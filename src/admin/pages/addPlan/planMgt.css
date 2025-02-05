@@ -1,0 +1,13 @@
+#name{
+    border-bottom: 1px solid;
+    border-color: darkblue;
+}
+#name:focus{
+    border-bottom: 2px solid;
+    border-color: #007bff
+}
+
+#amount{
+    border-bottom: 1px solid;
+    border-color: #007bff;
+}
