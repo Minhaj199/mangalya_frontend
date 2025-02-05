@@ -2,8 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } 
 import { handleAlert } from "./alert/SweeAlert";
 
 const client = axios.create({
-  // baseURL: import.meta.env.VITE_BACKENT_URL,
-  baseURL: 'http://mangalya.home.kg',
+  baseURL: import.meta.env.VITE_BACKENT_URL,
+  
 });
 
 let isRefreshing = false;

@@ -22,8 +22,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const onliners = useSelector((state: ReduxState) => state.onlinePersons);
 
   useEffect(() => {
-    // const newSocket: Socket = io(import.meta.env.VITE_BACKENT_URL);
-    const newSocket: Socket = io('http://mangalya.home.kg');
+    const newSocket: Socket = io(import.meta.env.VITE_BACKENT_URL);
+    
 
     const userId = localStorage.getItem("userToken");
     if (userId) {
