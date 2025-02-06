@@ -22,6 +22,9 @@ import { dateToDateInputGenerator } from "../../utils/dateToDateInputGenerator.t
 import { useSocket } from "@/shared/hoc/GlobalSocket.tsx";
 import CircularIndeterminate from "@/components/circularLoading/Circular.tsx";
 import { Footer } from "@/components/user/footer/Footer.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { ReduxState } from "@/redux/reduxGlobal.ts";
+
 
 export type userData = {
   PersonalInfo: {
@@ -63,15 +66,13 @@ export const UserProfile = () => {
   const socket=useSocket()
   const [editUser, setEditUser] = useState<boolean>(false);
   const [editedData, setEditedData] = useState<userData>(blanUserData);
-
-  ///////////////////////handle between edit and view profile/////////////////////
-  // const handleTogleBetweenEdit = (action: boolean) => {
-  //   window.scrollTo({ top: 0, behavior: "smooth" });
-
-  //   setEditUser(action);
-  // };
+  const userData=useSelector((state:ReduxState)=>state.userData)
+  const dispatch=useDispatch()
   //////////////////fetching data////////////
   
+
+
+
   const [orginalData, setOrginalData] = useState<fetchBlankData>({
     PersonalInfo: {
       firstName: "",
@@ -487,9 +488,38 @@ const [loading,setLoading]=useState<boolean>(false)
         if(response?.newData.token&&typeof response?.newData.token==='string'){
           localStorage.setItem('userToken',response.newData.token)
         }
+        if(response.newData.data.PersonalInfo.image!==orginalData.PersonalInfo.image){
+          const data={...userData,photo:response.newData.data.PersonalInfo.image}
+          dispatch({type:'SET_DATA',payload:data})
+        }
         if (response) {
           if (response.newData) {
             setOrginalData(response.newData.data);
+            setEditedData((el) => ({
+              ...el,
+              
+              email: response.newData.data.Email,
+              PersonalInfo: {
+                ...el.PersonalInfo,
+                image:'',
+                photo:null,
+                firstName: response.newData.data.PersonalInfo.firstName,
+                dateOfBirth: dateToDateInputGenerator(
+                  "",
+                  new Date(
+                    response.newData.data.PersonalInfo.dateOfBirth
+                  ).toLocaleDateString()
+                ),
+                gender: response.newData.data.PersonalInfo.gender,
+                interest: response.newData.data.PersonalInfo.interest,
+                secondName: response.newData.data.PersonalInfo.secondName,
+                state: response.newData.data.PersonalInfo.state,
+              },
+              partnerData: {
+                ...el.partnerData,
+                gender: response.newData.data.PartnerData.gender,
+              },
+            }));
             handleAlert("success", "datas updated");
           } else {
             handleAlert("info", "data not updated");
@@ -512,7 +542,7 @@ const [loading,setLoading]=useState<boolean>(false)
             "error"
           );
         }else{
-          console.error(error)
+          console.warn(error)
         }
       }
     }

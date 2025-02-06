@@ -59,7 +59,7 @@ export const Forgot_first:React.FC<Forgot_Props> = ({changeToggle}) => {
     {isLoading&&<div className='w-full flex items-center justify-center  h-full  fixed bg-[rgba(0,0,0,.8)] z-10'>
       <CircularIndeterminate/>
     </div>}
-    <div className="flex z-40 items-center flex-col h-3/5 w-[350px] sm:w-1/3 sm:h-[350px] relative sm:top-32 sm:left-96 top-28 left-14   bg-[rgba(0,0,0,0.7)]">
+    <div className="flex z-40 items-center flex-col h-3/5 w-[350px] sm:w-1/3 sm:h-[350px] relative sm:top-32 sm:left-96 top-28 left-3   bg-[rgba(0,0,0,0.7)]">
          <div  className=" w-full h-10 flex justify-end items-center pr-4 ">
           <p className=" text-white cursor-pointer" onClick={()=>changeToggle('2')}>X</p>
          </div>

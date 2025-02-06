@@ -10,7 +10,7 @@ import { showToast } from "@/utils/alert/toast";
 
 
 
-// export const Navbar = ({ openSearchModalFunc,resetProfilePage,active }: { active: string,openSearchModalFunc?:()=>void ,resetProfilePage?:()=>void}) => {
+
 export const Navbar = ({active,setShowRequest }: { active: string,setShowRequest?:Dispatch<SetStateAction<boolean>>}) => {
 
   const socket=useSocket()
@@ -19,17 +19,18 @@ export const Navbar = ({active,setShowRequest }: { active: string,setShowRequest
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const userphoto=useSelector((state:ReduxState)=>state.userData.photo)
   
   const [messageNumber,setMessageNumber]=useState(0)
   const [ids,setIds]=useState<string[]>([])
   const [newMessage,setNewMessage]=useState<{userId:string,name:string,count:number}[]>([])
-  // const [shouldNavigate, setShouldNavigate]=useState(false);
-  useEffect(() => {
+  const userphoto=useSelector((state:ReduxState)=>state.userData.photo)
+  useEffect(()=>{
     if (userphoto) {
       setImage(userphoto || "");
     }
-
+  },[userphoto])
+  useEffect(() => {
+    
     const fetchMessage=async()=>{
       try {
         const fetch:{newMessagesForNav:{count:number,ids:string[]},newMessagesNotifiation:{
@@ -123,13 +124,7 @@ export const Navbar = ({active,setShowRequest }: { active: string,setShowRequest
     }
     navigate('/suggestion',{state:{from:'suggestion'}})
   }
-  // useEffect(()=>{
-   
-  //   if(shouldNavigate&&messageNumber===0){
-  //     setShouldNavigate(false)
-  //     navigate('/match')
-  //   }
-  // },[shouldNavigate,messageNumber])
+
 
   async function handleMatchProfile(){
    

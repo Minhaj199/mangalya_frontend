@@ -328,7 +328,7 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="flex flex-col  h-screen max-w-full  bg-gradient-to-b from-gray-50 to-white shadow-xl ">
+    <div className="flex flex-col  h-svh max-w-full  bg-gradient-to-b from-gray-50 to-white shadow-xl ">
       {currentPhoto && (
         <div className="w-full h-full fixed  z-10 bg-[rgba(0,0,0,.8)] ">
           <div className="w-full h-full flex relative justify-center items-center">

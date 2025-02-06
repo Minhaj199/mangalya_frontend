@@ -73,22 +73,15 @@ export const Login:React.FC<userLoginProp> = ({changeToggle,loginTogle,setLoadin
       }
       else if(response.message==='password matched'){
         localStorage.setItem('userToken',response.token)
-       
-
-        
-        
         if(response.photo){
-         
           data.photo=response.photo||''
         }
         if(response.subscriptionStatus){
-          
           data.subscriptionStatus=response.subscriptionStatus
           dispatch({type:'SET_DATA',payload:data})
           changeToggle('1')
           handleAlert('success',`welcome ${response.name}`)
           setTimeout(()=>{
-
             if(response.subscriptionStatus==='Not subscribed'||response.subscriptionStatus==='connection finished'){
               navigate('/PlanDetails')
               setLoading(true)

@@ -4,7 +4,6 @@ import './Credential.css'
 import { SignupContext } from "../../shared/globalCondext/signupData";
 import { Countdown } from "@/components/user/timer/Countdown"; 
 import { request } from "../../utils/AxiosUtils";
-import { Loading } from "@/components/loading/Loading"; 
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import { promptSweet } from "../../utils/alert/SweeAlert";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,11 +51,11 @@ export const OTPVerification:React.FC = () => {
             localStorage.setItem('userToken',response.token)
             promptSweet(routeToPhoto,'Do you want to continue adding details ?','Basic account creation completed',secondFunction)
             async function routeToPhoto(){
-              dispatch({type:'SET_DATA',payload:{...userData,auth:true}})
+              dispatch({type:'SET_DATA',payload:{...userData,subscriptionStatus:'Not subscribed'}})
               navigate('/photoAdding')
             }
           async function secondFunction(){
-              dispatch({type:'SET_DATA',payload:{...userData,auth:true}})
+              dispatch({type:'SET_DATA',payload:{...userData,subscriptionStatus:'Not subscribed'}})
               setSignupFirst({"FIRST NAME":'',"SECOND NAME":'',"DATE OF BIRTH":'',"GENDER OF PARTNER":'',"DISTRICT THAT YOU LIVE":'',"YOUR GENDER":'','EMAIL':'','PASSWORD':''})
               alertWithOk('Signup completed','Best of luck with you journy',"success")
               navigate('/PlanDetails')

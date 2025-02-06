@@ -1,8 +1,7 @@
 .first_part{
     background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(10, 9, 9, 0.5)),
-    url('https://res.cloudinary.com/dyomgcbln/image/upload/v1738761967/mangaly_front_image/sbdff2lnthf5igcumrnf.jpg') ;
+    url('./pexels-emma-bauso-.jpg');
     background-position: center;
     background-color: aquamarine;
 }
-/* url('./pexels-emma-bauso-.jpg'); */
 
