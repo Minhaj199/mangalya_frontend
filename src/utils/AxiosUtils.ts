@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } 
 import { handleAlert } from "./alert/SweeAlert";
 
 const client = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: import.meta.env.VITE_BACKENT_URL,
 });
 
 let isRefreshing = false;
