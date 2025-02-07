@@ -5,7 +5,7 @@ export const Footer = () => {
   return (
     <div className="w-[100%] h-72 bg-[#0b3e80] flex text-base">
       
-        <div className="w-1/4 sm:w-1/3 h-full sm:px-5 py-10   ">
+        <div className="w-1/3 sm:w-1/3 h-full sm:px-5 px-2 py-10    ">
         <div className="sm:w-44 sm:h-16 w-20 ">
 
           <img
@@ -30,7 +30,7 @@ export const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="w-1/3 h-full ">
+        <div className="w-1/3 h-full  ">
           <div className="w-full h-1/5 text-white flex justify-center items-end text-sm sm:text-base">
             Contact us
           </div>

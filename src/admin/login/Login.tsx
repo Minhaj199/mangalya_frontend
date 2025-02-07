@@ -76,7 +76,7 @@ interface LoginType{
       className="w-full h-screen flex justify-center items-center flex-col bg-[#69aaff] pb-10"
     >
       
-      <div className="h-[400px]  sm:h-4/6 sm:w-[40%]  w-[99%] bg-white rounded-[20px] border-4 border-dark-blue   ">
+      <div className="h-[400px]  sm:h-4/6 sm:w-[40%]  w-[90%] bg-white rounded-[20px] border-4 border-dark-blue   ">
         <div className="w-full h-2/5 flex justify-center   items-center">
           <p className="font-inter font-extrabold text-2xl sm:text-3xl mt-12 text-theme-blue">
             WELCOME ADMIN

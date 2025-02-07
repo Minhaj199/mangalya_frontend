@@ -172,7 +172,7 @@ export function Abuse() {
     {loading&&<div className='w-full flex items-center justify-center  h-full  fixed bg-[rgba(0,0,0,.8)] z-50'>
       <CircularIndeterminate/>
     </div>}
-    <div className="container   pt-16 sm:px-24 ">
+    <div className="container   pt-16 sm:px-24 px-2">
       
       <ReportModal
         isOpen={isOpen}
@@ -182,7 +182,7 @@ export function Abuse() {
         setLoading={setLoading}
       />
       
-      <div className="w-full max-h-[60%] bg-white pb-14 border border-blue-400 rounded-xl overflow-y-auto">
+      <div className="w-full max-h-[60%] bg-white pb-14  border border-blue-400 rounded-xl overflow-y-auto">
         <div className="p-4 max-w-3xl mx-auto">
           <h1 className="text-2xl font-bold mb-4">Messages</h1>
           <div className="space-y-4">

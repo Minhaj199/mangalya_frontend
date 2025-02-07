@@ -60,7 +60,7 @@ const PieChart: React.FC = () => {
   };
 
   return (
-    <div style={{ margin: "auto", textAlign: "center"}} className="w-[300px]">
+    <div style={{ margin: "auto", textAlign: "center"}} className="w-[300px] ">
       <h3  className="font-bold mb-4 text-dark-blue">
         subscribers and not subscribers
       </h3>
