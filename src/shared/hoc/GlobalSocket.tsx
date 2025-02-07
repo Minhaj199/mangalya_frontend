@@ -29,7 +29,9 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       newSocket.emit("register", { userId });
       socket?.on("newUserOnline", (data) => {
         if (data.id) {
+          alert('global')
           store.dispatch({ type: "ADD_NEW_ONLINER", payload: data.id });
+
         }
       });
       socket?.on("user_loggedOut", (data: { id: string }) => {

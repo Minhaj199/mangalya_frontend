@@ -89,6 +89,7 @@ const ChatInterface = () => {
       });
     });
     function getOnliners(data: { id: string }) {
+    
       if (data.id && !onliners.includes(data.id)) {
         store.dispatch({ type: "ADD_NEW_ONLINER", payload: data.id });
       }
@@ -101,7 +102,7 @@ const ChatInterface = () => {
       socket?.off("newUserOnline", getOnliners);
       socket?.off("errorFromSocket");
     };
-  }, [socket]);
+  }, []);
   
 
   useEffect(() => {
@@ -331,8 +332,8 @@ const ChatInterface = () => {
     <div className="flex flex-col  h-svh max-w-full  bg-gradient-to-b from-gray-50 to-white shadow-xl ">
       {currentPhoto && (
         <div className="w-full h-full fixed  z-10 bg-[rgba(0,0,0,.8)] ">
-          <div className="w-full h-full flex relative justify-center items-center">
-            <div className="w-[50%] h-[80%] bg-red-400">
+          <div className="w-full h-full  flex relative justify-center items-center">
+            <div className="sm:w-[50%]  sm:h-[80%] bg-red-400">
               <img src={currentPhoto} className="w-full h-full" alt="" />
             </div>
             <img
@@ -498,7 +499,7 @@ const ChatInterface = () => {
               className="text-[#000000] absolute right-4 top-3 cursor-pointer"
             />
             {emogi && (
-              <div className="w-52 h-52 bg-green-400 absolute bottom-80  right-36">
+              <div className="sm:w-52 sm:h-52 w-16 h-16  absolute sm:bottom-80 bottom-[450px]  sm:right-36 right-56">
                 <Picker
                   data={data}
                   emojiSize={18}
