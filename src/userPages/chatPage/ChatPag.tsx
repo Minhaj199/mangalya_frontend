@@ -89,10 +89,13 @@ const ChatInterface = () => {
       });
     });
     function getOnliners(data: { id: string }) {
-    
-      if (data.id && !onliners.includes(data.id)) {
-        store.dispatch({ type: "ADD_NEW_ONLINER", payload: data.id });
-      }
+      store.dispatch((distpatch,getState:()=>ReduxState)=>{
+        const   updateOnliners=getState().onlinePersons
+        if (data.id && !updateOnliners.includes(data.id)) {
+          distpatch({ type: "ADD_NEW_ONLINER", payload: data.id });
+        }
+      })
+      
     }
 
     socket?.on("newUserOnline", getOnliners);
