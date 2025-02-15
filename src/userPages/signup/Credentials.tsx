@@ -168,7 +168,7 @@ export const Credentials: React.FC<InputArrayProbs> = ({
         }
       } catch (error) {
         if (error) {
-          handleAlert('error',"some error in photo and interest");
+          handleAlert("error", "some error in photo and interest");
         }
       }
     }

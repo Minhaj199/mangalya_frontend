@@ -162,7 +162,7 @@ export const LoginLanding = () => {
     socket?.on("new_connect", (data: { data: profileType; note: string }) => {
       if (data.data) {
         showToast("new request arraived", "info");
-        setProfiles(prev=>prev.filter(el=>el._id!==data.data._id))
+        setProfiles((prev) => prev.filter((el) => el._id !== data.data._id));
         setRequest((el) => [...el, data.data]);
       }
     });
@@ -183,10 +183,9 @@ export const LoginLanding = () => {
       e.stopPropagation();
     }
 
-  
     if (requestProfile) {
       const isDuplicate = requestProfile?.filter((el) => el._id === id);
-     
+
       if (isDuplicate.length >= 1) {
         alertWithOk("Duplication", "already in request", "info");
         return;
@@ -238,7 +237,6 @@ export const LoginLanding = () => {
         );
       }
     } else {
-     
       alertWithOk("Plan subscription", "No valid plan", "info");
     }
   };
@@ -292,7 +290,7 @@ export const LoginLanding = () => {
         });
         const res: { profile: profileType[]; request: profileType[] }[] =
           response.datas ?? { profile: [], request: [] };
-      
+
         if (!res[0]?.profile) {
           alert("error");
         }
@@ -498,7 +496,6 @@ export const LoginLanding = () => {
     if (currentPage < totalPage) setCurrenPage((el) => el + 1);
   };
   ///////search////////////
-
 
   const minAge: number[] = [];
   for (let i = 18; i < 60; i++) {
@@ -819,7 +816,7 @@ export const LoginLanding = () => {
           </div>
         </div>
       )}
-    
+
       <Navbar
         active={
           location?.state?.from && location?.state?.from === "search"
@@ -830,9 +827,8 @@ export const LoginLanding = () => {
         }
         setShowRequest={setShowRequest}
       />
-    
+
       <div className="w-[100%] h-full  flex">
-       
         <div className="md:w-0 lg:w-[20%] sm:w-0 w-0 overflow-hidden md:h-screen  h-[1000px]  mt-28">
           <div className="w-full  md:h-[45%] sm:h-[30%] flex    md:flex justify-center flex-col items-center">
             <p className="pb-2 font-semibold  font-aborato text-base text-amber-900 md:block  ml-3">
@@ -842,7 +838,10 @@ export const LoginLanding = () => {
 
             {planData?.name ? (
               <>
-                <div onClick={()=>navigate('/planAndRequest')} className="sm:w-[85%] w-[90%] cursor-pointer  sm:h-[250px] md:h-[250px] h-[200px] md:ml-0 ml-2  transition-all duration-500 ease-in-out hover:shadow-md hover:shadow-orange-800  bg-white shadow-xl md:flex justify-center items-center flex-col  rounded-xl ">
+                <div
+                  onClick={() => navigate("/planAndRequest")}
+                  className="sm:w-[85%] w-[90%] cursor-pointer  sm:h-[250px] md:h-[250px] h-[200px] md:ml-0 ml-2  transition-all duration-500 ease-in-out hover:shadow-md hover:shadow-orange-800  bg-white shadow-xl md:flex justify-center items-center flex-col  rounded-xl "
+                >
                   <div className="w-fullh-[30%]   flex justify-center items-center">
                     <p className="font-aborato font-black  pt-1 text-base text-amber-950 ">
                       {planData.name}
@@ -1032,11 +1031,8 @@ export const LoginLanding = () => {
           </div>
 
           {/* ///////////////////////////////pagination//////////////////////////// */}
-          <div className="w-[80%] h-14  flex justify-center items-center text-center">
-            <p className="mt-4 mr-1 ">
-              <span className="font-bold text-center">{currentPage}</span> of{" "}
-              {totalPage}{" "}
-            </p>
+          <div className="w-[80%] h-14  mb-10 flex justify-center items-center text-center">
+            
             <button
               onClick={() => handlePreviouse()}
               disabled={currentPage === 1}
@@ -1044,17 +1040,21 @@ export const LoginLanding = () => {
             >
               {"<<"}
             </button>
+            <p className=" mx-2 ">
+              <span className="font-bold text-center">{currentPage}</span> of{" "}
+              {totalPage}{" "}
+            </p>
             <button
               onClick={() => handleNext()}
               disabled={currentPage === totalPage}
-              className="bg-dark-blue text-white rounded-full sm:h-14 h-9 w-9 sm:w-14 ml-1 font-bold "
+              className="bg-dark-blue text-white rounded-full sm:h-14 h-9 w-9 sm:w-14  font-bold"
             >
               {">>"}
             </button>
           </div>
         </div>
       </div>
-             <Footer /> 
+      <Footer />
       {/* <Footer/> */}
     </div>
   );

@@ -12,13 +12,18 @@ import {
 } from "chart.js";
 import { request } from "../../../../utils/AxiosUtils";
 
-
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const LineChart = () => {
   const [datas, setData] = useState<{ month: number[]; revenue: number[] }>();
-
-  
 
   useEffect(() => {
     async function FetchData() {
@@ -35,7 +40,6 @@ const LineChart = () => {
     FetchData();
   }, []);
 
-  
   const data = {
     labels: datas?.month,
     datasets: [
@@ -44,13 +48,12 @@ const LineChart = () => {
         data: datas?.revenue,
         borderColor: "#007bff",
         backgroundColor: "rgba(255, 87, 51, 0.2)",
-        tension: 0.4, 
-        pointBackgroundColor: "#990000", 
-        pointRadius: 5, 
+        tension: 0.4,
+        pointBackgroundColor: "#990000",
+        pointRadius: 5,
       },
     ],
   };
-
 
   const options = {
     responsive: true,
@@ -64,7 +67,6 @@ const LineChart = () => {
         align: "start",
         font: { size: 20, weight: "bold" },
       },
-      
     },
     scales: {
       y: {
@@ -75,15 +77,21 @@ const LineChart = () => {
       },
     },
     animation: {
-      duration: 2000, 
-      easing: "easeInOutQuart", 
+      duration: 2000,
+      easing: "easeInOutQuart",
     },
   };
 
   return (
-    <div  className="w-[100%] m-auto p-4">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ fontWeight: "bold", margin: 0 ,color:'teal' }}></h2>
+    <div className="w-[100%] m-auto p-4">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2 style={{ fontWeight: "bold", margin: 0, color: "teal" }}></h2>
         {/* <select style={{ padding: "5px" }}>
           <option>Monthly</option>
           <option>Quarterly</option>

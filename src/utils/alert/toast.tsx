@@ -1,36 +1,40 @@
 import { toast } from "react-toastify";
 
-export const showToast = (message: string, type: "success" | "error" | "info" | "warning" = "info",duration=3000) => {
- toast.dismiss()
+export const showToast = (
+  message: string,
+  type: "success" | "error" | "info" | "warning" = "info",
+  duration = 3000
+) => {
+  toast.dismiss();
   switch (type) {
     case "success":
-      toast.success(message,{
+      toast.success(message, {
         style: {
           backgroundColor: "black",
           color: "white",
         },
-        autoClose:duration
+        autoClose: duration,
       });
       break;
     case "error":
       toast.error(message);
       break;
     case "info":
-      toast.info(message,{
+      toast.info(message, {
         style: {
           backgroundColor: "black",
           color: "white",
         },
-        autoClose:duration
+        autoClose: duration,
       });
       break;
     case "warning":
-      toast.warn(message,{
+      toast.warn(message, {
         style: {
           backgroundColor: "black",
           color: "white",
         },
-        autoClose:duration
+        autoClose: duration,
       });
       break;
     default:

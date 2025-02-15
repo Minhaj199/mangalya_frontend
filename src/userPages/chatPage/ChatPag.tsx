@@ -71,11 +71,11 @@ const ChatInterface = () => {
       createdAt: string;
       senderId: string;
       image: boolean;
-      chatId:string
+      chatId: string;
     }) => {
       setMessages((el) => [...el, data]);
 
-      socket?.emit('makeReaded',{chatId:data.chatId})
+      socket?.emit("makeReaded", { chatId: data.chatId });
     };
     socket?.on("recieveMessage", receiveMessage);
     socket?.on("errorFromSocket", (data: { message: string }) => {
@@ -89,13 +89,12 @@ const ChatInterface = () => {
       });
     });
     function getOnliners(data: { id: string }) {
-      store.dispatch((distpatch,getState:()=>ReduxState)=>{
-        const   updateOnliners=getState().onlinePersons
+      store.dispatch((distpatch, getState: () => ReduxState) => {
+        const updateOnliners = getState().onlinePersons;
         if (data.id && !updateOnliners.includes(data.id)) {
           distpatch({ type: "ADD_NEW_ONLINER", payload: data.id });
         }
-      })
-      
+      });
     }
 
     socket?.on("newUserOnline", getOnliners);
@@ -106,7 +105,6 @@ const ChatInterface = () => {
       socket?.off("errorFromSocket");
     };
   }, []);
-  
 
   useEffect(() => {
     const fetch = async () => {
@@ -143,7 +141,6 @@ const ChatInterface = () => {
     if (messageBox.current) {
       messageBox.current.scrollTop = messageBox.current.scrollHeight;
     }
-   
   }, [messages]);
   const formatTime = (timestamp: Date) => {
     const date = new Date(timestamp);
@@ -179,7 +176,7 @@ const ChatInterface = () => {
     setLoading(true);
     if (file) {
       const formData = new FormData();
-      
+
       formData.append("file", file);
       try {
         const url: { image: string } = await request({
@@ -206,7 +203,7 @@ const ChatInterface = () => {
             _id: string;
             text: string;
             senderId: string;
-            receiverId:string
+            receiverId: string;
             createdAt: Date;
             image: boolean;
           };
@@ -214,8 +211,8 @@ const ChatInterface = () => {
         } = await request({
           url: "/user/createChats",
           data: {
-            senderIdString:localStorage.getItem('userRefresh'),
-            receiverId:location.state.id,
+            senderIdString: localStorage.getItem("userRefresh"),
+            receiverId: location.state.id,
             chatId: chatId,
             text: imgUrl,
             image: imgUrl !== "",
@@ -228,10 +225,10 @@ const ChatInterface = () => {
         if (response.newMessage._id) {
           socket?.emit("sendMessage", {
             chatId: chatId,
-            senderId:localStorage.getItem('userRefresh'),
+            senderId: localStorage.getItem("userRefresh"),
             receiverId: response.newMessage.receiverId,
             text: response.newMessage.text,
-            createdAt:new Date(response.newMessage.createdAt).toISOString(),
+            createdAt: new Date(response.newMessage.createdAt).toISOString(),
             _id: response.newMessage._id,
             image: response.newMessage.image,
           });
@@ -265,7 +262,7 @@ const ChatInterface = () => {
             _id: string;
             text: string;
             senderId: string;
-            receiverId:string
+            receiverId: string;
             createdAt: Date;
             image: boolean;
           };
@@ -273,8 +270,8 @@ const ChatInterface = () => {
         } = await request({
           url: "/user/createChats",
           data: {
-            senderIdString: localStorage.getItem('userRefresh'),
-            receiverId:location.state.id,
+            senderIdString: localStorage.getItem("userRefresh"),
+            receiverId: location.state.id,
             chatId: chatId,
             text: input,
             image: imgUrl !== "",
@@ -286,7 +283,7 @@ const ChatInterface = () => {
         if (response.newMessage._id) {
           socket?.emit("sendMessage", {
             chatId: chatId,
-            senderId:localStorage.getItem('userRefresh'),
+            senderId: localStorage.getItem("userRefresh"),
             receiverId: response.newMessage.receiverId,
             text: response.newMessage.text,
             createdAt: new Date(response.newMessage.createdAt).toISOString(),
@@ -356,15 +353,19 @@ const ChatInterface = () => {
           >
             <ArrowLeft size={24} />
           </button>
-          {recieverData?.image? <img
-            src={recieverData?.image}
-            alt="Profile"
-            className="w-14 h-14 rounded-full border-2 border-white shadow-md"
-          />:<img
-          src='./photoUpload.png'
-          alt="Profile"
-          className="w-14 h-14 rounded-full border-2 border-white shadow-md"
-        />}
+          {recieverData?.image ? (
+            <img
+              src={recieverData?.image}
+              alt="Profile"
+              className="w-14 h-14 rounded-full border-2 border-white shadow-md"
+            />
+          ) : (
+            <img
+              src="./photoUpload.png"
+              alt="Profile"
+              className="w-14 h-14 rounded-full border-2 border-white shadow-md"
+            />
+          )}
           <div>
             <h2 className="text-white font-semibold text-lg">
               {recieverData?.name}

@@ -3,28 +3,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { districtsOfKerala } from "../../App.tsx";
 import "./userProfile.css";
-import { CountdownProfile } from "@/components/user/timer/CountdownProfile"; 
+import { CountdownProfile } from "@/components/user/timer/CountdownProfile";
 import { Send, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { request } from "../../utils/AxiosUtils.ts";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert.ts";
-  
+
 import { validateEditedData } from "../../validators/editValidator.ts";
 import { capitaliser } from "../../utils/firstLetterCapitaliser.ts";
 import { Navbar } from "../../components/user/navbar/Navbar.tsx";
 
 import { showToast } from "@/utils/alert/toast.tsx";
 
- 
-import { editedDataFinder, fetchBlankData } from "../../utils/editedDataFinder.ts";
+import {
+  editedDataFinder,
+  fetchBlankData,
+} from "../../utils/editedDataFinder.ts";
 import { dateToDateInputGenerator } from "../../utils/dateToDateInputGenerator.ts";
 import { useSocket } from "@/shared/hoc/GlobalSocket.tsx";
 import CircularIndeterminate from "@/components/circularLoading/Circular.tsx";
 import { Footer } from "@/components/user/footer/Footer.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/redux/reduxGlobal.ts";
-
 
 export type userData = {
   PersonalInfo: {
@@ -63,15 +64,12 @@ const blanUserData = {
   subscriber: "",
 };
 export const UserProfile = () => {
-  const socket=useSocket()
+  const socket = useSocket();
   const [editUser, setEditUser] = useState<boolean>(false);
   const [editedData, setEditedData] = useState<userData>(blanUserData);
-  const userData=useSelector((state:ReduxState)=>state.userData)
-  const dispatch=useDispatch()
+  const userData = useSelector((state: ReduxState) => state.userData);
+  const dispatch = useDispatch();
   //////////////////fetching data////////////
-  
-
-
 
   const [orginalData, setOrginalData] = useState<fetchBlankData>({
     PersonalInfo: {
@@ -110,7 +108,7 @@ export const UserProfile = () => {
       try {
         const userData: fetchUserData = await request({
           url: "/user/getUserProfile",
-        }); 
+        });
 
         const interest: {
           Data: { food: string[]; music: string[]; sports: string[] };
@@ -150,16 +148,15 @@ export const UserProfile = () => {
             gender: userData.user.PartnerData.gender,
           },
         }));
-      } catch (error:unknown) {
-        if(error instanceof Error){
-
+      } catch (error: unknown) {
+        if (error instanceof Error) {
           alertWithOk(
             "UserData loading",
             error.message || "error on fetch user data",
             "error"
-          )
-        }else{
-          console.error(error)
+          );
+        } else {
+          console.error(error);
         }
       }
     }
@@ -193,8 +190,6 @@ export const UserProfile = () => {
           PersonalInfo: { ...el.PersonalInfo, gender: e.target.value },
         }));
     } else if (e.target.name === "dateOfBirth") {
-     
-      
       const inputDate = new Date(e.target.value);
       const formattedDate = inputDate.toISOString().split("T")[0];
       setEditedData((el) => ({
@@ -244,10 +239,9 @@ export const UserProfile = () => {
   }
   //////////////////handle remove interest///////////
 
-
   ///////////////////password reset//////////////////
 
- interface FormWarning{
+  interface FormWarning {
     firstName: string;
     secondName: string;
     state: string;
@@ -266,14 +260,13 @@ export const UserProfile = () => {
   const [formWarning, setFormWarning] = useState<FormWarning>({
     firstName: "",
     secondName: "",
-  
+
     state: "",
     dob: "",
     email: "",
-
   });
   interface IsValid {
-    status: 'OTP not found'|'opt matched'|'Not valid otp';
+    status: "OTP not found" | "opt matched" | "Not valid otp";
     message: string;
   }
   const [PasswordWarnning, setPasswordWarning] = useState<{
@@ -281,14 +274,16 @@ export const UserProfile = () => {
     confirmPassword: string;
   }>({ confirmPassword: "", password: "" });
   async function submitPassword() {
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
-    const test=strongPasswordRegex.test(passwords.password)
-    if(!test){
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    const test = strongPasswordRegex.test(passwords.password);
+    if (!test) {
+      setPasswordWarning((el) => ({
+        ...el,
+        password: "password is not strong",
+      }));
 
-      setPasswordWarning((el) => ({ ...el, password: "password is not strong" }))
-            
-     return false
-      
+      return false;
     }
     if (passwords.password.trim() === "") {
       setPasswordWarning((el) => ({ ...el, password: "Blank not allowed" }));
@@ -305,8 +300,7 @@ export const UserProfile = () => {
     } else {
       setPasswordWarning((el) => ({ ...el, confirmPassword: "" }));
     }
-    
-    
+
     if (passwords.password !== passwords.confirmPassword) {
       setPasswordWarning({
         password: "Password is not match",
@@ -330,19 +324,18 @@ export const UserProfile = () => {
         setOpenPopUp(false);
         setOtp(0);
         setEditUser(false);
-        setActive("info")
-        setSwitchTopassword(false)
+        setActive("info");
+        setSwitchTopassword(false);
         handleAlert("success", "Password changed successfully");
       }
     } catch (error: unknown) {
-      if(error instanceof Error){
-
+      if (error instanceof Error) {
         alertWithOk(
           "Password Reset",
           error.message || "error on password reset",
           "error"
-        )
-        console.error(error)
+        );
+        console.error(error);
       }
     }
   }
@@ -351,7 +344,7 @@ export const UserProfile = () => {
       setWarning("Please enter otp");
       return;
     }
-    if(otp.toString().length<6||otp.toString().length>6){
+    if (otp.toString().length < 6 || otp.toString().length > 6) {
       setWarning("Insert 6 digits");
       return;
     }
@@ -359,28 +352,25 @@ export const UserProfile = () => {
       const isValid: IsValid = await request({
         url: "/user/validateUserOTP",
         method: "post",
-        data: { OTP: otp ,from:'forgot'},
+        data: { OTP: otp, from: "forgot" },
       });
 
       if (isValid.message) {
         throw new Error(isValid.message || "error on otp validation");
       }
-      if (isValid.status==='opt matched') {
-
+      if (isValid.status === "opt matched") {
         setSwitchTopassword(true);
-      }else{
-        throw new Error(isValid.status)
+      } else {
+        throw new Error(isValid.status);
       }
-      
     } catch (error: unknown) {
-      if(error instanceof Error){
-
+      if (error instanceof Error) {
         alertWithOk(
           "OTP VALIDATION",
           error.message || "validation faild",
           "error"
         );
-        console.error(error)
+        console.error(error);
       }
     }
   }
@@ -414,95 +404,101 @@ export const UserProfile = () => {
     }));
   }
   useEffect(() => {
-    
     if (openPopUp) {
       async function createOTP() {
         await request({ url: "/user/otpRstPsword", method: "post" });
       }
       createOTP();
     }
-    function handleFuncton(data:{name:string,from:'accept'|'reject'}){
-      if(data.from==='accept'){
-        showToast(`${data.name?data.name:'partner'} accepted your request`)
-      }else{
-        showToast(`${data.name?data.name:'partner'} declined your request`,'warning')
+    function handleFuncton(data: { name: string; from: "accept" | "reject" }) {
+      if (data.from === "accept") {
+        showToast(`${data.name ? data.name : "partner"} accepted your request`);
+      } else {
+        showToast(
+          `${data.name ? data.name : "partner"} declined your request`,
+          "warning"
+        );
       }
     }
-    socket?.on('requestStutus',handleFuncton)
-    socket?.on('errorFromSocket',(data:{message:string})=>{
-         
-          showToast(data.message,'error')    
-              })
-              socket?.on('new_connect',((data)=>{
-              
-                    if(data.data){
-                      showToast('new request arraived',"info")
-                    }
-                  
-                  }))
+    socket?.on("requestStutus", handleFuncton);
+    socket?.on("errorFromSocket", (data: { message: string }) => {
+      showToast(data.message, "error");
+    });
+    socket?.on("new_connect", (data) => {
+      if (data.data) {
+        showToast("new request arraived", "info");
+      }
+    });
 
-return ()=>{
-socket?.off('new_connect')
-socket?.off('requestStutus',handleFuncton)
-socket?.off('errorFromSocket')
-}
+    return () => {
+      socket?.off("new_connect");
+      socket?.off("requestStutus", handleFuncton);
+      socket?.off("errorFromSocket");
+    };
   }, [openPopUp]);
 
   ////////////////////////////// handle submit edited data//////////////////////
-const [loading,setLoading]=useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   async function submitEditedData() {
     setFormWarning({
       firstName: "",
       secondName: "",
-    
+
       state: "",
       dob: "",
       email: "",
-  
-    })
-    setLoading(true)
-    const dataToFind=structuredClone(editedData)
-    
-    editedDataFinder({dataToFind,orginalData})
- 
-    
-    const validate =await validateEditedData(dataToFind,setFormWarning);
-   
-   
-    
-     if(validate) {
+    });
+    setLoading(true);
+    const dataToFind = structuredClone(editedData);
+
+    editedDataFinder({ dataToFind, orginalData });
+
+    const validate = await validateEditedData(dataToFind, setFormWarning);
+
+    if (validate) {
       const formData = new FormData();
       formData.append("file", editedData.PersonalInfo.image || "");
       formData.append("data", JSON.stringify(dataToFind));
       try {
-        const response: { newData: {data:fetchBlankData,token:string|boolean}; message: string } =
-          await request({
-            url: "/user/editProfile",
-            method: "put",
-            data: formData,
-          });
-        
+        const response: {
+          newData: { data: fetchBlankData; token: string | boolean };
+          message: string;
+        } = await request({
+          url: "/user/editProfile",
+          method: "put",
+          data: formData,
+        });
+
         if (response?.message) {
           throw new Error(response.message || "error on updating");
         }
-        if(response?.newData.token&&typeof response?.newData.token==='string'){
-          localStorage.setItem('userToken',response.newData.token)
+        if (
+          response?.newData.token &&
+          typeof response?.newData.token === "string"
+        ) {
+          localStorage.setItem("userToken", response.newData.token);
         }
-        if(response.newData.data.PersonalInfo.image!==orginalData.PersonalInfo.image){
-          const data={...userData,photo:response.newData.data.PersonalInfo.image}
-          dispatch({type:'SET_DATA',payload:data})
+        if (
+          response.newData.data.PersonalInfo.image !==
+          orginalData.PersonalInfo.image
+        ) {
+          const data = {
+            ...userData,
+            photo: response.newData.data.PersonalInfo.image,
+          };
+          dispatch({ type: "SET_DATA", payload: data });
         }
         if (response) {
           if (response.newData) {
             setOrginalData(response.newData.data);
             setEditedData((el) => ({
               ...el,
-              
+
               email: response.newData.data.Email,
               PersonalInfo: {
                 ...el.PersonalInfo,
-                image:'',
-                photo:null,
+                image: "",
+                photo: null,
                 firstName: response.newData.data.PersonalInfo.firstName,
                 dateOfBirth: dateToDateInputGenerator(
                   "",
@@ -527,26 +523,25 @@ const [loading,setLoading]=useState<boolean>(false)
         } else {
           throw new Error("data not updated");
         }
-       setActive("info");
+        setActive("info");
         setTempPhot("");
         setEditUser(false);
-        setLoading(false)
-        window.scroll({top:0,behavior:"smooth"})
-      } catch (error:unknown) {
-        if(error instanceof Error){
-
-          setLoading(false)
+        setLoading(false);
+        window.scroll({ top: 0, behavior: "smooth" });
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setLoading(false);
           alertWithOk(
             "Update Error",
             error.message || "error on updata",
             "error"
           );
-        }else{
-          console.warn(error)
+        } else {
+          console.warn(error);
         }
       }
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   const [active, setActive] = useState<"info" | "edit Data" | "changePassword">(
@@ -599,25 +594,18 @@ const [loading,setLoading]=useState<boolean>(false)
       },
       email: orginalData.Email,
     }));
-    handleRemovePhoto()
+    handleRemovePhoto();
   }
 
   //////////////handle interst////////////////
- 
+
   function handleInterest(item: string) {
-      
-    
     if (!editedData.PersonalInfo.interest?.length) {
-     
       setEditedData((el) => ({
         ...el,
         PersonalInfo: { ...el.PersonalInfo, interest: [item] },
       }));
-    } 
-    
-    else if (editedData.PersonalInfo.interest?.includes(item)) {
-     
-      
+    } else if (editedData.PersonalInfo.interest?.includes(item)) {
       setEditedData((el) => ({
         ...el,
         PersonalInfo: {
@@ -626,580 +614,301 @@ const [loading,setLoading]=useState<boolean>(false)
         },
       }));
     } else if (
-      
       editedData.PersonalInfo.interest?.length &&
       editedData.PersonalInfo.interest.length >= 5
     ) {
-      
       showToast("maximum interest choice is finished");
     } else {
-      
-     
-      
-        setEditedData((el) => ({
-          ...el,
-          PersonalInfo: {
-            ...el.PersonalInfo,
-            interest: [...(el.PersonalInfo.interest || []), item],
-          },
-        }));
-      
+      setEditedData((el) => ({
+        ...el,
+        PersonalInfo: {
+          ...el.PersonalInfo,
+          interest: [...(el.PersonalInfo.interest || []), item],
+        },
+      }));
     }
   }
   return (
     <>
-    
-    {loading&&<div className='w-full flex items-center justify-center  h-full  fixed bg-[rgba(0,0,0,.8)] z-10'>
-      <CircularIndeterminate/>
-    </div>}
-    <div className="w-full flex   items-center justify-evenly  pb-12  md:min-h-[1100px]   bg-blue-100 ">
-      <Navbar active="profile setting" />
-      <div className="w-[90%] min-h-svh flex md:flex-row items-center flex-col md:items-start pt-36 gap-5   ">
-       
-       {openPopUp && (
-               <div className="w-full h-screen  z-[1] fixed -top-0 flex justify-center items-center">
-
-                
-                 <div className="sm:w-[40%] w-[60%] h-[60%] shadow shadow-dark-blue border-4 border-blue-200 bg-white  rounded-3xl flex flex-col  items-center">
-                   <div className="w-full h-8  flex rounded-xl justify-end items-center px-4">
-                     <p
-                       onClick={() => (
-                         setOpenPopUp(false),
-                         setSwitchTopassword(false),
-                          setActive("info"), 
-                         setWarning("")
-                       )}
-                       className="text-xl cursor-pointer font-bold text-theme-blue"
-                     >
-                       X
-                     </p>
-                   </div>
-                   {/* <div className="w-full h-20 px-5 bg-green-500 pt-2  ">
+      {loading && (
+        <div className="w-full flex items-center justify-center  h-full  fixed bg-[rgba(0,0,0,.8)] z-10">
+          <CircularIndeterminate />
+        </div>
+      )}
+      <div className="w-full flex   items-center justify-evenly  pb-12  md:min-h-[1100px]   bg-blue-100 ">
+        <Navbar active="profile setting" />
+        <div className="w-[90%] min-h-svh flex md:flex-row items-center flex-col md:items-start pt-36 gap-5   ">
+          {openPopUp && (
+            <div className="w-full h-screen  z-[1] fixed -top-0 flex justify-center items-center">
+              <div className="sm:w-[40%] w-[60%] h-[60%] shadow shadow-dark-blue border-4 border-blue-200 bg-white  rounded-3xl flex flex-col  items-center">
+                <div className="w-full h-8  flex rounded-xl justify-end items-center px-4">
+                  <p
+                    onClick={() => (
+                      setOpenPopUp(false),
+                      setSwitchTopassword(false),
+                      setActive("info"),
+                      setWarning("")
+                    )}
+                    className="text-xl cursor-pointer font-bold text-theme-blue"
+                  >
+                    X
+                  </p>
+                </div>
+                {/* <div className="w-full h-20 px-5 bg-green-500 pt-2  ">
                    </div> */}
 
-                   <div className='w-10 h-10 rounded-full'>
-                    <img src="/reset-password.png" className='w-full h-full rounded-full' alt="" />
-                   </div>
-                     <p className=" font-playfair font-semibold sm:text-3xl text-sm ">
-                       Forgot your Password ?
-                     </p>
-       
-                   {/* /////////////////////////passowrd part////////////////// */}
-                   {!switchTopassword ? (
-                     <>
-                       <div className="w-full h-10   mt-3 flex justify-center items-center">
-                         <p className="font-acme sm:text-base text-xs  text-theme-blue">
-                           ENTER OTP
-                         </p>
-                       </div>
-                       <div className="w-full h-16  mt-2 flex justify-center items-center">
-                         <div className="sm:w-36 w-20 sm:h-14 h-10 border ">
-                           <input
-                             onChange={(t) => setOtp(parseInt(t.target.value))}
-                             min={1}
-                             max={1000000}
-                             type="number"
-                             className="h-full font-bold w-full px-2 outline-none text-center text-dark-blue "
-                           />
-                         </div>
-                       </div>
-                       <div className="sm:w-36 w-28 sm:h-6 h-5 font-semibold text-center text-dark_red">
-                         {warnning && warnning}
-                       </div>
-                       <div className="sm:w-36  font-bold w-28 mt-1 sm:h-10 h-8  inline-flex justify-between">
-                         {openPopUp === true && (
-                           <CountdownProfile
-                             expiryTimeStamp={expiryTimeStamp}
-                             from="userProfile"
-                           />
-                         )}
-                       </div>
-                       <div className="sm:w-36 w-28 mt-2 sm:h-10 h-8 flex justify-center items-center ">
-                         <button
-                           onClick={handleOTPSent}
-                           className="cursor-pointer relative group  overflow-hidden border-2 sm:px-8 px-4 sm:py-1 border-theme-blue"
-                         >
-                           <span className="font-bold text-white  relative z-10 group-hover:text-theme-blue duration-500">
-                             SUBMIT
-                           </span>
-                           <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:-translate-x-full h-full"></span>
-                           <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-x-full h-full"></span>
-       
-                           <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 delay-300 group-hover:-translate-y-full h-full"></span>
-                           <span className="absolute delay-300 top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-y-full h-full"></span>
-                         </button>
-                       </div>
-                     </>
-                   ) : (
-                     ///////////////////////// passsword Typing part/////////////////////////////
-                     <div className="w-[95%] mt-5 h-[55%]   flex    items-center flex-col">
-                       <div className="w-[60%]   flex  flex-col justify-between h-[45%] ">
-                         <label
-                           htmlFor=""
-                           className="text-slate-700 font-bold sm:text-sm text-sm "
-                         >
-                           PASSWORD
-                         </label>
-                         <div className="mb-2 h-8 mt-1 w- border rounded-md">
-                           <input
-                             onChange={inputPassword}
-                             name="password"
-                             className="w-full font-semibold h-full border rounded-md text-black px-2"
-                             type="text"
-                           />
-                         </div>
-                         <div className="w-full h-6  text-dark_red sm:text-base text-xs relative group">
-                           {PasswordWarnning.password}
-                           {PasswordWarnning.password==='password is not strong'&&<span className=" absolute px-2 py-2   text-white rounded-full bg-[rgba(92,92,254)] bottom-8 hidden group-hover:flex justify-center text-sm items-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">insert upper,lower,number and charecters more than 8</span>}
-                         </div>
-                       </div>
-                       <div className="w-[60%] mt-2  flex  flex-col justify-between h-[45%] ">
-                         <label
-                           className="text-slate-700 font-bold sm:text-sm text-sm"
-                           htmlFor=""
-                         >
-                           CONFIRM PASSWORD
-                         </label>
-                         <div className="mb-2 h-8 mt-1 w- border rounded-md">
-                           <input
-                             name="confirmPassword"
-                             onChange={inputPassword}
-                             className="w-full h-full px-2 border rounded-md text-gray-800 "
-                             type="password"
-                           />
-                         </div>
-                         <div className="w-full h-6 text-dark_red sm:text-base text-xs ">
-                           {PasswordWarnning.confirmPassword}
-                         </div>
-                       </div>
-                       <div className="sm:w-[100%] w-28  mt-2 sm:h-10 h-8 flex justify-center items-center ">
-                         <button
-                           onClick={submitPassword}
-                           className="cursor-pointer relative group  overflow-hidden border-2 sm:px-8 px-4 sm:py-1 border-theme-blue"
-                         >
-                           <span className="font-bold text-white  relative z-10 group-hover:text-theme-blue duration-500">
-                             RESET
-                           </span>
-                           <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:-translate-x-full h-full"></span>
-                           <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-x-full h-full"></span>
-       
-                           <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 delay-300 group-hover:-translate-y-full h-full"></span>
-                           <span className="absolute delay-300 top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-y-full h-full"></span>
-                         </button>
-                       </div>
-                     </div>
-                   )}
-                 </div>
-               </div>
-             )}
-        {/* ////////////////menuBar///////////////// */}
-        <div className="md:w-[20%] w-[70%]  md:h-[400px] h-[500px]  pt-6 flex flex-col items-center   bg-white border-2 rounded-lg">
-          <div className="w-[80%] h-[40%]   rounded-xl relative">
-            {/* ////////////////profile picture///////////////// */}
-            <img
-              className="w-full h-full rounded-xl"
-              src={
-                editUser
-                  ? tempPhoto ||
-                    orginalData.PersonalInfo.image ||
-                    "photoUpload.png"
-                  : orginalData.PersonalInfo.image || "photoUpload.png"
-              }
-            />
-            <input
-              type="file"
-              ref={profileRef}
-              name="photo"
-              onChange={handleFileInput}
-              className="hidden"
-              accept="image/*"
-            />
-            {editUser && (
-              <div className="w-full h-full flex justify-center items-center absolute bg-[rgba(0,0,0,.4)] rounded-lg top-0">
-                {tempPhoto ? (
+                <div className="w-10 h-10 rounded-full">
                   <img
-                    src="/forbidden.png"
-                    onClick={handleRemovePhoto}
-                    className="w-10 h-10 mt-20 cursor-pointer rounded-full"
+                    src="/reset-password.png"
+                    className="w-full h-full rounded-full"
                     alt=""
                   />
-                ) : (
-                  <button
-                    onClick={handleClick}
-                    className="w-[50%] h-8 bg-transparent border border-white rounded-full text-white"
-                  >
-                    CHANGE
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-          {/* ////////////////profile menu///////////////// */}
-          <div className="w-[80%] h-[60%]  font-popin space-y-3 text-sm mt-5  font-semibold">
-            <div
-              onClick={() => toggle("personalInfo")}
-              className={
-                active === "info"
-                  ? "bg-gradient-to-r from-[#b2f17f] rounded-r-full to-[#e9f5ff]  text-amber-950  w-full flex h-[20%] gap-4  items-center  px-4 py-3 cursor-pointer "
-                  : "hover:bg-gray-200  rounded-r-full cursor-pointer w-full flex h-[20%] gap-4  items-center  px-4 py-3"
-              }
-            >
-              <img src="/profileDash.png" className="w-6 h-6" alt="" />
-              <p>Profile info</p>
-            </div>
-            <div
-              onClick={() => toggle("editInfo")}
-              className={
-                active === "edit Data"
-                  ? "bg-gradient-to-r from-[#b2f17f] rounded-r-full to-[#e9f5ff]  text-amber-950  w-full flex h-[20%] gap-4  items-center  px-4 py-3 cursor-pointer "
-                  : "rounded-r-full hover:bg-gray-200 cursor-pointer w-full flex h-[20%] gap-4  items-center  px-4 py-3"
-              }
-            >
-              <img src="/pen.png" className="w-6 h-6" alt="" />
-              <p>Edit info</p>
-            </div>
-            <div
-              onClick={() => (toggle("changePassword"),setOpenPopUp(true))}
-              
-              className={
-                active === "changePassword"
-                  ? "bg-gradient-to-r from-[#b2f17f] rounded-r-full to-[#e9f5ff]  text-amber-950  w-full flex h-[20%] gap-4  items-center  px-4 py-3 cursor-pointer"
-                  : "rounded-r-full hover:bg-gray-200 cursor-pointer w-full flex h-[20%] gap-4  items-center  px-4 py-3"
-              }
-            >
-              <img src="/reset.png" className="w-6 h-6" alt="" />
-              <p >Reset Password</p>
-            </div>
-          </div>
-        </div>
-        <div className={orginalData.currentPlan?.name?"sm:w-[70%] md:pt-20 pt-10  md:px-16 px-8 w-[100%] md:w-[80%]  md:h-[1900px] h-[2900px]  rounded-lg drop-shadow-2xl bg-white"
-          :"sm:w-[70%] md:pt-20 pt-10  md:px-16 px-8 w-[100%] md:w-[80%]  md:h-[1900px] h-[2350px]  rounded-lg drop-shadow-2xl bg-white"
-        }>
-          <div className="w-[100%] h-[90%] ">
-            <div>
-              {/* title */}
-
-              <div className="w-full h-[72px]   ">
-                <p className="text-2xl text-[#333333] font-playfair  font-bold">
-                  {editUser ? "Edit My Profile" : "My Profile"}
+                </div>
+                <p className=" font-playfair font-semibold sm:text-3xl text-sm ">
+                  Forgot your Password ?
                 </p>
-              </div>
-              {/* personal info */}
-              <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
-                <p className="font-playfair text-amber-950 font-semibold">
-                  Personal info
-                </p>
-              </div>
-              <div className="personal info grid md:grid-cols-3 grid-cols-1 h-auto gap-1  pb-20 border-b-4 border-black ">
-                <div className="w-full h-[120px] font-semibold  relative  md:col-span-2  ">
-                  <div className="border h-10 rounded-md mt-7 ">
-                    <input
-                      type="text"
-                      id="fname"
-                      name="firstName"
-                      disabled={!editUser}
-                      onChange={editUser ? handleInputData : undefined}
-                      value={
-                        editUser
-                          ? editedData.PersonalInfo?.firstName
-                          : orginalData.PersonalInfo.firstName
-                      }
-                      className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
-                    />
-                    {editUser && (
-                      <img
-                        src="/undo.png"
-                        className="w-4 h-4 cursor-pointer absolute right-3 top-10 "
-                        onClick={() =>
-                          setEditedData((el) => ({
-                            ...el,
-                            PersonalInfo: {
-                              ...el.PersonalInfo,
-                              firstName: orginalData.PersonalInfo.firstName,
-                            },
-                          }))
-                        }
-                        alt=""
-                      />
-                    )}
-                  </div>
-                  <label
-                    className="block absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                    htmlFor="fname"
-                  >
-                    First name:
-                  </label>
-                  <p className="text-sm mt-2 ml-2 text-dark_red">
-                    {formWarning.firstName}
-                  </p>
-                </div>
 
-                <div className="w-full relative h-[120px] ">
-                  <div className="border h-10 rounded-md mt-7 font-semibold ">
-                    <input
-                      type="text"
-                      id="sname"
-                      disabled={!editUser}
-                      value={
-                        editUser
-                          ? editedData.PersonalInfo?.secondName
-                          : orginalData.PersonalInfo.secondName
-                      }
-                      name="secondName"
-                      onChange={editUser ? handleInputData : undefined}
-                      className="profileInputs px-4  font-popin  rounded-md w-[100%] active:border-2 h-full "
-                    />
-                    {editUser && (
-                      <img
-                        src="/undo.png"
-                        className="w-4 h-4 cursor-pointer absolute right-3 top-10 "
-                        onClick={() =>
-                          setEditedData((el) => ({
-                            ...el,
-                            PersonalInfo: {
-                              ...el.PersonalInfo,
-                              secondName: orginalData.PersonalInfo.secondName,
-                            },
-                          }))
-                        }
-                        alt=""
-                      />
-                    )}
-                  </div>
-                  <label
-                    className="block font-semibold  absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                    htmlFor="sname"
-                  >
-                    Last name:
-                  </label>
-                  <p className="text-sm mt-2 ml-2 font-semibold text-dark_red">
-                    {formWarning.secondName}
-                  </p>
-                </div>
-                <div className="w-full h-[120px] relative  font-semibold">
-                  <div>
-                    <div className="border h-10 rounded-md mt-7 w-[100%]">
-                      <input
-                        type="text"
-                        id="age"
-                        disabled={editUser}
-                        value={orginalData.PersonalInfo.age}
-                        className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
-                      />
-                    </div>
-                    <label
-                      className="block absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                      htmlFor="age"
-                    >
-                      Age:
-                    </label>
-                  </div>
-                </div>
-                <div className="w-full h-[120px]  relative">
-                  <div>
-                    <div className="border h-10 px-2 rounded-md mt-7 w-[100%] font-semibold">
-                      {editUser ? (
-                        <select
-                          className="w-full h-full  outline-none"
-                          name="gender"
-                          onChange={handleInputData}
-                          disabled={!editUser}
-                          value={editedData.PersonalInfo.gender}
-                          id="gender"
-                        >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
-                      ) : (
-                        <input
-                          type="text"
-                          
-                          name="firstName"
-                         
-                          value={orginalData.PersonalInfo.gender}
-                          className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
-                        />
-                      )}
-                      {editUser && (
-                        <div className="w-4 h-4 cursor-pointer absolute right-8 top-10 ">
-                          <img
-                            src="/undo.png"
-                            className=""
-                            onClick={() =>
-                              setEditedData((el) => ({
-                                ...el,
-                                PersonalInfo: {
-                                  ...el.PersonalInfo,
-                                  gender: orginalData.PersonalInfo.gender,
-                                },
-                              }))
-                            }
-                            alt=""
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <label
-                      className="block font-semibold absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                      htmlFor="gender"
-                    >
-                      Gender:
-                    </label>
-                  </div>
-                </div>
-                <div className="w-full h-[120px]  relative">
-                  <div>
-                    <div className="border h-10 px-2 rounded-md mt-7 font-semibold w-[100%]">
-                      {editUser ? (
-                        <select
-                          className="w-full h-full outline-none"
-                          name="district"
-                          id="district"
-                          onChange={handleInputData}
-                          value={editedData.PersonalInfo.state}
-                          
-                        >
-                          <option value="">select state</option>
-                          {districtsOfKerala?.map((el, index) => (
-                            <option className="text-sm " key={index} value={el}>
-                              {el}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type="text"
-                          id=""
-                          name=""
-                          disabled={!editUser}
-                          value={orginalData.PersonalInfo.state}
-                          className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
-                        />
-                      )}
-                    </div>
-                    <label
-                      className="font-semibold block absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                      htmlFor="district"
-                    >
-                      District:
-                    </label>
-                    {editUser && (
-                      <img
-                        src="/undo.png"
-                        className="w-4 h-4 cursor-pointer absolute right-8 top-10 "
-                        onClick={() =>
-                          setEditedData((el) => ({
-                            ...el,
-                            PersonalInfo: {
-                              ...el.PersonalInfo,
-                              state: orginalData.PersonalInfo.state,
-                            },
-                          }))
-                        }
-                        alt=""
-                      />
-                    )}
-                  </div>
-                </div>
-
-                {/* //////////////////date of birth/////////////// */}
-                <div className="w-full h-[120px] relative ">
-                  {editUser ? (
-                    <div>
-                      <div className="border font-semibold   h-10 rounded-md mt-7 w-[100%]">
-                        <input
-                          type="date"
-                          id="date"
-                          name="dateOfBirth"
-                          onChange={editUser ? handleInputData : undefined}
-                          value={dateToDateInputGenerator(
-                            "intoInput",
-                            new Date(
-                              editedData.PersonalInfo.dateOfBirth
-                            ).toDateString()
-                          )}
-                          className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
-                        />
-                        {editUser && (
-                          <img
-                            src="/undo.png"
-                            className="w-4 h-4 cursor-pointer absolute right-10 top-10 "
-                            onClick={() =>
-                              setEditedData((el) => ({
-                                ...el,
-                                PersonalInfo: {
-                                  ...el.PersonalInfo,
-                                  dateOfBirth: new Date(
-                                    orginalData.PersonalInfo.dateOfBirth
-                                  ).toDateString(),
-                                },
-                              }))
-                            }
-                            alt=""
-                          />
-                        )}
-                      </div>
-                      <label
-                        className="block absolute font-semibold -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                        htmlFor="date of birth "
-                      >
-                        Date of birth{" "}
-                        <span className="text-gray-700"> (MM-DD-YYYY)</span> :
-                      </label>
-                      <p className="text-sm mt-2 ml-2 font-semibold text-dark_red">
-                        {formWarning.dob}
+                {/* /////////////////////////passowrd part////////////////// */}
+                {!switchTopassword ? (
+                  <>
+                    <div className="w-full h-10   mt-3 flex justify-center items-center">
+                      <p className="font-acme sm:text-base text-xs  text-theme-blue">
+                        ENTER OTP
                       </p>
                     </div>
-                  ) : (
-                    <div>
-                      <div className="border font-semibold  h-10 rounded-md mt-7 w-[100%]">
+                    <div className="w-full h-16  mt-2 flex justify-center items-center">
+                      <div className="sm:w-36 w-20 sm:h-14 h-10 border ">
                         <input
-                          type="text"
-                         
-                          disabled={!editUser}
-                          name="dateOfBirth"
-                          
-                          value={dateToDateInputGenerator(
-                            "",
-                            orginalData.PersonalInfo.dateOfBirth
-                          )}
-                          className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                          onChange={(t) => setOtp(parseInt(t.target.value))}
+                          min={1}
+                          max={1000000}
+                          type="number"
+                          className="h-full font-bold w-full px-2 outline-none text-center text-dark-blue "
                         />
                       </div>
-                      <label
-                        className="block absolute font-semibold -top-1 cursor-pointer peer-placeholder-shown:uppercase"
-                        htmlFor="age"
-                      >
-                        Date of birth:
-                      </label>
                     </div>
+                    <div className="sm:w-36 w-28 sm:h-6 h-5 font-semibold text-center text-dark_red">
+                      {warnning && warnning}
+                    </div>
+                    <div className="sm:w-36  font-bold w-28 mt-1 sm:h-10 h-8  inline-flex justify-between">
+                      {openPopUp === true && (
+                        <CountdownProfile
+                          expiryTimeStamp={expiryTimeStamp}
+                          from="userProfile"
+                        />
+                      )}
+                    </div>
+                    <div className="sm:w-36 w-28 mt-2 sm:h-10 h-8 flex justify-center items-center ">
+                      <button
+                        onClick={handleOTPSent}
+                        className="cursor-pointer relative group  overflow-hidden border-2 sm:px-8 px-4 sm:py-1 border-theme-blue"
+                      >
+                        <span className="font-bold text-white  relative z-10 group-hover:text-theme-blue duration-500">
+                          SUBMIT
+                        </span>
+                        <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:-translate-x-full h-full"></span>
+                        <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-x-full h-full"></span>
+
+                        <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 delay-300 group-hover:-translate-y-full h-full"></span>
+                        <span className="absolute delay-300 top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-y-full h-full"></span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  ///////////////////////// passsword Typing part/////////////////////////////
+                  <div className="w-[95%] mt-5 h-[55%]   flex    items-center flex-col">
+                    <div className="w-[60%]   flex  flex-col justify-between h-[45%] ">
+                      <label
+                        htmlFor=""
+                        className="text-slate-700 font-bold sm:text-sm text-sm "
+                      >
+                        PASSWORD
+                      </label>
+                      <div className="mb-2 h-8 mt-1 w- border rounded-md">
+                        <input
+                          onChange={inputPassword}
+                          name="password"
+                          className="w-full font-semibold h-full border rounded-md text-black px-2"
+                          type="text"
+                        />
+                      </div>
+                      <div className="w-full h-6  text-dark_red sm:text-base text-xs relative group">
+                        {PasswordWarnning.password}
+                        {PasswordWarnning.password ===
+                          "password is not strong" && (
+                          <span className=" absolute px-2 py-2   text-white rounded-full bg-[rgba(92,92,254)] bottom-8 hidden group-hover:flex justify-center text-sm items-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                            insert upper,lower,number and charecters more than 8
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-[60%] mt-2  flex  flex-col justify-between h-[45%] ">
+                      <label
+                        className="text-slate-700 font-bold sm:text-sm text-sm"
+                        htmlFor=""
+                      >
+                        CONFIRM PASSWORD
+                      </label>
+                      <div className="mb-2 h-8 mt-1 w- border rounded-md">
+                        <input
+                          name="confirmPassword"
+                          onChange={inputPassword}
+                          className="w-full h-full px-2 border rounded-md text-gray-800 "
+                          type="password"
+                        />
+                      </div>
+                      <div className="w-full h-6 text-dark_red sm:text-base text-xs ">
+                        {PasswordWarnning.confirmPassword}
+                      </div>
+                    </div>
+                    <div className="sm:w-[100%] w-28  mt-2 sm:h-10 h-8 flex justify-center items-center ">
+                      <button
+                        onClick={submitPassword}
+                        className="cursor-pointer relative group  overflow-hidden border-2 sm:px-8 px-4 sm:py-1 border-theme-blue"
+                      >
+                        <span className="font-bold text-white  relative z-10 group-hover:text-theme-blue duration-500">
+                          RESET
+                        </span>
+                        <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:-translate-x-full h-full"></span>
+                        <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-x-full h-full"></span>
+
+                        <span className="absolute top-0 left-0 w-full bg-theme-blue duration-500 delay-300 group-hover:-translate-y-full h-full"></span>
+                        <span className="absolute delay-300 top-0 left-0 w-full bg-theme-blue duration-500 group-hover:translate-y-full h-full"></span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          {/* ////////////////menuBar///////////////// */}
+          <div className="md:w-[20%] w-[70%]  md:h-[400px] h-[500px]  pt-6 flex flex-col items-center   bg-white border-2 rounded-lg">
+            <div className="w-[80%] h-[40%]   rounded-xl relative">
+              {/* ////////////////profile picture///////////////// */}
+              <img
+                className="w-full h-full rounded-xl"
+                src={
+                  editUser
+                    ? tempPhoto ||
+                      orginalData.PersonalInfo.image ||
+                      "photoUpload.png"
+                    : orginalData.PersonalInfo.image || "photoUpload.png"
+                }
+              />
+              <input
+                type="file"
+                ref={profileRef}
+                name="photo"
+                onChange={handleFileInput}
+                className="hidden"
+                accept="image/*"
+              />
+              {editUser && (
+                <div className="w-full h-full flex justify-center items-center absolute bg-[rgba(0,0,0,.4)] rounded-lg top-0">
+                  {tempPhoto ? (
+                    <img
+                      src="/forbidden.png"
+                      onClick={handleRemovePhoto}
+                      className="w-10 h-10 mt-20 cursor-pointer rounded-full"
+                      alt=""
+                    />
+                  ) : (
+                    <button
+                      onClick={handleClick}
+                      className="w-[50%] h-8 bg-transparent border border-white rounded-full text-white"
+                    >
+                      CHANGE
+                    </button>
                   )}
                 </div>
+              )}
+            </div>
+            {/* ////////////////profile menu///////////////// */}
+            <div className="w-[80%] h-[60%]  font-popin space-y-3 text-sm mt-5  font-semibold">
+              <div
+                onClick={() => toggle("personalInfo")}
+                className={
+                  active === "info"
+                    ? "bg-gradient-to-r from-[#b2f17f] rounded-r-full to-[#e9f5ff]  text-amber-950  w-full flex h-[20%] gap-4  items-center  px-4 py-3 cursor-pointer "
+                    : "hover:bg-gray-200  rounded-r-full cursor-pointer w-full flex h-[20%] gap-4  items-center  px-4 py-3"
+                }
+              >
+                <img src="/profileDash.png" className="w-6 h-6" alt="" />
+                <p>Profile info</p>
+              </div>
+              <div
+                onClick={() => toggle("editInfo")}
+                className={
+                  active === "edit Data"
+                    ? "bg-gradient-to-r from-[#b2f17f] rounded-r-full to-[#e9f5ff]  text-amber-950  w-full flex h-[20%] gap-4  items-center  px-4 py-3 cursor-pointer "
+                    : "rounded-r-full hover:bg-gray-200 cursor-pointer w-full flex h-[20%] gap-4  items-center  px-4 py-3"
+                }
+              >
+                <img src="/pen.png" className="w-6 h-6" alt="" />
+                <p>Edit info</p>
+              </div>
+              <div
+                onClick={() => (toggle("changePassword"), setOpenPopUp(true))}
+                className={
+                  active === "changePassword"
+                    ? "bg-gradient-to-r from-[#b2f17f] rounded-r-full to-[#e9f5ff]  text-amber-950  w-full flex h-[20%] gap-4  items-center  px-4 py-3 cursor-pointer"
+                    : "rounded-r-full hover:bg-gray-200 cursor-pointer w-full flex h-[20%] gap-4  items-center  px-4 py-3"
+                }
+              >
+                <img src="/reset.png" className="w-6 h-6" alt="" />
+                <p>Reset Password</p>
+              </div>
+            </div>
+          </div>
+          <div
+            className={
+              orginalData.currentPlan?.name
+                ? "sm:w-[70%] md:pt-20 pt-10  md:px-16 px-8 w-[100%] md:w-[80%]  md:h-[1900px] h-[2900px]  rounded-lg drop-shadow-2xl bg-white"
+                : "sm:w-[70%] md:pt-20 pt-10  md:px-16 px-8 w-[100%] md:w-[80%]  md:h-[1900px] h-[2350px]  rounded-lg drop-shadow-2xl bg-white"
+            }
+          >
+            <div className="w-[100%] h-[90%] ">
+              <div>
+                {/* title */}
 
-                {/* //////////////////email/////////////// */}
-
-                <div className="w-full h-[120px] relative  md:col-span-2 ">
-                  <div>
-                    <div className="border h-10 rounded-md mt-7 w-[100%] relative">
+                <div className="w-full h-[72px]   ">
+                  <p className="text-2xl text-[#333333] font-playfair  font-bold">
+                    {editUser ? "Edit My Profile" : "My Profile"}
+                  </p>
+                </div>
+                {/* personal info */}
+                <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
+                  <p className="font-playfair text-amber-950 font-semibold">
+                    Personal info
+                  </p>
+                </div>
+                <div className="personal info grid md:grid-cols-3 grid-cols-1 h-auto gap-1  pb-20 border-b-4 border-black ">
+                  <div className="w-full h-[120px] font-semibold  relative  md:col-span-2  ">
+                    <div className="border h-10 rounded-md mt-7 ">
                       <input
+                        type="text"
+                        id="fname"
+                        name="firstName"
                         disabled={!editUser}
-                        type="email"
-                        id="email"
-                        name="email"
                         onChange={editUser ? handleInputData : undefined}
-                        value={editUser ? editedData.email : orginalData.Email}
-                        className="profileInputs font-semibold px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full 
-                        outline-none 
-                        "
+                        value={
+                          editUser
+                            ? editedData.PersonalInfo?.firstName
+                            : orginalData.PersonalInfo.firstName
+                        }
+                        className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
                       />
                       {editUser && (
                         <img
                           src="/undo.png"
-                          className="w-4 h-4 cursor-pointer absolute right-3 top-3"
+                          className="w-4 h-4 cursor-pointer absolute right-3 top-10 "
                           onClick={() =>
                             setEditedData((el) => ({
                               ...el,
-                              email: orginalData.Email,
+                              PersonalInfo: {
+                                ...el.PersonalInfo,
+                                firstName: orginalData.PersonalInfo.firstName,
+                              },
                             }))
                           }
                           alt=""
@@ -1207,65 +916,350 @@ const [loading,setLoading]=useState<boolean>(false)
                       )}
                     </div>
                     <label
-                      className="block font-semibold absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase "
-                      htmlFor="email"
+                      className="block absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                      htmlFor="fname"
                     >
-                      Email:
+                      First name:
                     </label>
-                    <div className="w-full flex mt-2 px-2 justify-between items-center">
-                      <p className=" text-sm font-s   font-semibold text-dark_red">
-                        {formWarning.email}
-                      </p>
+                    <p className="text-sm mt-2 ml-2 text-dark_red">
+                      {formWarning.firstName}
+                    </p>
+                  </div>
+
+                  <div className="w-full relative h-[120px] ">
+                    <div className="border h-10 rounded-md mt-7 font-semibold ">
+                      <input
+                        type="text"
+                        id="sname"
+                        disabled={!editUser}
+                        value={
+                          editUser
+                            ? editedData.PersonalInfo?.secondName
+                            : orginalData.PersonalInfo.secondName
+                        }
+                        name="secondName"
+                        onChange={editUser ? handleInputData : undefined}
+                        className="profileInputs px-4  font-popin  rounded-md w-[100%] active:border-2 h-full "
+                      />
+                      {editUser && (
+                        <img
+                          src="/undo.png"
+                          className="w-4 h-4 cursor-pointer absolute right-3 top-10 "
+                          onClick={() =>
+                            setEditedData((el) => ({
+                              ...el,
+                              PersonalInfo: {
+                                ...el.PersonalInfo,
+                                secondName: orginalData.PersonalInfo.secondName,
+                              },
+                            }))
+                          }
+                          alt=""
+                        />
+                      )}
+                    </div>
+                    <label
+                      className="block font-semibold  absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                      htmlFor="sname"
+                    >
+                      Last name:
+                    </label>
+                    <p className="text-sm mt-2 ml-2 font-semibold text-dark_red">
+                      {formWarning.secondName}
+                    </p>
+                  </div>
+                  <div className="w-full h-[120px] relative  font-semibold">
+                    <div>
+                      <div className="border h-10 rounded-md mt-7 w-[100%]">
+                        <input
+                          type="text"
+                          id="age"
+                          disabled={editUser}
+                          value={orginalData.PersonalInfo.age}
+                          className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                        />
+                      </div>
+                      <label
+                        className="block absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                        htmlFor="age"
+                      >
+                        Age:
+                      </label>
+                    </div>
+                  </div>
+                  <div className="w-full h-[120px]  relative">
+                    <div>
+                      <div className="border h-10 px-2 rounded-md mt-7 w-[100%] font-semibold">
+                        {editUser ? (
+                          <select
+                            className="w-full h-full  outline-none"
+                            name="gender"
+                            onChange={handleInputData}
+                            disabled={!editUser}
+                            value={editedData.PersonalInfo.gender}
+                            id="gender"
+                          >
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            name="firstName"
+                            value={orginalData.PersonalInfo.gender}
+                            className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                          />
+                        )}
+                        {editUser && (
+                          <div className="w-4 h-4 cursor-pointer absolute right-8 top-10 ">
+                            <img
+                              src="/undo.png"
+                              className=""
+                              onClick={() =>
+                                setEditedData((el) => ({
+                                  ...el,
+                                  PersonalInfo: {
+                                    ...el.PersonalInfo,
+                                    gender: orginalData.PersonalInfo.gender,
+                                  },
+                                }))
+                              }
+                              alt=""
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <label
+                        className="block font-semibold absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                        htmlFor="gender"
+                      >
+                        Gender:
+                      </label>
+                    </div>
+                  </div>
+                  <div className="w-full h-[120px]  relative">
+                    <div>
+                      <div className="border h-10 px-2 rounded-md mt-7 font-semibold w-[100%]">
+                        {editUser ? (
+                          <select
+                            className="w-full h-full outline-none"
+                            name="district"
+                            id="district"
+                            onChange={handleInputData}
+                            value={editedData.PersonalInfo.state}
+                          >
+                            <option value="">select state</option>
+                            {districtsOfKerala?.map((el, index) => (
+                              <option
+                                className="text-sm "
+                                key={index}
+                                value={el}
+                              >
+                                {el}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            id=""
+                            name=""
+                            disabled={!editUser}
+                            value={orginalData.PersonalInfo.state}
+                            className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                          />
+                        )}
+                      </div>
+                      <label
+                        className="font-semibold block absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                        htmlFor="district"
+                      >
+                        District:
+                      </label>
+                      {editUser && (
+                        <img
+                          src="/undo.png"
+                          className="w-4 h-4 cursor-pointer absolute right-8 top-10 "
+                          onClick={() =>
+                            setEditedData((el) => ({
+                              ...el,
+                              PersonalInfo: {
+                                ...el.PersonalInfo,
+                                state: orginalData.PersonalInfo.state,
+                              },
+                            }))
+                          }
+                          alt=""
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* //////////////////date of birth/////////////// */}
+                  <div className="w-full h-[120px] relative ">
+                    {editUser ? (
+                      <div>
+                        <div className="border font-semibold   h-10 rounded-md mt-7 w-[100%]">
+                          <input
+                            type="date"
+                            id="date"
+                            name="dateOfBirth"
+                            onChange={editUser ? handleInputData : undefined}
+                            value={dateToDateInputGenerator(
+                              "intoInput",
+                              new Date(
+                                editedData.PersonalInfo.dateOfBirth
+                              ).toDateString()
+                            )}
+                            className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                          />
+                          {editUser && (
+                            <img
+                              src="/undo.png"
+                              className="w-4 h-4 cursor-pointer absolute right-10 top-10 "
+                              onClick={() =>
+                                setEditedData((el) => ({
+                                  ...el,
+                                  PersonalInfo: {
+                                    ...el.PersonalInfo,
+                                    dateOfBirth: new Date(
+                                      orginalData.PersonalInfo.dateOfBirth
+                                    ).toDateString(),
+                                  },
+                                }))
+                              }
+                              alt=""
+                            />
+                          )}
+                        </div>
+                        <label
+                          className="block absolute font-semibold -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                          htmlFor="date of birth "
+                        >
+                          Date of birth{" "}
+                          <span className="text-gray-700"> (MM-DD-YYYY)</span> :
+                        </label>
+                        <p className="text-sm mt-2 ml-2 font-semibold text-dark_red">
+                          {formWarning.dob}
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="border font-semibold  h-10 rounded-md mt-7 w-[100%]">
+                          <input
+                            type="text"
+                            disabled={!editUser}
+                            name="dateOfBirth"
+                            value={dateToDateInputGenerator(
+                              "",
+                              orginalData.PersonalInfo.dateOfBirth
+                            )}
+                            className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                          />
+                        </div>
+                        <label
+                          className="block absolute font-semibold -top-1 cursor-pointer peer-placeholder-shown:uppercase"
+                          htmlFor="age"
+                        >
+                          Date of birth:
+                        </label>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* //////////////////email/////////////// */}
+
+                  <div className="w-full h-[120px] relative  md:col-span-2 ">
+                    <div>
+                      <div className="border h-10 rounded-md mt-7 w-[100%] relative">
+                        <input
+                          disabled={!editUser}
+                          type="email"
+                          id="email"
+                          name="email"
+                          onChange={editUser ? handleInputData : undefined}
+                          value={
+                            editUser ? editedData.email : orginalData.Email
+                          }
+                          className="profileInputs font-semibold px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full 
+                        outline-none 
+                        "
+                        />
+                        {editUser && (
+                          <img
+                            src="/undo.png"
+                            className="w-4 h-4 cursor-pointer absolute right-3 top-3"
+                            onClick={() =>
+                              setEditedData((el) => ({
+                                ...el,
+                                email: orginalData.Email,
+                              }))
+                            }
+                            alt=""
+                          />
+                        )}
+                      </div>
+                      <label
+                        className="block font-semibold absolute -top-1 cursor-pointer peer-placeholder-shown:uppercase "
+                        htmlFor="email"
+                      >
+                        Email:
+                      </label>
+                      <div className="w-full flex mt-2 px-2 justify-between items-center">
+                        <p className=" text-sm font-s   font-semibold text-dark_red">
+                          {formWarning.email}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Partner info */}
-              <div className="pb-6 border-b-4 border-black">
-                <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
-                  <p className="font-playfair  text-amber-950 font-semibold">
-                    Partner gender
-                  </p>
-                </div>
-                <div className="w-full h-[120px]  ">
-                  <div>
-                    <label
-                      className="block  font-semibold  -top-1 cursor-pointer peer-placeholder-shown:uppercase "
-                      htmlFor="partnerGender"
-                    >
-                      Gender:
-                    </label>
+                {/* Partner info */}
+                <div className="pb-6 border-b-4 border-black">
+                  <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
+                    <p className="font-playfair  text-amber-950 font-semibold">
+                      Partner gender
+                    </p>
+                  </div>
+                  <div className="w-full h-[120px]  ">
+                    <div>
+                      <label
+                        className="block  font-semibold  -top-1 cursor-pointer peer-placeholder-shown:uppercase "
+                        htmlFor="partnerGender"
+                      >
+                        Gender:
+                      </label>
 
-                   
                       {editUser ? (
-                         <div className="border h-10 rounded-md mt-5 w-[100%] relative">
-                        <select
-                          className="w-full h-full  outline-none"
-                          name="partnerGender"
-                          onChange={handleInputData}
-                          disabled={!editUser}
-                          value={editedData.partnerData.gender}
-                          
-                          id="partnerGender"
-                        >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
-                        {editUser && (
+                        <div className="border h-10 rounded-md mt-5 w-[100%] relative">
+                          <select
+                            className="w-full h-full  outline-none"
+                            name="partnerGender"
+                            onChange={handleInputData}
+                            disabled={!editUser}
+                            value={editedData.partnerData.gender}
+                            id="partnerGender"
+                          >
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                          {editUser && (
                             <img
                               src="/undo.png"
                               className="w-4 h-4 cursor-pointer top-3 right-6 absolute "
                               onClick={() =>
                                 setEditedData((el) => ({
                                   ...el,
-                                  partnerData:{...el.partnerData,gender:orginalData.PartnerData.gender},
+                                  partnerData: {
+                                    ...el.partnerData,
+                                    gender: orginalData.PartnerData.gender,
+                                  },
                                 }))
                               }
                               alt=""
                             />
                           )}
-                         </div>
+                        </div>
                       ) : (
                         <div className="border  h-10 rounded-md mt-5 w-[100%] relative">
                           <input
@@ -1283,155 +1277,154 @@ const [loading,setLoading]=useState<boolean>(false)
                         outline-none 
                         "
                           />
-                          
                         </div>
                       )}
-                   
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* PLAN INFO */}
-              <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
-                <p className="font-playfair text-amber-950 font-semibold">
-                  Plan info
-                </p>
-              </div>
-              {!orginalData.currentPlan?.name ? (
-                <div className="w-full h-[500px] relative border flex justify-center  flex-col items-center">
-                  <div className="w-full h-[9%] absolute  bottom-0 right-0 left-0 bg-black flex justify-center items-center">
-                    <p className=" text-white font-bold font-playfair">
-                      NO PLAN AVAILABLE
-                    </p>
-                  </div>
-                  <FontAwesomeIcon
-                  onClick={()=>navigate('/PlanDetails')}
-                    icon={faCreditCard}
-                    beatFade
-                    size="6x"
-                    style={{ color: "#d10e00", cursor: "pointer" }}
-                  />
-                  <p className="text-sm text-amber-950 font-extrabold font-playfair mt-4">
-                    BUY A PLAN
+                {/* PLAN INFO */}
+                <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
+                  <p className="font-playfair text-amber-950 font-semibold">
+                    Plan info
                   </p>
                 </div>
-              ) : (
-                <div className="personal info    grid  sm:grid-cols-1 md:grid-cols-3 h-auto gap-2  pb-20 border-b-4 border-black ">
-                  <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
-                    <p className="font-semibold  mb-2  text-xs">NAME:</p>
-                    <p className="md:text-xl font-popin text-amber-950 font-bold">
-                      {orginalData.currentPlan?.name}
-                    </p>
-                  </div>
-                  <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
-                    <p className="font-semibold  mb-2  text-xs">STATUS:</p>
-                    <p className="md:text-xl font-popin text-amber-950 font-bold">
-                      {orginalData?.subscriptionStatus}
-                    </p>
-                  </div>
-                  <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
-                    <p className="font-semibold  mb-2  text-xs">AMOUNT:</p>
-                    <p className="md:text-xl font-popin text-amber-950 font-bold">
-                      {orginalData?.currentPlan?.amount}
-                    </p>
-                  </div>
-
-                  <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
-                    <p className="font-semibold  mb-2  text-xs">CONNECT:</p>
-                    <p className="md:text-xl font-popin text-amber-950 font-bold">
-                      {orginalData?.currentPlan?.connect}
-                    </p>
-                  </div>
-                  <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
-                    <p className="font-semibold  mb-2  text-xs">
-                      AVAILABLE CONNECT:
-                    </p>
-                    <p className="md:text-xl font-popin text-amber-950 font-bold">
-                      {orginalData.currentPlan?.avialbleConnect}
-                    </p>
-                  </div>
-                  <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
-                    <p className="font-semibold  mb-2  text-xs">
-                      AVAILABLE CONNECT:
-                    </p>
-                    <p className="md:text-xl font-popin text-amber-950 font-bold">
-                      {dateToDateInputGenerator(
-                        "",
-                        new Date(orginalData.currentPlan?.Expiry).toDateString()
-                      )}
-                    </p>
-                  </div>
-                  <div className="w-full flex md:h-[150px] sm:[200px]  flex-col h-[200px] rounded-2xl   gap-4 border md:col-span-3 col-span-1">
-                    <div className="w-full h-[10%] font-semibold pt-2 pl-6">
-                      Feature
+                {!orginalData.currentPlan?.name ? (
+                  <div className="w-full h-[500px] relative border flex justify-center  flex-col items-center">
+                    <div className="w-full h-[9%] absolute  bottom-0 right-0 left-0 bg-black flex justify-center items-center">
+                      <p className=" text-white font-bold font-playfair">
+                        NO PLAN AVAILABLE
+                      </p>
                     </div>
-                    <div className="w-full h-[90%] flex p-4 flex-wrap ">
-                      {orginalData.currentPlan?.features.map((el, index) => {
+                    <FontAwesomeIcon
+                      onClick={() => navigate("/PlanDetails")}
+                      icon={faCreditCard}
+                      beatFade
+                      size="6x"
+                      style={{ color: "#d10e00", cursor: "pointer" }}
+                    />
+                    <p className="text-sm text-amber-950 font-extrabold font-playfair mt-4">
+                      BUY A PLAN
+                    </p>
+                  </div>
+                ) : (
+                  <div className="personal info    grid  sm:grid-cols-1 md:grid-cols-3 h-auto gap-2  pb-20 border-b-4 border-black ">
+                    <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
+                      <p className="font-semibold  mb-2  text-xs">NAME:</p>
+                      <p className="md:text-xl font-popin text-amber-950 font-bold">
+                        {orginalData.currentPlan?.name}
+                      </p>
+                    </div>
+                    <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
+                      <p className="font-semibold  mb-2  text-xs">STATUS:</p>
+                      <p className="md:text-xl font-popin text-amber-950 font-bold">
+                        {orginalData?.subscriptionStatus}
+                      </p>
+                    </div>
+                    <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
+                      <p className="font-semibold  mb-2  text-xs">AMOUNT:</p>
+                      <p className="md:text-xl font-popin text-amber-950 font-bold">
+                        {orginalData?.currentPlan?.amount}
+                      </p>
+                    </div>
+
+                    <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
+                      <p className="font-semibold  mb-2  text-xs">CONNECT:</p>
+                      <p className="md:text-xl font-popin text-amber-950 font-bold">
+                        {orginalData?.currentPlan?.connect}
+                      </p>
+                    </div>
+                    <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
+                      <p className="font-semibold  mb-2  text-xs">
+                        AVAILABLE CONNECT:
+                      </p>
+                      <p className="md:text-xl font-popin text-amber-950 font-bold">
+                        {orginalData.currentPlan?.avialbleConnect}
+                      </p>
+                    </div>
+                    <div className="w-full h-[120px] flex justify-center flex-col items-center border rounded-xl">
+                      <p className="font-semibold  mb-2  text-xs">
+                        AVAILABLE CONNECT:
+                      </p>
+                      <p className="md:text-xl font-popin text-amber-950 font-bold">
+                        {dateToDateInputGenerator(
+                          "",
+                          new Date(
+                            orginalData.currentPlan?.Expiry
+                          ).toDateString()
+                        )}
+                      </p>
+                    </div>
+                    <div className="w-full flex md:h-[150px] sm:[200px]  flex-col h-[200px] rounded-2xl   gap-4 border md:col-span-3 col-span-1">
+                      <div className="w-full h-[10%] font-semibold pt-2 pl-6">
+                        Feature
+                      </div>
+                      <div className="w-full h-[90%] flex p-4 flex-wrap ">
+                        {orginalData.currentPlan?.features.map((el, index) => {
+                          return (
+                            <>
+                              <div
+                                key={index}
+                                className=" text-white ml-2 md:text-base text-xs flex justify-center items-center bg-black rounded-full h-10 "
+                              >
+                                {" "}
+                                <span className=" px-5 py-10 ">{el}</span>
+                              </div>
+                            </>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* //////////////interest///////////////// */}
+                <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
+                  <p className="font-playfair  font-semibold ">Interest</p>
+                </div>
+
+                <div className="w-full flex flex-col mt-5    md:h-[190px]  mb-4  max-h-[190px] bg-gray-200 rounded-md">
+                  <div className="w-full px-2 pt-4 gap-4  flex justify-evenly overflow-y-auto   pb-11 content-around h-[85%] flex-wrap ">
+                    {editUser &&
+                      interest?.map((el, index) => {
+                        return (
+                          <>
+                            {editedData.PersonalInfo?.interest?.includes(el) ? (
+                              <div
+                                onClick={() => handleInterest(el)}
+                                key={`edited-${index}`}
+                                className="min-h-10 md:w-[20%] w-[30%]  cursor-pointer   rounded-full text-white flex justify-center items-center bg-black  "
+                              >
+                                {el}
+                              </div>
+                            ) : (
+                              <div
+                                onClick={() => handleInterest(el)}
+                                key={`edited-2-${index}`}
+                                className="min-h-10 md:w-[20%] w-[30%] cursor-pointer  rounded-full text-black flex justify-center items-center font-semibold bg-white border  "
+                              >
+                                {el}
+                              </div>
+                            )}
+                          </>
+                        );
+                      })}
+                    {!editUser &&
+                      orginalData.PersonalInfo?.interest?.map((el, index) => {
                         return (
                           <>
                             <div
-                              key={index}
-                              className=" text-white ml-2 md:text-base text-xs flex justify-center items-center bg-black rounded-full h-10 "
+                              key={`view-${index}`}
+                              className="min-h-10 md:w-[20%] w-[30%]  hover:bg-stone-700 transition-colors duration-500 ease-in-out rounded-full text-white flex justify-center items-center bg-black  "
                             >
-                              {" "}
-                              <span className=" px-5 py-10 ">{el}</span>
+                              {el}
                             </div>
                           </>
                         );
                       })}
-                    </div>
                   </div>
-                </div>
-              )}
-
-              {/* //////////////interest///////////////// */}
-              <div className="w-full mt-5 h-[50px] border-b pb-10  mb-4">
-                <p className="font-playfair  font-semibold ">Interest</p>
-              </div>
-
-
-              <div className="w-full flex flex-col mt-5    md:h-[190px]  mb-4  max-h-[190px] bg-gray-200 rounded-md">
-                <div className="w-full px-2 pt-4 gap-4  flex justify-evenly overflow-y-auto   pb-11 content-around h-[85%] flex-wrap ">
-                  {editUser &&
-                    interest?.map((el, index) => {
-                      return (
-                        <>
-                          {editedData.PersonalInfo?.interest?.includes(el) ? (
-                            <div
-                              onClick={() => handleInterest(el)}
-                              key={`edited-${index}`}
-                              className="min-h-10 md:w-[20%] w-[30%]  cursor-pointer   rounded-full text-white flex justify-center items-center bg-black  "
-                            >
-                              {el}
-                            </div>
-                          ) : (
-                            <div
-                              onClick={() => handleInterest(el)}
-                              key={`edited-2-${index}`}
-                              className="min-h-10 md:w-[20%] w-[30%] cursor-pointer  rounded-full text-black flex justify-center items-center font-semibold bg-white border  "
-                            >
-                              {el}
-                            </div>
-                          )}
-                        </>
-                      );
-                    })}
-                  {!editUser &&
-                    orginalData.PersonalInfo?.interest?.map((el, index) => {
-                      return (
-                        <>
-                          <div
-                            key={`view-${index}`}
-                            className="min-h-10 md:w-[20%] w-[30%]  hover:bg-stone-700 transition-colors duration-500 ease-in-out rounded-full text-white flex justify-center items-center bg-black  "
-                          >
-                            {el}
-                          </div>
-                        </>
-                      );
-                    })}
-                </div>
-                <div className="w-full h-[15%]  px-5 font-semibold flex justify-between items-center ">
-                {editUser && (
+                  <div className="w-full h-[15%]  px-5 font-semibold flex justify-between items-center ">
+                    {editUser && (
                       <img
                         src="/undo.png"
                         className="w-4 h-4 cursor-pointer  right-3 top-10 "
@@ -1447,38 +1440,38 @@ const [loading,setLoading]=useState<boolean>(false)
                         alt=""
                       />
                     )}
-                  {editUser ? (
-                    <p className="">
-                      {editedData.PersonalInfo.interest?.length || 0}
-                      {"/"}5
-                    </p>
-                  ) : (
-                    <p className=" text-red-600">
-                      {orginalData.PersonalInfo.interest?.length || 0}
-                    </p>
-                  )}
+                    {editUser ? (
+                      <p className="">
+                        {editedData.PersonalInfo.interest?.length || 0}
+                        {"/"}5
+                      </p>
+                    ) : (
+                      <p className=" text-red-600">
+                        {orginalData.PersonalInfo.interest?.length || 0}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {/* /////////////////buttong/////////////////////////// */}
+                {/* /////////////////buttong/////////////////////////// */}
 
-              <div className="w-full h-[100px] mt-5  flex justify-center items-center">
-                {!editUser && (
-                  <FontAwesomeIcon
-                    icon={faCircleUp}
-                    onClick={() =>
-                      window.scrollTo({ top: 0, behavior: "smooth" })
-                    }
-                    bounce
-                    size="3x"
-                    style={{ color: "#700000", cursor: "pointer" }}
-                  />
-                )}
+                <div className="w-full h-[100px] mt-5  flex justify-center items-center">
+                  {!editUser && (
+                    <FontAwesomeIcon
+                      icon={faCircleUp}
+                      onClick={() =>
+                        window.scrollTo({ top: 0, behavior: "smooth" })
+                      }
+                      bounce
+                      size="3x"
+                      style={{ color: "#700000", cursor: "pointer" }}
+                    />
+                  )}
 
-                {editUser && (
-                  <Button
-                    onClick={() => submitEditedData()}
-                    className="
+                  {editUser && (
+                    <Button
+                      onClick={() => submitEditedData()}
+                      className="
         group 
         relative 
         mr-4
@@ -1501,19 +1494,19 @@ const [loading,setLoading]=useState<boolean>(false)
         hover:-translate-y-1 
         hover:scale-105
       "
-                  >
-                    <span className="absolute inset-0 bg-blue-700 opacity-0 group-hover:opacity-20 transition-opacity"></span>
-                    <div className="flex items-center space-x-2">
-                      <Send className="w-5 h-5" />
-                      <span>Submit</span>
-                    </div>
-                  </Button>
-                )}
+                    >
+                      <span className="absolute inset-0 bg-blue-700 opacity-0 group-hover:opacity-20 transition-opacity"></span>
+                      <div className="flex items-center space-x-2">
+                        <Send className="w-5 h-5" />
+                        <span>Submit</span>
+                      </div>
+                    </Button>
+                  )}
 
-                {editUser && (
-                  <Button
-                    onClick={() => handleReset()}
-                    className="
+                  {editUser && (
+                    <Button
+                      onClick={() => handleReset()}
+                      className="
           group 
           relative 
           md:px-24 
@@ -1532,20 +1525,20 @@ const [loading,setLoading]=useState<boolean>(false)
           items-center 
           space-x-2
         "
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RotateCcw className="w-5 h-5 transition-transform group-hover:rotate-180" />
-                      <span>Reset</span>
-                    </div>
-                  </Button>
-                )}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RotateCcw className="w-5 h-5 transition-transform group-hover:rotate-180" />
+                        <span>Reset</span>
+                      </div>
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <Footer /> 
+      <Footer />
     </>
   );
 };

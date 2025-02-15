@@ -63,7 +63,7 @@ export const Dash = () => {
           img="/profileDash.png"
         />
       </div>
-     
+
       <div className="lg:w-[70%] w-[90%] lg:h-[400px] h-[300px] rounded-md bg-white transform transition-transform duration-300 ease-in-out hover:scale-105    mt-10">
         <BarChart />
       </div>

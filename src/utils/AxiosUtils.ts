@@ -1,10 +1,12 @@
-import axios, { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, {
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { handleAlert } from "./alert/SweeAlert";
 
 const client = axios.create({
-
- baseURL: import.meta.env.VITE_BACKENT_URL,
-
+  baseURL: import.meta.env.VITE_BACKENT_URL,
 });
 
 let isRefreshing = false;
@@ -44,12 +46,18 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.headers["authorizationforuser"]) {
-      localStorage.setItem("userRefresh", response.headers["authorizationforuser"]);
+      localStorage.setItem(
+        "userRefresh",
+        response.headers["authorizationforuser"]
+      );
     }
     return response.data;
   },
   async (error) => {
-    const originalRequest = { ...error.config, headers: { ...error.config.headers } };
+    const originalRequest = {
+      ...error.config,
+      headers: { ...error.config.headers },
+    };
 
     if (error.response?.status === 402 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -65,9 +73,12 @@ client.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post(`${import.meta.env.VITE_BACKENT_URL}/user/getNewToken`, {
-          refresh: localStorage.getItem("userRefresh"),
-        });
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_BACKENT_URL}/user/getNewToken`,
+          {
+            refresh: localStorage.getItem("userRefresh"),
+          }
+        );
         if (data?.token) {
           localStorage.setItem("userToken", data.token);
           onTokenRefreshed(data.token);
@@ -89,12 +100,12 @@ client.interceptors.response.use(
       return Promise.reject(new Error("Admin token expired."));
     }
 
-    return Promise.reject(new Error(error.response?.data?.message || error.message));
+    return Promise.reject(
+      new Error(error.response?.data?.message || error.message)
+    );
   }
 );
 
 export const request = async <T>(options: AxiosRequestConfig): Promise<T> => {
   return await client(options);
 };
-
-

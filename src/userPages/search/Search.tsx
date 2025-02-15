@@ -110,7 +110,7 @@ export const UserSearchPage = () => {
       parseInt(ageRange.max) > 60
     ) {
       showToast("Please provide a valid age range", "warning");
-      
+
       return;
     }
 
@@ -272,7 +272,7 @@ export const UserSearchPage = () => {
           )}
         </div>
       </div>
-      <Footer /> 
+      <Footer />
     </>
   );
 };
