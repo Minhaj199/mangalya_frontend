@@ -271,7 +271,7 @@ export const Matched = () => {
   const handleSerch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentItems(
       fetchedProfiles.filter((el) =>
-        el.firstName.toLowerCase().includes(e.target.value)
+        el.firstName.toLowerCase().includes(e.target.value.toLocaleLowerCase())
       )
     );
   };
