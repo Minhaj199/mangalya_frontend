@@ -416,7 +416,7 @@ const ChatInterface = () => {
                   }`}
                 >
                   <div
-                    className="w-10 h-10 cursor-pointer "
+                    className="w-10 h-10 cursor-pointer overflow-hidden"
                     onClick={() => setCurrentPhoto(message.text)}
                   >
                     <img src={message.text} alt="" />
