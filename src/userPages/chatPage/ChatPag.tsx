@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Send, ArrowLeft, Image } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { request } from "@/utils/AxiosUtils";
-import { handleAlert } from "@/utils/alert/SweeAlert";
+import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile, faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +13,7 @@ import store, { ReduxState } from "@/redux/reduxGlobal";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { showToast } from "@/utils/alert/toast";
+import { compressImage } from "@/utils/imageCompressor";
 
 const ChatInterface = () => {
   const onliners = useSelector((state: ReduxState) => state.onlinePersons);
@@ -309,12 +310,20 @@ const ChatInterface = () => {
   };
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoto =async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
 
     if (selectedFile) {
-      setFile(selectedFile);
-      setPreview(URL.createObjectURL(selectedFile));
+      const maxSize=10*1024*1024
+      const lessSize=1*1024*1024
+     const file=(selectedFile.size>lessSize)?await compressImage (selectedFile):selectedFile
+      if(maxSize<file.size){
+                   alertWithOk('Photo size limit','please reduce size to below 10 mp','info')
+                   return
+                 }
+      setFile(file);
+      setPreview(URL.createObjectURL(file))
+      ;
     }
   };
 

@@ -74,7 +74,7 @@ export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
       const fileDraft=t.target.files[0]
       const file =(fileDraft.size>lessSize)?await compressImage (t.target.files[0]):fileDraft
       if(maxSize<file.size){
-        alertWithOk('Photo size limit','please reduce size to below 10','info')
+        alertWithOk('Photo size limit','please reduce size to below 10 mp','info')
         return
       }
       probSetter((el) => ({ ...el, photo: file }));

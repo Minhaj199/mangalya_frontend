@@ -26,6 +26,7 @@ import CircularIndeterminate from "@/components/circularLoading/Circular.tsx";
 import { Footer } from "@/components/user/footer/Footer.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "@/redux/reduxGlobal.ts";
+import { compressImage } from "@/utils/imageCompressor.ts";
 
 export type userData = {
   PersonalInfo: {
@@ -226,14 +227,22 @@ export const UserProfile = () => {
   };
 
   ///////////////handling photo////////////////
-  function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files;
-    if (file?.length) {
+  async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
+  
+    const draft = e.target.files;
+    if (draft?.length) {
+      const maxSize=10*1024*1024
+    const lessSize=1*1024*1024
+      const file=(draft[0].size>lessSize)?await compressImage (draft[0]):draft[0]
+       if(maxSize<file.size){
+              alertWithOk('Photo size limit','please reduce size to below 10 mp','info')
+              return
+            }
       setEditedData((el) => ({
         ...el,
-        PersonalInfo: { ...el.PersonalInfo, image: file[0] },
+        PersonalInfo: { ...el.PersonalInfo, image: file },
       }));
-      const imageUrl = URL.createObjectURL(file[0]);
+      const imageUrl = URL.createObjectURL(file);
       setTempPhot(imageUrl);
     }
   }

@@ -48,9 +48,7 @@ export const Login:React.FC<userLoginProp> = ({changeToggle,loginTogle,setLoadin
 
   try {
     setLoading(true)
-    setTimeout(()=>{
-      setLoading(false)
-    },3000)
+   
     const isValid:boolean=LoginValidator({...userData},setWarnning)
     if(isValid){
     const response:LoginReponse=await request({url:'/user/login',method:'post',data:userData})
@@ -101,18 +99,21 @@ export const Login:React.FC<userLoginProp> = ({changeToggle,loginTogle,setLoadin
     }
     if(response.message){
       handleAlert("error",response.message  )
-      setLoading(true)
+      setLoading(false)
       return
     }
     }
   
   } catch (error:unknown) {
     if(error instanceof Error){
-      setLoading(true)
+      setLoading(false)
       handleAlert('error',error.message||'error on login')
     }
    }
-   setLoading(true)
+   finally{
+
+     setLoading(false)
+   }
   }
 
     return (
