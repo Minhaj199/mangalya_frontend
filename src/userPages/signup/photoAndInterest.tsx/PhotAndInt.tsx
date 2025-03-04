@@ -9,6 +9,7 @@ import { PhotoAndInterest } from "../Credentials";
 import { request } from "../../../utils/AxiosUtils";
 
 import { alertWithOk } from "@/utils/alert/SweeAlert";
+import { compressImage } from "@/utils/imageCompressor";
 
 interface PhotAndIntInterface {
   probState: PhotoAndInterest;
@@ -64,13 +65,29 @@ export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
       fileInputRef.current.click();
     }
   }
-  function handleFile(t: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(t: React.ChangeEvent<HTMLInputElement>) {
+   try {
+    const maxSize=10*1024*1024
+    const lessSize=1*1024*1024
     if (t.target.files?.length && t.target.files?.length > 0) {
-      const file = t.target.files[0];
+      
+      const fileDraft=t.target.files[0]
+      const file =(fileDraft.size>lessSize)?await compressImage (t.target.files[0]):fileDraft
+      if(maxSize<file.size){
+        alertWithOk('Photo size limit','please reduce size to below 10','info')
+        return
+      }
       probSetter((el) => ({ ...el, photo: file }));
       const imageUrl = URL.createObjectURL(t.target.files?.[0]);
       setImage(imageUrl);
     }
+   } catch (error:unknown) {
+    if(error instanceof Error){
+      alertWithOk('Error',error.message||'some error occured on photo management','error')
+    }else{
+      console.error(error)
+    }
+   }
   }
   function handleCategoryInterest(t: React.ChangeEvent<HTMLSelectElement>) {
     if (t.target.value) {
