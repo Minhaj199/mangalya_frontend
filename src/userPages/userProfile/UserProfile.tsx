@@ -337,6 +337,8 @@ export const UserProfile = () => {
         );
         console.error(error);
       }
+    }finally{
+      setLoading(false)
     }
   }
   async function handleOTPSent() {
@@ -372,6 +374,8 @@ export const UserProfile = () => {
         );
         console.error(error);
       }
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -539,6 +543,9 @@ export const UserProfile = () => {
         } else {
           console.warn(error);
         }
+      }finally{
+
+        setLoading(false);
       }
     }
     setLoading(false);
@@ -1511,7 +1518,7 @@ export const UserProfile = () => {
           relative 
           md:px-24 
           md:py-6
-          px-16
+          px-10
           py-6 
           rounded-full 
           border-2 

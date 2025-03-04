@@ -48,6 +48,8 @@ export const Forgot_first:React.FC<Forgot_Props> = ({changeToggle}) => {
       if(error instanceof Error){
         handleAlert('error',error.message||'internal server error')
       }
+    }finally{
+      setLoading(false)
     }
     return
    }else{

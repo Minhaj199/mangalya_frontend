@@ -298,6 +298,8 @@ const ChatInterface = () => {
           handleAlert("error", error.message);
         }
         handleAlert("error", "error on sending message");
+      }finally{
+        setLoading(false)
       }
 
       setInput("");

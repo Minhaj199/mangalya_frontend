@@ -85,6 +85,8 @@ const PlanPurchase = () => {
             );
           }
           console.error(error);
+        }finally{
+          setLoading(false)
         }
       }
       Purchase();

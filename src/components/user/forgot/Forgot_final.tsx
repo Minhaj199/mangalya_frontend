@@ -56,6 +56,9 @@ export const Forgot_Final:React.FC<Forgot_Props> = ({changeToggle}) => {
           setLoading(false) 
         }
       }
+      finally{
+        setLoading(false)
+      }
       
     }
   }

@@ -103,6 +103,9 @@ export const Credentials: React.FC<InputArrayProbs> = ({
           }
           console.error(error);
         }
+        finally{
+          setLoding(false)
+        }
         setSignupFirst(signupFirst);
       }
     } else if (inputToggle === 2) {
@@ -170,6 +173,8 @@ export const Credentials: React.FC<InputArrayProbs> = ({
         if (error) {
           handleAlert("error", "some error in photo and interest");
         }
+      }finally{
+        setLoding(false)
       }
     }
   }

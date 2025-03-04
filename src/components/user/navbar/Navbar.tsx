@@ -199,7 +199,7 @@ export const Navbar = ({active,setShowRequest }: { active: string,setShowRequest
         </div>
         <div className="sm:w-[40%] w-[70%]   justify-end mr-1 flex items-center flex-row">
           
-          {userData.subscriptionStatus&&userData.subscriptionStatus!==''&&userData.subscriptionStatus!=='subscribed'&&<button type="button" onClick={()=>navigate('/PlanDetails')} className="mr-10 text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 my-2 text-center me-2 mb-2">PREMIUM</button>}
+          {userData.subscriptionStatus&&userData.subscriptionStatus!==''&&userData.subscriptionStatus!=='subscribed'&&<button type="button" onClick={()=>navigate('/PlanDetails')} className="sm:block hidden mr-10 text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 my-2 text-center me-2 mb-2">PREMIUM</button>}
           <div className="w-10 h-10 mx-5">
             <img  src="/email.png" onClick={handleMessageTabToggle} className="w-full cursor-pointer relative  h-full" alt="" />
             {(messageNumber>=1)&&<div className="w-6 h-6 text-xs rounded-full  top-1 bg-yellow-600 absolute inline-flex justify-center items-center font-bold text-white">{(messageNumber>10)?'10+':messageNumber}</div>}
@@ -234,6 +234,9 @@ export const Navbar = ({active,setShowRequest }: { active: string,setShowRequest
               <li className="hover:text-blue-500 cursor-pointer py-2 text-sm" onClick={()=>(toggleMenu(),protectSearch())}>
                 Search
               </li>
+             {userData.subscriptionStatus&&userData.subscriptionStatus!==''&&userData.subscriptionStatus!=='subscribed'&& <li className="hover:text-blue-500 cursor-pointer py-2 text-sm" onClick={()=>(toggleMenu(),navigate('/PlanDetails'))}>
+                Plan purchase
+              </li>}
 
 
               <li className="hover:text-blue-500 cursor-pointer py-2 text-sm inline-flex" onClick={()=>(toggleMenu(),handleMatchProfile())}>

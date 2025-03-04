@@ -3,7 +3,6 @@ import { Navbar } from "../../components/user/navbar/Navbar";
 import { useState } from "react";
 import store, { ReduxState } from "../../redux/reduxGlobal";
 import { showToast as toastAlert } from "@/utils/alert/toast";
-
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
@@ -12,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
+  DialogFooter} from "@/components/ui/dialog";
+  
+  import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -53,7 +52,15 @@ export const Matched = () => {
   const [fetchedProfiles, setFetchedProfiles] = useState<MatchedProfileType[]>(
     []
   );
+
+  /////////////pagination////////////
+  const [temporary, setTemporay] = useState<MatchedProfileType[]>([]);
   const [currentItems, setCurrentItems] = useState<MatchedProfileType[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 4;
+  const [pageNumber, setPageNumber] = useState([0]);
+  const [totalPages, setTotalPage] = useState(0);
+
   const [place, setPlaces] = useState<string[]>([]);
   const [reportedId, setReportedId] = useState<string>("");
   const [onliner, setOnliner] = useState<string[]>([]);
@@ -95,10 +102,10 @@ export const Matched = () => {
           }
           if (Array.isArray(response.fetchMatchedUsers)) {
             setFetchedProfiles([]);
-            setCurrentItems([]);
+            setTemporay([]);
           } else {
             setFetchedProfiles(response.fetchMatchedUsers.formatedResponse);
-            setCurrentItems(response.fetchMatchedUsers.formatedResponse);
+            setTemporay(response.fetchMatchedUsers.formatedResponse);
             setPlaces(response.fetchMatchedUsers.Places);
             setOnliner(response.fetchMatchedUsers.onlines);
 
@@ -122,35 +129,33 @@ export const Matched = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const total = Math.ceil(temporary.length / itemPerPage);
+    setTotalPage(total);
+    setPageNumber(Array.from({ length: total }, (_, i) => i + 1));
+    const startingIndex = (currentPage - 1) * itemPerPage;
+    setCurrentItems(
+      temporary.slice(startingIndex, startingIndex + itemPerPage)
+    );
+  }, [temporary, currentPage]);
+
   ////////////handle sorting/////////////////
 
   function handleSorting(value: string) {
     if (value === "reset") {
-      setCurrentItems(fetchedProfiles);
+      setTemporay(fetchedProfiles);
       return;
     }
-    setCurrentItems(fetchedProfiles.filter((el) => el.state === value));
+    setTemporay(fetchedProfiles.filter((el) => el.state === value));
   }
 
   //////////////pagination logic///////////////////////
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemPerPage = 5;
-  const [totalPages, setTotalPage] = useState(1);
-  const [pageNumber, setPageNumber] = useState([0]);
+
   const [reportData, setReportData] = useState<{
     reason: string;
     moreInfo: string;
   }>({ moreInfo: "", reason: "" });
-  useEffect(() => {
-    setCurrentItems(
-      fetchedProfiles?.slice(
-        (currentPage - 1) * itemPerPage,
-        currentPage * itemPerPage
-      )
-    );
-    setTotalPage(Math.ceil(fetchedProfiles?.length / itemPerPage));
-    setPageNumber(Array.from({ length: totalPages }, (_, i) => i + 1));
-  }, [totalPages, fetchedProfiles, currentPage]);
+
   const goNext = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
@@ -202,14 +207,13 @@ export const Matched = () => {
       socket?.off("user_loggedOut");
     };
   }, []);
-
   const showNotification = (message: string) => {
     setToastMessage(message);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleDelete = async (userId: string) => {
+const handleDelete = async (userId: string) => {
     try {
       const response: { status: boolean; message: string } = await request({
         url: "/user/deleteMatched",
@@ -218,7 +222,9 @@ export const Matched = () => {
       });
 
       if (response && response.status) {
-        setFetchedProfiles((el) => el.filter((elem) => elem._id !== userId));
+        const data = fetchedProfiles.filter((elem) => elem._id !== userId);
+        setFetchedProfiles(data);
+        setTemporay(data);
         setCurrentPage(1);
         showNotification("User removed successfully");
       } else {
@@ -234,7 +240,7 @@ export const Matched = () => {
       }
       console.warn(error);
     }
-  };
+};
 
   const handleReport = async (userId: string) => {
     if (reportData.reason === "") {
@@ -269,16 +275,16 @@ export const Matched = () => {
   };
 
   const handleSerch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentItems(
+    setTemporay(
       fetchedProfiles.filter((el) =>
         el.firstName.toLowerCase().includes(e.target.value.toLocaleLowerCase())
       )
     );
+    setCurrentPage(1);
   };
 
-  //////////////////handling reporting//////////////////
-
-  return (
+//////////////////handling reporting//////////////////
+return (
     <div className="h-auto w-auto bg-slate-200 min-h-svh">
       <div className="container mx-auto px-4 py-8 ">
         <Navbar active="matched" />
@@ -345,7 +351,7 @@ export const Matched = () => {
             {currentItems ? <></> : <></>}
             {currentItems?.length > 0 &&
               currentItems?.map((user) => (
-                <>
+                
                   <Card
                     key={user._id}
                     className="hover:shadow-2xl transition-shadow  relative shadow-blue-300"
@@ -489,10 +495,10 @@ export const Matched = () => {
                       </Dialog>
                     </CardFooter>
                   </Card>
-                </>
+                
               ))}
           </div>
-          {currentItems?.length <= 0 && (
+          {temporary?.length <= 0 && (
             <div className="w-full flex justify-center items-center h-[300px] ">
               <div className="sm:w-1/2 w-full h-full">
                 <img src="/NoDataFound.jpg" className="w-full h-full" alt="" />
@@ -512,11 +518,10 @@ export const Matched = () => {
             <Button
               variant="outline"
               onClick={goBack}
-              disabled={currentPage <= 1}
-            >
+              disabled={currentPage <= 1}>
               Previous
             </Button>
-            {currentItems?.length &&
+            {temporary?.length &&
               pageNumber?.map((el) => (
                 <Button
                   className={el === currentPage ? "bg-blue-300 text-white" : ""}
@@ -527,7 +532,6 @@ export const Matched = () => {
                   {el}
                 </Button>
               ))}
-
             <Button
               onClick={goNext}
               disabled={currentPage === totalPages}

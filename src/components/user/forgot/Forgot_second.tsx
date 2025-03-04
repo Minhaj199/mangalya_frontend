@@ -49,6 +49,8 @@ export const Forgot_second:React.FC<Forgot_Props> = ({changeToggle}) => {
         if(error instanceof Error){
           handleAlert('error',error.message||'intenal server error')
         }
+      }finally{
+        setLoading(false)
       }
       
     }

@@ -938,7 +938,7 @@ export const LoginLanding = () => {
           </div>
         </div>
 
-        <div className="sm:w-[95%] lg:w-[75%] w-full  sm:px-0 px-28 h-full    ">
+        <div className="sm:w-[95%] lg:w-[75%] w-full   sm:px-0 px-28 h-full    ">
           {/* ///////card///////////////////////////////// */}
 
           <div className="sm:px-5 md:px-10 px-2 py-16     bg-center grid grid-cols-1 w-[100%]   mt-16 sm:ml-10 min-h-[600px]  md:grid-cols-2  sm:grid-cols-2 lg:grid-cols-2 gap-14  ">
@@ -1031,8 +1031,7 @@ export const LoginLanding = () => {
           </div>
 
           {/* ///////////////////////////////pagination//////////////////////////// */}
-          <div className="w-[80%] h-14  mb-10 flex justify-center items-center text-center">
-            
+          <div className="w-[100%] h-14  mb-10 flex justify-center items-center text-center">
             <button
               onClick={() => handlePreviouse()}
               disabled={currentPage === 1}

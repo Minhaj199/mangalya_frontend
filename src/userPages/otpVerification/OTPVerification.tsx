@@ -106,6 +106,8 @@ export const OTPVerification: React.FC = () => {
         if (error instanceof Error) {
           handleAlert("error", error.message || "internal server error");
         }
+      }finally{
+        setLoading(false)
       }
     } else {
       setWarning("please insert 6 charectors");
