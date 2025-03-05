@@ -39,7 +39,7 @@ export type profileType = {
   matchStatics?: string;
 };
 
-export const LoginLanding = () => {
+ const LoginLanding = () => {
   const socket = useSocket();
   const navigate = useNavigate();
   const [planData, setPlanData] = useState<PlanData | null>(null);
@@ -1058,3 +1058,4 @@ export const LoginLanding = () => {
     </div>
   );
 };
+export default LoginLanding

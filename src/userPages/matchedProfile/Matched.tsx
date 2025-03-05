@@ -42,7 +42,7 @@ import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { useSelector } from "react-redux";
 import { Footer } from "@/components/user/footer/Footer";
 
-export const Matched = () => {
+ const Matched = () => {
   const onliners = useSelector((state: ReduxState) => state.onlinePersons);
 
   const [showToast, setShowToast] = useState(false);
@@ -546,3 +546,4 @@ return (
     </div>
   );
 };
+export default Matched

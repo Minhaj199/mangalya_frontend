@@ -64,7 +64,7 @@ const blanUserData = {
 
   subscriber: "",
 };
-export const UserProfile = () => {
+ const UserProfile = () => {
   const socket = useSocket();
   const [editUser, setEditUser] = useState<boolean>(false);
   const [editedData, setEditedData] = useState<userData>(blanUserData);
@@ -1558,3 +1558,4 @@ export const UserProfile = () => {
     </>
   );
 };
+export default UserProfile

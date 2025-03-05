@@ -1,13 +1,18 @@
-import React, { useContext } from "react";
-import { Login } from "./admin/login/Login";
+import React, { useContext, lazy, Suspense } from "react";
+
+const Login = lazy(() => import("./admin/login/Login"));
 import { Layout } from "./admin/layout/Layout";
 import { Routes, Route } from "react-router-dom";
-import { Landing } from "./userPages/landing/Landing";
+import Landing from "./userPages/landing/Landing";
+
 import { SignupContext } from "./shared/globalCondext/signupData";
-import { LoginLanding } from "./userPages/loginLanding/LogLanding";
-import { UserTable } from "./admin/pages/userMgt/Table";
-import { OTPVerification } from "./userPages/otpVerification/OTPVerification";
-import { PlanDetails } from "./admin/pages/planMgt/PlanMgt";
+
+const LoginLanding = lazy(() => import("./userPages/loginLanding/LogLanding"));
+const UserTable = lazy(() => import("./admin/pages/userMgt/Table"));
+const OTPVerification = lazy(
+  () => import("./userPages/otpVerification/OTPVerification")
+);
+const PlanDetails = lazy(() => import("./admin/pages/planMgt/PlanMgt"));
 import {
   ProtectRouteAdmin,
   PlanRouteUser,
@@ -15,17 +20,20 @@ import {
   UnProtectRouteAdmin,
   ProtectRouteUser,
 } from "./shared/hoc/routeManagement";
-import { AddPlan } from "./admin/pages/addPlan/AddPlan";
-import { SubscriberTable } from "./admin/pages/subscribers/Table";
-import PlanPurchase from "./userPages/plan/Plan";
-import { UserProfile } from "./userPages/userProfile/UserProfile";
-import { Credentials } from "./userPages/signup/Credentials";
-import { Dash } from "./admin/pages/dash/Dash";
-import { UserSearchPage } from "./userPages/search/Search";
-import { Matched } from "./userPages/matchedProfile/Matched";
-import { Abuse } from "./admin/pages/abuse/Abuse";
-import ChatInterface from "./userPages/chatPage/ChatPag";
-import { PlanHistoryAndReq } from "./userPages/planHistory/PlanHistoryAndReq";
+import CircularIndeterminate from "./components/circularLoading/Circular";
+const AddPlan = lazy(() => import("./admin/pages/planMgt/PlanMgt"));
+const SubscriberTable = lazy(() => import("./admin/pages/subscribers/Table"));
+const PlanPurchase = lazy(() => import("./userPages/plan/Plan"));
+const UserProfile = lazy(() => import("./userPages/userProfile/UserProfile"));
+const Credentials = lazy(() => import("./userPages/signup/Credentials"));
+const UserSearchPage = lazy(() => import("./userPages/search/Search"));
+const Matched = lazy(() => import("./userPages/matchedProfile/Matched"));
+const Abuse = lazy(() => import("./admin/pages/abuse/Abuse"));
+const Dash = lazy(() => import("./admin/pages/dash/Dash"));
+const ChatInterface = lazy(() => import("./userPages/chatPage/ChatPag"));
+const PlanHistoryAndReq = lazy(
+  () => import("./userPages/planHistory/PlanHistoryAndReq")
+);
 
 export const districtsOfKerala = [
   "Alappuzha",
@@ -86,45 +94,53 @@ const App: React.FC = () => {
     },
   ];
   return (
-    <Routes>
-      <Route element={<UnProtectRouteAdmin />}>
-        <Route path="/login" element={<Login />} />
-      </Route>
-      <Route element={<ProtectRouteAdmin />}>
-        <Route path="/admin" element={<Layout />}>
-          <Route path="manageUser" element={<UserTable />} />
-          <Route path="addPlan" element={<AddPlan />} />
-          <Route path="Plan" element={<PlanDetails />} />
-          <Route path="subscriber" element={<SubscriberTable />} />
-          <Route path="Dash" element={<Dash />} />
-          <Route path="Abuse" element={<Abuse />} />
+    <Suspense
+      fallback={
+        <div className="w-full h-full fixed flex justify-center items-center bg-black">
+          <CircularIndeterminate />
+        </div>
+      }
+    >
+      <Routes>
+        <Route element={<UnProtectRouteAdmin />}>
+          <Route path="/login" element={<Login />} />
         </Route>
-      </Route>
-      <Route path="/PlanDetails" element={<PlanRouteUser />}>
-        <Route path="" element={<PlanPurchase />} />
-      </Route>
-      <Route element={<UnProtectRouteUser />}>
-        <Route path="/" element={<Landing />} />
-        <Route
-          path="/signUp"
-          element={<Credentials inputFields={inputFields} toggle={1} />}
-        />
-        <Route
-          path="/photoAdding"
-          element={<Credentials inputFields={inputFields} toggle={2} />}
-        />
-        <Route path="/otpVerification" element={<OTPVerification />} />
-      </Route>
-      <Route element={<ProtectRouteUser />}>
-        <Route path="/loginLanding" element={<LoginLanding />} />
-        <Route path="/userProfile" element={<UserProfile />} />
-        <Route path="/suggestion" element={<LoginLanding />} />
-        <Route path="/search" element={<UserSearchPage />} />
-        <Route path="/match" element={<Matched />} />
-        <Route path="/chat" element={<ChatInterface />} />
-        <Route path="/planAndRequest" element={<PlanHistoryAndReq />} />
-      </Route>
-    </Routes>
+        <Route element={<ProtectRouteAdmin />}>
+          <Route path="/admin" element={<Layout />}>
+            <Route path="manageUser" element={<UserTable />} />
+            <Route path="addPlan" element={<AddPlan />} />
+            <Route path="Plan" element={<PlanDetails />} />
+            <Route path="subscriber" element={<SubscriberTable />} />
+            <Route path="Dash" element={<Dash />} />
+            <Route path="Abuse" element={<Abuse />} />
+          </Route>
+        </Route>
+        <Route path="/PlanDetails" element={<PlanRouteUser />}>
+          <Route path="" element={<PlanPurchase />} />
+        </Route>
+        <Route element={<UnProtectRouteUser />}>
+          <Route path="/" element={<Landing />} />
+          <Route
+            path="/signUp"
+            element={<Credentials inputFields={inputFields} toggle={1} />}
+          />
+          <Route
+            path="/photoAdding"
+            element={<Credentials inputFields={inputFields} toggle={2} />}
+          />
+          <Route path="/otpVerification" element={<OTPVerification />} />
+        </Route>
+        <Route element={<ProtectRouteUser />}>
+          <Route path="/loginLanding" element={<LoginLanding />} />
+          <Route path="/userProfile" element={<UserProfile />} />
+          <Route path="/suggestion" element={<LoginLanding />} />
+          <Route path="/search" element={<UserSearchPage />} />
+          <Route path="/match" element={<Matched />} />
+          <Route path="/chat" element={<ChatInterface />} />
+          <Route path="/planAndRequest" element={<PlanHistoryAndReq />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 

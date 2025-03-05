@@ -21,7 +21,7 @@ export interface AbuserReport {
   createdAt: Date;
 }
 
-export function Abuse() {
+ function Abuse() {
   const [reports, setReports] = useState<AbuserReport[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -233,3 +233,4 @@ export function Abuse() {
     </>
   );
 }
+export default Abuse

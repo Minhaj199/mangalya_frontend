@@ -7,7 +7,7 @@ import { alertWithOk } from "../../../utils/alert/SweeAlert";
 import { request } from "../../../utils/AxiosUtils";
 import { useNavigate } from "react-router-dom";
 
-export const Dash = () => {
+ const Dash = () => {
   const [dashCount, setDashCount] = useState<{
     revenue: number;
     suscriber: number;
@@ -75,3 +75,4 @@ export const Dash = () => {
     </div>
   );
 };
+export default Dash

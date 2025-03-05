@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Credential.css";
+
 import { SignupContext } from "../../shared/globalCondext/signupData";
 import { Countdown } from "@/components/user/timer/Countdown";
 import { request } from "../../utils/AxiosUtils";
@@ -15,7 +15,7 @@ export interface CredentialInterface {
   [key: string]: string;
 }
 
-export const OTPVerification: React.FC = () => {
+ const OTPVerification: React.FC = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state: ReduxState) => state.userData);
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export const OTPVerification: React.FC = () => {
           method: "post",
           data: { otp: otp, email: signupFirstData.EMAIL, from: "signup" },
         });
-
+       
         if (Response) {
           if (Response?.message === "OTP valid") {
             const response: { message: string; token: string } = await request({
@@ -50,6 +50,7 @@ export const OTPVerification: React.FC = () => {
               method: "post",
               data: signupFirstData,
             });
+            console.log(response)
             if (response?.message && response.message === "sign up completed") {
               localStorage.setItem("userToken", response.token);
               promptSweet(
@@ -93,6 +94,8 @@ export const OTPVerification: React.FC = () => {
                 );
                 navigate("/PlanDetails");
               }
+            }else{
+              throw new Error(response.message)
             }
           } else if (Response?.message === "OTP not valid") {
             setLoading(false);
@@ -166,3 +169,4 @@ export const OTPVerification: React.FC = () => {
     </>
   );
 };
+export default OTPVerification

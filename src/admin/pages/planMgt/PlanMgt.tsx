@@ -22,7 +22,7 @@ export type PlanType = {
   connect: number;
 };
 
-export const PlanDetails = () => {
+ const PlanDetails = () => {
   const [featureData, setFeatureData] = useState<string[]>([""]);
 
   useEffect(() => {
@@ -487,3 +487,4 @@ export const PlanDetails = () => {
     </div>
   );
 };
+export default PlanDetails

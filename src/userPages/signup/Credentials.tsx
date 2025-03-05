@@ -30,7 +30,7 @@ export type PhotoAndInterest = {
   photo?: File | null;
   interest?: string[];
 };
-export const Credentials: React.FC<InputArrayProbs> = ({
+ const Credentials: React.FC<InputArrayProbs> = ({
   inputFields,
   toggle,
 }) => {
@@ -254,3 +254,4 @@ export const Credentials: React.FC<InputArrayProbs> = ({
     </>
   );
 };
+export default Credentials

@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { Info } from "../../components/user/homeInfo/Info";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 
-export const Landing = () => {
+ const Landing = () => {
   const [loginTogle, changeTogle] = useState<string>("1");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -80,3 +80,4 @@ export const Landing = () => {
     </div>
   );
 };
+export default Landing

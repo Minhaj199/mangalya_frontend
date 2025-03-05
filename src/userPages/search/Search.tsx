@@ -18,9 +18,9 @@ import { useNavigate } from "react-router-dom";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { Footer } from "@/components/user/footer/Footer";
 
-// Sample data for districts and interests
 
-export const UserSearchPage = () => {
+
+ const UserSearchPage = () => {
   // State for search filters
   const [ageRange, setAgeRange] = useState({ min: "", max: "" });
   const [selectedDistrict, setSelectedDistrict] = useState("");

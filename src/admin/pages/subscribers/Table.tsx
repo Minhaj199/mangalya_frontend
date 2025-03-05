@@ -20,7 +20,7 @@ export interface UserListInterface {
   triggerPagination: () => void;
 }
 
-export const SubscriberTable: React.FC = () => {
+ const SubscriberTable: React.FC = () => {
   const navigate = useNavigate();
   type planDataType = {
     name: string;
@@ -198,3 +198,4 @@ export const SubscriberTable: React.FC = () => {
     </>
   );
 };
+export default SubscriberTable

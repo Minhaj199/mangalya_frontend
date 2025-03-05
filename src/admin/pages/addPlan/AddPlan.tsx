@@ -19,7 +19,7 @@ export type PlanData = {
   duration: number;
 };
 
-export const AddPlan = () => {
+ const AddPlan = () => {
   const navigate = useNavigate();
 
   const [featureData, setFeatureData] = useState<string[]>([""]);
@@ -249,3 +249,4 @@ export const AddPlan = () => {
     </div>
   );
 };
+export default AddPlan

@@ -8,7 +8,7 @@ import { currentPlan } from "@/utils/editedDataFinder";
 
 import { useEffect, useState } from "react";
 
-export const PlanHistoryAndReq = () => {
+ const PlanHistoryAndReq = () => {
   const socket = useSocket();
   const [toggle, setToggle] = useState<boolean>(false);
   const [currenPlan, setCurrentPlan] = useState<currentPlan>();
@@ -258,3 +258,4 @@ export const PlanHistoryAndReq = () => {
     </>
   );
 };
+export default PlanHistoryAndReq

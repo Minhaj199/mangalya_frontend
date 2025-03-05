@@ -12,7 +12,7 @@ export interface AdminInterface {
   email: string;
   password: string;
 }
-export const Login: React.FC = () => {
+ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [adminForm, setAdminForm] = useState<AdminInterface>({
     email: "",
@@ -143,3 +143,4 @@ export const Login: React.FC = () => {
     </>
   );
 };
+export default  Login
