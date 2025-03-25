@@ -5,6 +5,7 @@ import { Layout } from "./admin/layout/Layout";
 import { Routes, Route } from "react-router-dom";
 import Landing from "./userPages/landing/Landing";
 
+
 import { SignupContext } from "./shared/globalCondext/signupData";
 
 const LoginLanding = lazy(() => import("./userPages/loginLanding/LogLanding"));
@@ -21,7 +22,7 @@ import {
   ProtectRouteUser,
 } from "./shared/hoc/routeManagement";
 import CircularIndeterminate from "./components/circularLoading/Circular";
-const AddPlan = lazy(() => import("./admin/pages/planMgt/PlanMgt"));
+const AddPlan = lazy(() => import("./admin/pages/addPlan/AddPlan"));
 const SubscriberTable = lazy(() => import("./admin/pages/subscribers/Table"));
 const PlanPurchase = lazy(() => import("./userPages/plan/Plan"));
 const UserProfile = lazy(() => import("./userPages/userProfile/UserProfile"));
