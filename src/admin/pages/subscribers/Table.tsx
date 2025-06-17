@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination,Row, Cell, TableInstance, UsePaginationInstanceProps, UsePaginationState } from "react-table";
 import {
   Table,
   TableBody,
@@ -10,11 +10,12 @@ import {
 } from "@mui/material";
 
 import { Columns } from "./UserHeadSchema";
-import { SubscriberTableDataType } from "./SubscriberTableDataType";
+import { SubscriberTableDataType } from "./SubscriberTableDataType"; 
 
 import { request } from "../../../utils/AxiosUtils";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, } from "../../../utils/alert/SweeAlert";
+import { PlanDataType } from "./SubscriberTableDataType";
 
 export interface UserListInterface {
   triggerPagination: () => void;
@@ -22,17 +23,10 @@ export interface UserListInterface {
 
  const SubscriberTable: React.FC = () => {
   const navigate = useNavigate();
-  type planDataType = {
-    name: string;
-  };
-  interface data {
-    planData: planDataType[];
-    userData: SubscriberTableDataType[];
-    message: string;
-  }
-
+  
+  
   const [MockData, setMockData] = useState<SubscriberTableDataType[]>([]);
-  const [planData, setPlanData] = useState<planDataType[]>([{ name: "" }]);
+  const [planData, setPlanData] = useState<PlanDataType[]>([{ name: "" }]);
   const [searchWord, setSearchWord] = useState<string>("");
 
   ///fetch data///
@@ -52,12 +46,16 @@ export interface UserListInterface {
           navigate("/login");
         }
         setMockData(data.userData);
-      } catch (error: any) {
-        if (error.message === "405") {
-          navigate("/login");
-          return;
+      } catch (error) {
+        if(error instanceof Error){
+          if (error.message === "405") {
+            alertWithOk("subscriber", error.message || "error on dash", "error");
+            navigate("/login");
+            return;
+          }else{
+            alertWithOk("subscriber", error.message || "error on dash", "error");
+          }
         }
-        alertWithOk("subscriber", error.message || "error on dash", "error");
       }
     }
     fetchData();
@@ -65,7 +63,7 @@ export interface UserListInterface {
 
   ///// fitlter data when sortin initiated
   const filterData = useMemo(() => {
-    return MockData.filter((plan) =>
+    return MockData?.filter((plan) =>
       plan.planName.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase())
     );
   }, [searchWord, MockData]);
@@ -89,15 +87,15 @@ export interface UserListInterface {
     headerGroups,
     page,
     nextPage,
-    setPageSize,
     previousPage,
     prepareRow,
     canNextPage,
     canPreviousPage,
     pageOptions,
     state,
-  } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
-  const { pageIndex, pageSize } = state;
+  } = useTable<SubscriberTableDataType>({ columns, data,  initialState: { pageIndex: 0, pageSize: 5 }, }, usePagination)  as TableInstance<SubscriberTableDataType> & UsePaginationInstanceProps<SubscriberTableDataType>;
+  const { pageIndex } = state as UsePaginationState<SubscriberTableDataType>;
+  
   return (
     <>
       <div className="w-[100%] h-svh">
@@ -147,7 +145,7 @@ export interface UserListInterface {
                   ))}
                 </TableHead>
                 <TableBody {...getTableBodyProps()} className="bg-gray-200 ">
-                  {page.map((row, rowIndex) => {
+                  {page.map((row:Row<SubscriberTableDataType>, rowIndex:number) => {
                     prepareRow(row);
                     return (
                       <TableRow
@@ -155,7 +153,7 @@ export interface UserListInterface {
                         key={rowIndex}
                         className="text-start hover:bg-slate-400 "
                       >
-                        {row.cells.map((cell) => (
+                        {row.cells.map((cell: Cell<SubscriberTableDataType>) => (
                           <TableCell
                             className="text-lg"
                             {...cell.getCellProps()}

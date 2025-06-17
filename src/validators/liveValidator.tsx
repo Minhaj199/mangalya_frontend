@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { CredentialInterface } from "../userPages/signup/Credentials";
+import { CredentialInterface } from "@/types/typesAndInterfaces";
 
 export function Validator_(
   setWarning: Dispatch<SetStateAction<CredentialInterface>>,
@@ -67,16 +67,7 @@ export function Validator_(
     }
   }
   if (key === "PASSWORD") {
-    // alert('hello')
-    // if(value.trim().length<5||value.trim().length>10){
-    //     setWarning((el)=>{
-    //         return {...el,[key]:'password should b/w 5-10'}
-    //     })
-    // }else{
-    //     setWarning((el)=>{
-    //         return {...el,[key]:''}
-    //     })
-    // }
+  
     const strongPasswordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
     const test = strongPasswordRegex.test(value);

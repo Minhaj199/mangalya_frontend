@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCreditCard } from "@fortawesome/free-solid-svg-icons";
-import { districtsOfKerala } from "../../App.tsx";
+import { districtsOfKerala } from "@/components/user/signupInputs/inputFields.ts";
 import "./userProfile.css";
 import { CountdownProfile } from "@/components/user/timer/CountdownProfile";
 import { Send, RotateCcw } from "lucide-react";

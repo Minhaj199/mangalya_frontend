@@ -41,6 +41,7 @@ import { useNavigate } from "react-router-dom";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { useSelector } from "react-redux";
 import { Footer } from "@/components/user/footer/Footer";
+import { MatchedProfileType } from "@/types/typesAndInterfaces";
 
  const Matched = () => {
   const onliners = useSelector((state: ReduxState) => state.onlinePersons);
@@ -65,21 +66,13 @@ import { Footer } from "@/components/user/footer/Footer";
   const [reportedId, setReportedId] = useState<string>("");
   const [onliner, setOnliner] = useState<string[]>([]);
   const navigate = useNavigate();
-  type MatchedProfileType = {
-    firstName: string;
-    secondName: string;
-    photo: string;
-    state: string;
-    dateOfBirth: string;
-    age: number;
-    _id: string;
-  };
+  
 
   ////////////fetch data/////////
   interface Response {
     fetchMatchedUsers:
       | {
-          formatedResponse: MatchedProfileType[];
+          connectedParterns: MatchedProfileType[];
           Places: string[];
           onlines: string[];
         }
@@ -104,8 +97,8 @@ import { Footer } from "@/components/user/footer/Footer";
             setFetchedProfiles([]);
             setTemporay([]);
           } else {
-            setFetchedProfiles(response.fetchMatchedUsers.formatedResponse);
-            setTemporay(response.fetchMatchedUsers.formatedResponse);
+            setFetchedProfiles(response.fetchMatchedUsers.connectedParterns);
+            setTemporay(response.fetchMatchedUsers.connectedParterns);
             setPlaces(response.fetchMatchedUsers.Places);
             setOnliner(response.fetchMatchedUsers.onlines);
 
@@ -216,9 +209,8 @@ import { Footer } from "@/components/user/footer/Footer";
 const handleDelete = async (userId: string) => {
     try {
       const response: { status: boolean; message: string } = await request({
-        url: "/user/deleteMatched",
+        url: "/user/deleteMatched/"+userId ,
         method: "delete",
-        data: { id: userId },
       });
 
       if (response && response.status) {

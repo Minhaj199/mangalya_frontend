@@ -6,20 +6,9 @@ import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert";
 import { request } from "../../../utils/AxiosUtils";
 import { useNavigate } from "react-router-dom";
 import { capitaliser } from "../../../utils/firstLetterCapitaliser";
-export type planMgtWarningType = {
-  name: string;
-  amount: string;
-  connect: string;
-  duration: string;
-};
-export type PlanData = {
-  name: string;
-  amount: number;
-  connect: number;
-  duration: number;
-};
+import { PlanDatas, PlanMgtWarningType } from '../../../types/typesAndInterfaces'
 
- const AddPlan = () => {
+const AddPlan = () => {
   const navigate = useNavigate();
 
   const [featureData, setFeatureData] = useState<string[]>([""]);
@@ -33,13 +22,13 @@ export type PlanData = {
     }
     fetchFeature();
   }, []);
-  const [warning, setWarning] = useState<planMgtWarningType>({
+  const [warning, setWarning] = useState<PlanMgtWarningType>({
     amount: "",
     connect: "",
     duration: "",
     name: "",
   });
-  const [datas, setDatas] = useState<PlanData>({
+  const [datas, setDatas] = useState<PlanDatas>({
     amount: 0,
     connect: 0,
     name: "",
@@ -62,13 +51,16 @@ export type PlanData = {
   async function handleSubmit() {
     if (PlanValidator(datas, setWarning, handleFeatureState)) {
       try {
-        const response: { status: unknown; message: string; name: string } =
-          await request({
-            url: "/admin/insertPlan",
-            method: "post",
-            data: { datas, handleFeatureState },
-          });
-        console.log(response);
+        const response: {
+          result: { created: boolean };
+          message: string;
+          name: string;
+        } = await request({
+          url: "/admin/insertPlan",
+          method: "post",
+          data: { datas, handleFeatureState },
+        });
+  
         if (response?.message && response?.name) {
           if (response.name === "authentication failed") {
             throw new Error(response?.name);
@@ -77,9 +69,11 @@ export type PlanData = {
           }
         } else if (response.message) {
           throw new Error(response.message);
-        } else if (typeof response.status === "object") {
+        } else if (response?.result && response?.result.created) {
           handleAlert("success", "Plan Added");
           navigate("/admin/Plan");
+        } else {
+          throw new Error("error on plan creation");
         }
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -133,7 +127,6 @@ export type PlanData = {
                 className=" w-[90%]  text-sm  outline-none"
               />
 
-              {/* <input type="text" className='border border-black focus:border-blue-500 'placeholder='type hear' /> */}
               <p className="mt-1 sm:text-base text-xs">{warning.name}</p>
             </div>
             <div className="w-[100%] h-[20%]  flex justify-between">
@@ -181,7 +174,7 @@ export type PlanData = {
                 <label className="text-dark-blue font-bold sm:text-base text-xs">
                   DURATION
                 </label>
-                {/* <input id='amount' type="number" className='mt-1 w-[60%] outline-none'min={1} max={10000} /> */}
+
                 <select
                   defaultValue={datas.duration}
                   onChange={(t) =>
@@ -249,4 +242,4 @@ export type PlanData = {
     </div>
   );
 };
-export default AddPlan
+export default AddPlan;

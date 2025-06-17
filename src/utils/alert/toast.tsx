@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 export const showToast = (
   message: string,
   type: "success" | "error" | "info" | "warning" = "info",
-  duration = 3000
+  duration = 3000,
 ) => {
   toast.dismiss();
   switch (type) {
@@ -26,6 +26,7 @@ export const showToast = (
           color: "white",
         },
         autoClose: duration,
+        position:'bottom-right'
       });
       break;
     case "warning":

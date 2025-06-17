@@ -41,7 +41,7 @@ export const ReportModal = ({
       setTimeout(()=>{
         setLoading(false)
       },5000)
-      const response:{data:AbuserReport,message:string}=await request({url:'/admin/sendWarningMale',method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id,docId:reportData._id}})
+      const response:{data:AbuserReport,message:string}=await request({url:'/admin/sendWarningMail/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
       if(response.message){
         setLoading(false)
         if(response.message==='validation Faild'){
@@ -70,7 +70,7 @@ export const ReportModal = ({
 
     try {
       setLoading(true)
-      const response:{data:AbuserReport,message:string}=await request({url:'/admin/blockAbuser',method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id,docId:reportData._id}})
+      const response:{data:AbuserReport,message:string}=await request({url:'/admin/blockAbuser/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
       if(response.message){
         setLoading(false)
         if(response.message==='validation Faild'){
@@ -97,7 +97,7 @@ export const ReportModal = ({
     // Implement reject logic
     try {
       setLoading(true)
-      const response:{data:AbuserReport,message:string}=await request({url:'/admin/rejecReport',method:'patch',data:{reporter:reportData.reporter._id,docId:reportData._id}})
+      const response:{data:AbuserReport,message:string}=await request({url:'/admin/rejecReport/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id}})
       if(response.message){
         setLoading(false)
         if(response.message==='validation Faild'){

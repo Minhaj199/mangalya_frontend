@@ -1,4 +1,4 @@
-    export type  TableDataType = {
+    export type  TableUserDataType = {
         _id:string,
         no: number;
         username: string;

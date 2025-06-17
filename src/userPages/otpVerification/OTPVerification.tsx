@@ -50,7 +50,6 @@ export interface CredentialInterface {
               method: "post",
               data: signupFirstData,
             });
-            console.log(response)
             if (response?.message && response.message === "sign up completed") {
               localStorage.setItem("userToken", response.token);
               promptSweet(

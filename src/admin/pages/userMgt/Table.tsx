@@ -1,5 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useTable, usePagination } from "react-table";
+import {
+  useTable,
+  usePagination,
+  TableInstance,
+  UsePaginationInstanceProps,
+  UsePaginationState,
+} from "react-table";
 import {
   Table,
   TableBody,
@@ -10,7 +16,7 @@ import {
 } from "@mui/material";
 
 import { Columns } from "./UserHeadSchema";
-import { TableDataType } from "./UserTable";
+import { TableUserDataType } from "./UserTable";
 
 import { request } from "../../../utils/AxiosUtils";
 import { useNavigate } from "react-router-dom";
@@ -23,17 +29,16 @@ export interface UserListInterface {
 export const UserTable: React.FC = () => {
   const navigate = useNavigate();
 
-  const [MockData, setMockData] = useState<TableDataType[]>([]);
+  const [MockData, setMockData] = useState<TableUserDataType[]>([]);
   function blockUser(id: string, name: string, status: string) {
     async function Handler() {
       try {
         const updateStatus = status === "block" ? true : false;
-        const response: any = await request({
-          url: "/admin/block&Unblock",
+        const response: { message: string } = await request({
+          url: `/admin/block&Unblock/${id}`,
           method: "patch",
-          data: { updateStatus: updateStatus, id },
+          data: { updateStatus: updateStatus },
         });
-
         if (response.message === "validation Faild") {
           navigate("/login");
         }
@@ -44,16 +49,18 @@ export const UserTable: React.FC = () => {
             )
           );
         }
-      } catch (error: any) {
-        if (error.message === "405") {
-          navigate("/login");
-          return;
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.message === "405") {
+            navigate("/login");
+            return;
+          }
+          alertWithOk(
+            "user management",
+            error.message || "error on dash",
+            "error"
+          );
         }
-        alertWithOk(
-          "user management",
-          error.message || "error on dash",
-          "error"
-        );
       }
     }
     const text = `Do you want to ${status} ${name} ?`;
@@ -64,29 +71,30 @@ export const UserTable: React.FC = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const MockDataFromDb: any = await request({
+        const MockDataFromDb: TableUserDataType[] = await request({
           url: `/admin/fetchUserData?from=user`,
         });
-        console.log(MockDataFromDb);
-        if (MockDataFromDb?.message === "validation Faild") {
-          alertWithOk(
-            "Validation",
-            MockDataFromDb.message || "Validation faild",
-            "info"
-          );
-          navigate("/login");
-        }
+
         setMockData(MockDataFromDb);
-      } catch (error: any) {
-        if (error.message === "405") {
-          navigate("/login");
-          return;
+      } catch (error) {
+        if(error instanceof Error){
+          if (error.message === "405") {
+            navigate("/login");
+            return;
+          }
+          alertWithOk(
+            "user management",
+            error.message || "error on dash",
+            "error"
+          );
+
+        }else{
+           alertWithOk(
+            "user management",
+           "error on user fetching",
+            "error"
+          );
         }
-        alertWithOk(
-          "user management",
-          error.message || "error on dash",
-          "error"
-        );
       }
     }
     fetchData();
@@ -101,7 +109,10 @@ export const UserTable: React.FC = () => {
     );
   }, [searchWord, MockData]);
   const columns = useMemo(() => Columns, []);
-  const data = useMemo(() => filterData ?? [], [filterData]);
+  const data: TableUserDataType[] = useMemo(
+    () => filterData ?? [],
+    [filterData]
+  );
 
   const {
     getTableProps,
@@ -109,15 +120,18 @@ export const UserTable: React.FC = () => {
     headerGroups,
     page,
     nextPage,
-    setPageSize,
     previousPage,
     prepareRow,
     canNextPage,
     canPreviousPage,
     pageOptions,
     state,
-  } = useTable({ columns, data, initialState: { pageSize: 5 } }, usePagination);
-  const { pageIndex, pageSize } = state;
+  } = useTable<TableUserDataType>(
+    { columns, data, initialState: { pageSize: 5 } },
+    usePagination
+  ) as TableInstance<TableUserDataType> &
+    UsePaginationInstanceProps<TableUserDataType>;
+  const { pageIndex } = state as UsePaginationState<TableUserDataType>;
   return (
     <>
       <div className="w-[80%] h-svh">
@@ -180,10 +194,7 @@ export const UserTable: React.FC = () => {
                             {cell.render("Cell")}
                           </TableCell>
                         ))}
-                        {/* <TableCell>
-                      <img onClick={()=>handleClick(row.original._id)} className='w-10 h-10 cursor-pointer' src="/info.png" alt="" />
-                      
-                      </TableCell> */}
+
                         <TableCell>
                           {!row.original.block ? (
                             <img
@@ -221,7 +232,6 @@ export const UserTable: React.FC = () => {
             </Paper>
           </div>
           <div className="w-full h-1/5 flex justify-center items-center">
-            
             <button
               onClick={() => previousPage()}
               disabled={!canPreviousPage}
@@ -230,7 +240,6 @@ export const UserTable: React.FC = () => {
               {"<<"}
             </button>
             <span className="mx-2 sm:mb-0 mb-3">
-              
               <strong>
                 {pageIndex + 1} of {pageOptions.length}
               </strong>{" "}
@@ -248,4 +257,4 @@ export const UserTable: React.FC = () => {
     </>
   );
 };
-export default UserTable
+export default UserTable;

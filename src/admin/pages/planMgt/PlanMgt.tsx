@@ -8,19 +8,12 @@ import {
   promptSweet,
 } from "../../../utils/alert/SweeAlert";
 
-import { planMgtWarningType } from "../addPlan/AddPlan";
+import { PlanMgtWarningType, PlanType } from "@/types/typesAndInterfaces"; 
 import { editedDataValidateion } from "../../../validators/planValidator";
 import { capitaliser } from "../../../utils/firstLetterCapitaliser";
+import { ReponseMessage } from "@/constrains/messages";
 
-export type PlanType = {
-  _id: string;
-  name: string;
-  delete: boolean;
-  duration: number;
-  features: string[];
-  amount: number;
-  connect: number;
-};
+
 
  const PlanDetails = () => {
   const [featureData, setFeatureData] = useState<string[]>([""]);
@@ -34,7 +27,7 @@ export type PlanType = {
     }
     fetchFeature();
   }, []);
-  const [warning, setWarning] = useState<planMgtWarningType>({
+  const [warning, setWarning] = useState<PlanMgtWarningType>({
     amount: "",
     connect: "",
     duration: "",
@@ -96,16 +89,21 @@ export type PlanType = {
           navigate("/login");
         }
         setData(dataDB.plans);
-      } catch (error: any) {
-        if (error.message === "405") {
-          navigate("/login");
-          return;
-        }
-        alertWithOk(
-          "Plan Management",
-          error.message || "error on dash",
-          "error"
-        );
+      } catch (error) {
+        if(error instanceof Error){
+                  if (error.message === "403") {
+                    navigate("/login");
+                    return;
+                  }
+                  alertWithOk(
+                    "Plan Management",
+                    error.message || "error on dash",
+                    "error"
+                  );
+        
+                }else{
+                  alertWithOk('plan service',ReponseMessage.UNEXPTECTED_ERROR,'error')
+                }
       }
     }
     fetchPlanData();
@@ -141,9 +139,8 @@ export type PlanType = {
     async function deletePlan() {
       try {
         const response: { response: boolean; message: string } = await request({
-          url: "/admin/removePlan",
+          url: "/admin/removePlan/"+id,
           method: "patch",
-          data: { id: id },
         });
         if (response.response) {
           setData((el) => el.filter((elem) => elem._id !== id));
@@ -154,18 +151,23 @@ export type PlanType = {
         } else {
           throw new Error(response.message);
         }
-        console.log(response);
-      } catch (error: any) {
-        if (error.message === "405") {
-          navigate("/login");
-          return;
+    
+      } catch (error) {
+               if(error instanceof Error){
+          if (error.message === "405") {
+            navigate("/login");
+            return;
+          }
+  
+          alertWithOk(
+            "Plan Remove",
+            error.message || "Error occured on deleting",
+            "error"
+          );
+        }else{
+          alertWithOk('plan service',ReponseMessage.UNEXPTECTED_ERROR,'error')
         }
-
-        alertWithOk(
-          "Plan Remove",
-          error.message || "Error occured on deleting",
-          "error"
-        );
+       
       }
     }
   }
@@ -178,6 +180,7 @@ export type PlanType = {
             setCurrentData(singleData[0]);
           }
         } else {
+           alertWithOk('plan service',ReponseMessage.UNEXPTECTED_ERROR,'error')
         }
         setToggle(false);
       }
@@ -208,22 +211,22 @@ export type PlanType = {
 
   async function handleSubmission() {
     const processedData: {
-      finalData?: { [key: string]: any };
+      finalData?: { [key: string]: unknown };
       validation: boolean;
     } = editedDataValidateion(
       editData,
       originalData,
       setWarning,
-      editData.features
     );
+ 
     if (processedData.validation) {
       try {
         const response: { response: true; message: string } = await request({
-          url: "/admin/editPlan",
+          url: "/admin/editPlan/"+originalData._id,
           method: "put",
           data: processedData.finalData,
         });
-        console.log(response);
+       
         if (response.response) {
           setData((el) =>
             el.map((element) =>
@@ -245,17 +248,19 @@ export type PlanType = {
         } else {
           throw new Error(response.message);
         }
-      } catch (error: any) {
-        if (error.message === "405") {
-          navigate("/login");
-          return;
+      } catch (error) {
+        if(error instanceof Error){
+          if (error.message === "405") {
+            navigate("/login");
+            return;
+          }
+  
+          alertWithOk(
+            "Plan Edit",
+            error.message || "Error occured on editing",
+            "error"
+          );
         }
-
-        alertWithOk(
-          "Plan Edit",
-          error.message || "Error occured on editing",
-          "error"
-        );
       }
     }
   }
@@ -447,7 +452,7 @@ export type PlanType = {
                     onChange={(t) => changeOnfeature(t)}
                     className="w-[40%] outline-none rounded-xl sm:h-[80%] h-[50%] sm:text-base text-xs bg-dark-blue text-white"
                   >
-                    <option value="">Features</option>
+                    <option disabled value="">Features</option>
                     {featureData.map((el) => (
                       <option value={el}>{el}</option>
                     ))}

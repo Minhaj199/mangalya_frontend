@@ -1,4 +1,4 @@
-import { CredentialInterface } from "../userPages/signup/Credentials";
+import { CredentialInterface } from "@/types/typesAndInterfaces"; 
 import { Dispatch, SetStateAction } from "react";
 import { request } from "../utils/AxiosUtils";
 

@@ -3,17 +3,12 @@ import { userData } from "@/userPages/userProfile/UserProfile";
 import { showToast } from "../utils/alert/toast";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 import { request } from '../utils/AxiosUtils'
+import { editValidatorwarning } from "@/types/typesAndInterfaces";
 
-type warning = {
-  firstName: string;
-  secondName: string;
-  state: string;
-  dob: string;
-  email: string;
-};
+
 export async function validateEditedData(
   editedData: userData,
-  setFormWaring: Dispatch<SetStateAction<warning>>
+  setFormWaring: Dispatch<SetStateAction<editValidatorwarning>>
 ) {
   let count = 0;
   setFormWaring({

@@ -31,9 +31,8 @@ export const Forgot_first:React.FC<Forgot_Props> = ({changeToggle}) => {
     if(validateEmail(email)){
     try {
       
-      const encodedUri=encodeURI(`/user/forgotEmail?email=${email}`)
       setLoading(true)
-      const response:{email:string}|null=await request({url:encodedUri,method:'get'})
+      const response:{email:string}|null=await request({url:`/user/forgotEmail?email=${email}&&from=forgot`,method:'get'})
     setLoading(false)
       if(response?.email){
         setforgotEmail(response.email)

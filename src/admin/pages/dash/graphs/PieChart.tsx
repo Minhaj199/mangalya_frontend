@@ -3,6 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { request } from "../../../../utils/AxiosUtils";
 import { alertWithOk } from "../../../../utils/alert/SweeAlert";
+import { ReponseMessage } from "@/constrains/messages";
 
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -18,8 +19,12 @@ const PieChart: React.FC = () => {
         });
 
         setDashCount(response);
-      } catch (error: any) {
-        alertWithOk("Dash Error", error.message || "error on dash", "error");
+      } catch (error) {
+        if (error instanceof Error) {
+          alertWithOk("Dash Error", error.message || "error on dash", "error");
+        } else {
+          alertWithOk("Dash Error", ReponseMessage.UNEXPTECTED_ERROR, "error");
+        }
       }
     }
     fetchData();
@@ -50,7 +55,8 @@ const PieChart: React.FC = () => {
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => `${context.label}: ${context.raw}%`,
+          label: (context: { label: string; raw: string }) =>
+            `${context.label}: ${context.raw}%`,
         },
       },
     },

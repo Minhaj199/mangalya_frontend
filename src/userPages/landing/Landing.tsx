@@ -2,9 +2,9 @@ import "./Landing.css";
 
 import { Footer } from "../../components/user/footer/Footer";
 import { useEffect, useState } from "react";
-import { Forgot_first } from "../../components/user/forgot/Forgot_first";
-import { Forgot_second } from "../../components/user/forgot/Forgot_second";
-import { Forgot_Final } from "../../components/user/forgot/Forgot_final";
+import { Forgot_first } from "../../components/user/forgotPassword/Forgot_first";
+import { Forgot_second } from "../../components/user/forgotPassword/Forgot_second";
+import { Forgot_Final } from "../../components/user/forgotPassword/Forgot_final";
 import { Login } from "../../components/user/login/Login";
 import { HomeCards } from "../../components/user/homeCards/HomeCards";
 import { useDispatch } from "react-redux";

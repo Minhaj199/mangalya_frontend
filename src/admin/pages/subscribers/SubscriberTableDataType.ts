@@ -6,3 +6,11 @@ export type  SubscriberTableDataType = {
     MatchCountRemaining:number
     planAmount:number
 }
+export type PlanDataType = {
+    name: string;
+  };
+export interface data {
+    planData: PlanDataType[];
+    userData: SubscriberTableDataType[];
+    message: string;
+  }

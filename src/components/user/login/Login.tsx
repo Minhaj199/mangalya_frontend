@@ -1,5 +1,5 @@
 
-import { Forgot_Props } from "../forgot/Forgot_first"
+import { Forgot_Props } from "../forgotPassword/Forgot_first"
 import {  Dispatch, SetStateAction,useState } from "react"
 import { LoginValidator } from "../../../validators/loginValidator"
 import { useDispatch } from 'react-redux';

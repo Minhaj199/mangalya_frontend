@@ -22,14 +22,12 @@ export const Forgot_Final:React.FC<Forgot_Props> = ({changeToggle}) => {
   const [warning,setWarning]=useState<{password:string,confirm:string}>({password:'',confirm:''})
   
   async function handleReset(){
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
+  
+    const strongPasswordRegex =new RegExp(import.meta.env.VITE_PASSWORD_REGEX!)
     const test=strongPasswordRegex.test(password)
     if(!test){
-
       setWarning({password:'password is not strong',confirm:''})
             
-     
-      
     }else if(confirm.trim()===''){
       setWarning({password:'',confirm:'Blank not allowed'})
     }else if(password!==confirm){
@@ -40,7 +38,7 @@ export const Forgot_Final:React.FC<Forgot_Props> = ({changeToggle}) => {
       setWarning({password:'',confirm:""})
       try {
         setLoading(true)
-        const response:{message:string}=await request({url:'/user/changePassword',method:'patch',data:{email:forgotEmail,password}})
+        const response:{message:string}=await request({url:'/user/changePassword',method:'patch',data:{email:forgotEmail,password,confirmPassword:confirm}})
         if(response.message){
           if(response.message==='password changed'){
             alertWithOk('Password Reset','Password changed,please try again',"info")

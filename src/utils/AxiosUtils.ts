@@ -5,6 +5,7 @@ import axios, {
 } from "axios";
 import { handleAlert } from "./alert/SweeAlert";
 
+
 const client = axios.create({
   baseURL: import.meta.env.VITE_BACKENT_URL,
 });
@@ -18,8 +19,8 @@ const onTokenRefreshed = (token: string) => {
 };
 
 const addRefreshSubscriber = (callback: (token: string) => void) => {
-  refreshSubscribers.push(callback);
-};
+  refreshSubscribers.push(callback)
+};  
 
 // Request Interceptor
 client.interceptors.request.use(
@@ -58,8 +59,7 @@ client.interceptors.response.use(
       ...error.config,
       headers: { ...error.config.headers },
     };
-
-    if (error.response?.status === 402 && !originalRequest._retry) {
+    if (error.response?.status === 403 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve) => {
           addRefreshSubscriber((newToken: string) => {
@@ -86,15 +86,15 @@ client.interceptors.response.use(
           originalRequest.headers["AuthForUser"] = data.token;
           return client(originalRequest);
         }
-      } catch (error) {
-        localStorage.removeItem("userToken");
-        localStorage.removeItem("userRefresh");
+      } catch  {
         handleAlert("error", "Session expired. Please login again.");
-        return Promise.reject(error);
+      
+          return Promise.reject(new Error('token expired'));       
+      
       }
     }
 
-    if (error.response?.status === 405) {
+    if (error.response?.status === 401) {
       localStorage.removeItem("adminToken");
       handleAlert("info", "Admin session expired.");
       return Promise.reject(new Error("Admin token expired."));
@@ -107,5 +107,15 @@ client.interceptors.response.use(
 );
 
 export const request = async <T>(options: AxiosRequestConfig): Promise<T> => {
-  return await client(options);
+  try {
+    return await client(options);
+    
+  } catch (error) {
+    if(error instanceof Error){
+      throw new Error(error.message)
+    }else{
+      throw new Error('unexpted error')
+      
+    }
+  }
 };

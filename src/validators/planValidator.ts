@@ -1,17 +1,17 @@
 import { Dispatch, SetStateAction } from "react";
-import { PlanData, planMgtWarningType } from "../admin/pages/addPlan/AddPlan";
-import { alertWithOk, handleAlert } from "../utils/alert/SweeAlert";
-import { PlanType } from "../admin/pages/planMgt/PlanMgt";
 
-export type PlanDataForValidation = {
-  name: string;
-  amount: number | string;
-  connect: number | string;
-  duration: number;
-};
+import { alertWithOk, handleAlert } from "../utils/alert/SweeAlert";
+import { PlanDataForValidation, PlanType } from "@/types/typesAndInterfaces"; 
+import {
+  PlanValidation,
+  PlanDatas,
+  PlanMgtWarningType,
+} from "@/types/typesAndInterfaces";
+
+
 export function PlanValidator(
-  planData: PlanData | PlanType,
-  setWarning: Dispatch<SetStateAction<planMgtWarningType>>,
+  planData: PlanDatas | PlanType,
+  setWarning: Dispatch<SetStateAction<PlanMgtWarningType>>,
   handleFeatureState: string[]
 ): boolean {
   let state = true;
@@ -36,22 +36,25 @@ export function PlanValidator(
     typeof planDatas.amount === "number" &&
     planDatas.amount >= 10000
   ) {
-    setWarning((el) => ({ ...el, amount: "!more than 10000" }));
+    setWarning((el) => ({ ...el, amount: "more than 10000!" }));
+    state = false;
+  } else if (typeof planDatas.amount === "number" && planDatas.amount < 100) {
+    setWarning((el) => ({ ...el, amount: "less thant 100 !" }));
     state = false;
   } else {
     setWarning((el) => ({ ...el, amount: "" }));
   }
   if (planData.connect <= 0 || "") {
-    setWarning((el) => ({ ...el, connect: "!insert number" }));
+    setWarning((el) => ({ ...el, connect: "insert number !" }));
     state = false;
   } else if (planData.connect > 1000) {
-    setWarning((el) => ({ ...el, connect: "!more than 1000" }));
+    setWarning((el) => ({ ...el, connect: "more than 1000 !" }));
     state = false;
   } else {
     setWarning((el) => ({ ...el, connect: "" }));
   }
   if (planData.duration === 0) {
-    setWarning((el) => ({ ...el, duration: "!Blank" }));
+    setWarning((el) => ({ ...el, duration: "Blank!" }));
     state = false;
   } else {
     setWarning((el) => ({ ...el, duration: "" }));
@@ -62,40 +65,38 @@ export function PlanValidator(
   }
   return state;
 }
+
 export function editedDataValidateion(
-  planData: any,
-  originalData: any,
-  setWarning: Dispatch<SetStateAction<planMgtWarningType>>,
-  handleFeatureState: string[]
+  planDatas: unknown,
+  originalDatas: unknown,
+  setWarning: Dispatch<SetStateAction<PlanMgtWarningType>>
 ) {
-  const finalData: { [key: string]: any } = {};
-  Object.keys(planData).forEach((key: string) => {
-    const planValue = planData[key];
-    const originalValue = originalData[key];
-    if (
-      Array.isArray(planValue) &&
-      planValue.length !== 0 &&
-      Array.isArray(originalValue) &&
-      planValue.length !== 0
-    ) {
+  const finalData: { [key: string]: string|boolean|Date|string[] } = {};
+  const planData=planDatas as PlanValidation
+  const originalData=originalDatas as PlanValidation
+  Object.keys(planData).forEach((key) => {
+    const typedKey = key as keyof PlanValidation;
+    
+    const planValue = planData[typedKey];
+    const originalValue = originalData[typedKey];
+    if (Array.isArray(planValue)&& planValue.length !== 0 &&Array.isArray(originalValue) &&planValue.length !== 0) {
       if (JSON.stringify(planValue) !== JSON.stringify(originalValue)) {
-        finalData[key] = planData[key];
+        if(typedKey==='features'&&isStringArray(planData[typedKey]))
+        finalData[typedKey] =  planData[typedKey];
       }
     }
+   
+    if (typeof planData[typedKey] === "string" &&planData[typedKey]?.trim() !== "" &&planValue !== originalValue
+    &&typedKey==='name') {
 
-    if (
-      typeof planValue === "string" &&
-      planValue?.trim() !== "" &&
-      planValue !== originalValue
-    ) {
-      finalData[key] = planData[key];
+      finalData[typedKey] = planData[typedKey];
     }
     if (
-      typeof planValue === "number" &&
-      planValue !== 0 &&
+      typeof planData[typedKey] === "number" &&
+      planData[typedKey] !== 0 &&
       planValue !== originalValue
     ) {
-      finalData[key] = planData[key];
+      finalData[typedKey] = planData[typedKey];
     }
   });
   if (Object?.keys(finalData).length <= 0) {
@@ -103,11 +104,11 @@ export function editedDataValidateion(
     return { validation: false };
   }
 
-  const planDatas = planData as PlanDataForValidation;
+ 
 
   if (
-    (planData.name && planData.name.length > 10) ||
-    (planData.name && planData.name.length < 3)
+    (planData['name']&&typeof planData['name']==='string' && planData['name'].length > 10) ||
+    (planData.name,planData['name']&&typeof planData['name']==='string' && planData.name.length < 3)
   ) {
     setWarning((el) => ({ ...el, name: "Name should b/w 3-10" }));
     return { validation: false };
@@ -115,9 +116,9 @@ export function editedDataValidateion(
     setWarning((el) => ({ ...el, name: "" }));
   }
   if (
-    (planDatas.amount && NaN) ||
-    (planDatas.amount && planDatas.amount === "") ||
-    (planDatas.amount &&
+    (planData['amount'] && NaN) ||
+    (planData['amount'] && planData['amount'] === "") ||
+    (planData.amount &&
       typeof planData.amount === "number" &&
       planData.amount === 0)
   ) {
@@ -125,29 +126,42 @@ export function editedDataValidateion(
     return { validation: false };
   } else if (
     planData.amount &&
-    typeof planDatas.amount === "number" &&
-    planDatas.amount >= 10000
+    typeof planData['amount'] === "number" &&
+    planData['amount'] >= 10000
   ) {
-    setWarning((el) => ({ ...el, amount: "!more than 10000" }));
+    setWarning((el) => ({ ...el, amount: "more than 10000 !" }));
+    return { validation: false };
+  } else if (
+    planData.amount &&
+    typeof planData['amount'] === "number" &&
+    planData.amount < 100
+  ) {
+    setWarning((el) => ({ ...el, amount: "Less than 100!" }));
     return { validation: false };
   } else {
     setWarning((el) => ({ ...el, amount: "" }));
   }
-  if ((planData.connect && planData.connect <= 0) || "") {
-    setWarning((el) => ({ ...el, connect: "!insert number" }));
+  if ((planData['connect'] &&typeof planData['connect']==='number'&&planData['connect'] <= 0) || "") {
+    setWarning((el) => ({ ...el, connect: "insert number !" }));
     return { validation: false };
-  } else if (planData.connect && planData.connect > 1000) {
-    setWarning((el) => ({ ...el, connect: "!more than 1000" }));
+  } else if (planData['connect'] &&typeof planData['connect']==='number' && planData.connect > 1000) {
+    setWarning((el) => ({ ...el, connect: "more than 1000 !" }));
     return { validation: false };
   } else {
     setWarning((el) => ({ ...el, connect: "" }));
   }
-  if (planData.duration && planData.duration === 0) {
-    setWarning((el) => ({ ...el, duration: "!Blank" }));
+  if (planData['duration'] &&typeof planData['duration']==='number'&&planData.duration === 0) {
+    setWarning((el) => ({ ...el, duration: "Blank !" }));
     return { validation: false };
   } else {
     setWarning((el) => ({ ...el, duration: "" }));
   }
   finalData["_id"] = originalData._id;
   return { finalData, validation: true };
+}
+
+/////////////////// type guard/////////////
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(item => typeof item === "string");
 }

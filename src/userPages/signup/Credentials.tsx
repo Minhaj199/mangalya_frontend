@@ -13,23 +13,9 @@ import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import { useDispatch } from "react-redux";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { Footer } from "@/components/user/footer/Footer";
+import { CredentialInterface, InputArrayProbs, PhotoAndInterest } from "@/types/typesAndInterfaces";
 
-export interface CredentialInterface {
-  [key: string]: string;
-}
-export interface InputArrayProbs {
-  inputFields: {
-    linkingName: string;
-    inputType: string;
-    inputName: string;
-    option?: string[];
-  }[];
-  toggle: number;
-}
-export type PhotoAndInterest = {
-  photo?: File | null;
-  interest?: string[];
-};
+
  const Credentials: React.FC<InputArrayProbs> = ({
   inputFields,
   toggle,
@@ -53,6 +39,15 @@ export type PhotoAndInterest = {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  function handleBack(){
+    if(localStorage.getItem('userToken')){
+        localStorage.removeItem('userToken')
+    }
+    navigate('/')
+  }
+
+
 
   if (!context) {
     throw new Error("no contex");
@@ -161,7 +156,7 @@ export type PhotoAndInterest = {
               handleAlert("success", "Data Added");
               setTimeout(() => {
                 navigate("/PlanDetails");
-              }, 3000);
+              }, 4000);
             } else {
               navigate("/");
             }
@@ -200,7 +195,7 @@ export type PhotoAndInterest = {
         >
           <p
             className="font-Lumanosimo text-white text-sm sm:text-base cursor-pointer"
-            onClick={() => navigate("/")}
+            onClick={handleBack}
           >
             BACK
           </p>

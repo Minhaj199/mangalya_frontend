@@ -1,32 +1,19 @@
 import { ReportModal } from "@/components/admin/abuseModalAction/AbuseAction";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
+import { IAbuserReport } from "@/types/typesAndInterfaces";
 import { alertWithOk, handleAlert, promptSweet } from "@/utils/alert/SweeAlert";
 import { request } from "@/utils/AxiosUtils";
-import { showToast } from "@/utils/alert/toast";
 
 import { Trash2, Mail, MailOpen } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export interface AbuserReport {
-  _id: string;
-  reporter: { _id: string; PersonalInfo: { firstName: string } };
-  reported: { _id: string; PersonalInfo: { firstName: string } };
-  read: boolean;
-  reason: string;
-  moreInfo: string;
-  warningMail: boolean;
-  rejected: boolean;
-  block: boolean;
-  createdAt: Date;
-}
-
- function Abuse() {
-  const [reports, setReports] = useState<AbuserReport[]>([]);
+function Abuse() {
+  const [reports, setReports] = useState<IAbuserReport[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [currentData, setCurrentData] = useState<AbuserReport>({
+  const [currentData, setCurrentData] = useState<IAbuserReport>({
     _id: "",
     rejected: true,
     block: false,
@@ -42,7 +29,7 @@ export interface AbuserReport {
   useEffect(() => {
     try {
       async function fetch() {
-        const response: { data: AbuserReport[]; message: string } =
+        const response: { data: IAbuserReport[]; message: string } =
           await request({ url: "/admin/getReports" });
 
         if (response.message) {
@@ -66,7 +53,6 @@ export interface AbuserReport {
   const formatTime = (timestamp: Date) => {
     const date = new Date(timestamp);
     const now = new Date();
-
     const isToday =
       date.getDate() === now.getDate() &&
       date.getMonth() === now.getMonth() &&
@@ -110,9 +96,9 @@ export interface AbuserReport {
     });
     try {
       const response: { status: boolean; message: string } = await request({
-        url: "/admin/reportToggle",
+        url: "/admin/reportToggle/" + id,
         method: "patch",
-        data: { status: !status, id: id },
+        data: { status: !status },
       });
       if (response.message) {
         throw new Error(response.message);
@@ -147,9 +133,8 @@ export interface AbuserReport {
       );
       async function deleteMsg() {
         const response: { data: boolean; message: string } = await request({
-          url: "/admin/deleteMsg",
+          url: "/admin/deleteMsg/" + id,
           method: "delete",
-          data: { id: id },
         });
         if (response.message) {
           throw new Error(response.message);
@@ -233,4 +218,4 @@ export interface AbuserReport {
     </>
   );
 }
-export default Abuse
+export default Abuse;

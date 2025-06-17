@@ -22,6 +22,7 @@ import {
   ProtectRouteUser,
 } from "./shared/hoc/routeManagement";
 import CircularIndeterminate from "./components/circularLoading/Circular";
+import { inputFields } from "./components/user/signupInputs/inputFields";
 const AddPlan = lazy(() => import("./admin/pages/addPlan/AddPlan"));
 const SubscriberTable = lazy(() => import("./admin/pages/subscribers/Table"));
 const PlanPurchase = lazy(() => import("./userPages/plan/Plan"));
@@ -36,22 +37,6 @@ const PlanHistoryAndReq = lazy(
   () => import("./userPages/planHistory/PlanHistoryAndReq")
 );
 
-export const districtsOfKerala = [
-  "Alappuzha",
-  "Ernakulam",
-  "Idukki",
-  "Kannur",
-  "Kasaragod",
-  "Kollam",
-  "Kottayam",
-  "Kozhikode",
-  "Malappuram",
-  "Palakkad",
-  "Pathanamthitta",
-  "Trivandrum",
-  "Thrissur",
-  "Wayanad",
-];
 
 const App: React.FC = () => {
   const context = useContext(SignupContext);
@@ -59,41 +44,6 @@ const App: React.FC = () => {
   if (!context) {
     throw new Error("user  data is empty in opt verification");
   }
-
-  const inputFields = [
-    { linkingName: "firstName", inputType: "text", inputName: "FIRST NAME" },
-    { linkingName: "secondName", inputType: "text", inputName: "SECOND NAME" },
-    {
-      linkingName: "dateOfBirth",
-      inputType: "date",
-      inputName: "DATE OF BIRTH",
-    },
-    {
-      linkingName: "state",
-      inputType: "dropDown",
-      option: districtsOfKerala,
-      inputName: "DISTRICT THAT YOU LIVE",
-    },
-    {
-      linkingName: "Gender",
-      inputType: "dropDown",
-      option: ["female", "male"],
-      inputName: "YOUR GENDER",
-    },
-    {
-      linkingName: "partner",
-      inputType: "dropDown",
-      option: ["male", "female"],
-      inputName: "GENDER OF PARTNER",
-    },
-    { linkingName: "email", inputType: "email", inputName: "EMAIL" },
-    { linkingName: "password", inputType: "text", inputName: "PASSWORD" },
-    {
-      linkingName: "cPassword",
-      inputType: "password",
-      inputName: "CONFIRM PASSWORD",
-    },
-  ];
   return (
     <Suspense
       fallback={

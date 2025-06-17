@@ -1,10 +1,5 @@
+import { DashCardProps } from "@/types/typesAndInterfaces"; 
 import "./dash.css";
-
-interface DashCardProps {
-  Title: string;
-  Data: number;
-  img: string;
-}
 
 export function DashCard({ Title, Data, img }: DashCardProps) {
   return (

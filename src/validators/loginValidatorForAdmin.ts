@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
-import { AdminInterface } from "../admin/login/Login";
+import { IAdminAuth } from "@/types/typesAndInterfaces"; 
 
 type probs = {
   username: string;
   password: string;
 };
 export const LoginValidatorAdmin = (
-  { email, password }: AdminInterface,
+  { email, password }: IAdminAuth,
   setWarnning: Dispatch<SetStateAction<probs>>
 ): boolean => {
   if (email.trim() === "") {

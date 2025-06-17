@@ -1,20 +1,15 @@
 import React, {
   useRef,
   useState,
-  SetStateAction,
-  Dispatch,
   useEffect,
 } from "react";
-import { PhotoAndInterest } from "../Credentials";
+import { interestType, PhotAndIntInterface } from "@/types/typesAndInterfaces"; 
 import { request } from "../../../utils/AxiosUtils";
 
 import { alertWithOk } from "@/utils/alert/SweeAlert";
 import { compressImage } from "@/utils/imageCompressor";
 
-interface PhotAndIntInterface {
-  probState: PhotoAndInterest;
-  probSetter: Dispatch<SetStateAction<PhotoAndInterest>>;
-}
+
 
 export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -23,7 +18,7 @@ export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
   useEffect(() => {
     probSetter((el) => ({ ...el, interest: selected }));
   }, [selected, image]);
-  type interestType = { sports: string[]; music: string[]; food: string[] };
+
 
   const [enablingTypesOfInterest, setEnablingTypesOfInterest] =
     useState<boolean>(false);

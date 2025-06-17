@@ -1,5 +1,5 @@
 import imageCompression from 'browser-image-compression'
-import { handleAlert } from './alert/SweeAlert'
+
 export const compressImage=async(file:File)=>{
 const option={
     maxSizeMB:1,

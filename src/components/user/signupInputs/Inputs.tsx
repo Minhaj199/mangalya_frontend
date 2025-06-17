@@ -1,7 +1,7 @@
 
 
 import React, { Dispatch,SetStateAction } from 'react'
-import { CredentialInterface } from '../../../userPages/signup/Credentials'
+import { CredentialInterface } from '@/types/typesAndInterfaces' 
 import { Validator_ } from '../../../validators/liveValidator' 
 import { capitaliser } from '../../../utils/firstLetterCapitaliser'
 

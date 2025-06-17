@@ -31,7 +31,6 @@ const LineChart = () => {
         const response: { month: number[]; revenue: number[] } = await request({
           url: "/admin/getDataToDash?from=Revenue",
         });
-        console.log(response.month);
         setData({ month: response.month, revenue: response.revenue });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -92,10 +91,6 @@ const LineChart = () => {
         }}
       >
         <h2 style={{ fontWeight: "bold", margin: 0, color: "teal" }}></h2>
-        {/* <select style={{ padding: "5px" }}>
-          <option>Monthly</option>
-          <option>Quarterly</option>
-        </select> */}
       </div>
       <Line data={data} options={options} />
     </div>

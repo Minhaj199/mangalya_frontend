@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
-import { districtsOfKerala } from "../../App";
+import { districtsOfKerala } from "@/components/user/signupInputs/inputFields"; 
 import { request } from "@/utils/AxiosUtils";
 import { showToast } from "@/utils/alert/toast";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
@@ -90,12 +90,7 @@ import { Footer } from "@/components/user/footer/Footer";
 
   // Handle search submission
   const handleSearch = () => {
-    // Collect search parameters
-    if (
-      ageRange.min === "" &&
-      ageRange.max === "" &&
-      selectedDistrict === "" &&
-      !selectedInterests?.length
+    if (ageRange.min === "" &&ageRange.max === "" &&selectedDistrict === "" &&selectedInterests?.length
     ) {
       alertWithOk("Search Result", "No Criteria found", "info");
       return;
@@ -123,7 +118,6 @@ import { Footer } from "@/components/user/footer/Footer";
     navigate(`/loginLanding?`, {
       state: { data: searchParams, from: "search" },
     });
-    console.log("Search Parameters:", searchParams);
   };
 
   // Handle interest selection/deselection

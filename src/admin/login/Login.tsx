@@ -7,36 +7,27 @@ import { LoginValidatorAdmin } from "../../validators/loginValidatorForAdmin";
 import { useNavigate } from "react-router-dom";
 import { handleAlert } from "../../utils/alert/SweeAlert";
 import { Footer } from "@/components/user/footer/Footer";
+import {
+  IAdminAuth,
+  IAdminAuthicated,
+  ILoginWarning,
+} from "../../types/typesAndInterfaces";
 
-export interface AdminInterface {
-  email: string;
-  password: string;
-}
- const Login: React.FC = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [adminForm, setAdminForm] = useState<AdminInterface>({
+  const [adminForm, setAdminForm] = useState<IAdminAuth>({
     email: "",
     password: "",
   });
-  interface warning {
-    username: string;
-    password: string;
-  }
-  const [warnnig, setWarning] = useState<warning>({
+
+  const [warnnig, setWarning] = useState<ILoginWarning>({
     username: "",
     password: "",
   });
   async function handleSubmit() {
-    interface LoginType {
-      username?: string;
-      adminVerified?: string;
-      password?: string;
-      token: string;
-    }
-
     if (LoginValidatorAdmin(adminForm, setWarning)) {
       try {
-        const response: LoginType = await request({
+        const response: IAdminAuthicated = await request({
           url: "/admin/login",
           method: "post",
           data: adminForm,
@@ -72,10 +63,10 @@ export interface AdminInterface {
         if (error instanceof Error) {
           handleAlert(
             "error",
-            error.message || "internal server error at login 21"
+            error.message || "internal server error at login"
           );
         }
-        handleAlert("error", "internal server error at login 21");
+        handleAlert("error", "internal server error at login");
       }
     }
   }
@@ -143,4 +134,4 @@ export interface AdminInterface {
     </>
   );
 };
-export default  Login
+export default Login;

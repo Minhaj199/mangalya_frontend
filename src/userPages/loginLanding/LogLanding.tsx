@@ -15,7 +15,7 @@ import {
   handleAlert,
   simplePropt,
 } from "../../utils/alert/SweeAlert";
-import { PlanData } from "../plan/Plan";
+import { PlanData, profileType } from "@/types/typesAndInterfaces"; 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "../../redux/reduxGlobal";
@@ -24,20 +24,7 @@ import { showToast } from "@/utils/alert/toast";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { Footer } from "@/components/user/footer/Footer";
 
-export type profileType = {
-  _id: string;
-  interest: string[];
-  photo: string;
-  lookingFor: string;
-  name: string;
-  no: number;
-  secondName: string;
-  state: string;
-  age: number;
-  gender: string;
-  dateOfBirth: Date | string;
-  matchStatics?: string;
-};
+
 
  const LoginLanding = () => {
   const socket = useSocket();
@@ -245,7 +232,7 @@ export type profileType = {
   const useData = useSelector((state: ReduxState) => state.userData);
   ////////pagination
 
-  // const [interest, setInterest] = useState<string[]>();
+  
   //////////profile and plan fetching///////
   useEffect(() => {
     if (location?.state?.data && location?.state?.from === "search") {

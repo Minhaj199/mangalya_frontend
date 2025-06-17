@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import "./Plan.css";
 import { request } from "../../utils/AxiosUtils";
 import { useNavigate } from "react-router-dom";
@@ -9,32 +9,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { ReduxState } from "../../redux/reduxGlobal";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { Footer } from "@/components/user/footer/Footer";
+import { PlanData } from "@/types/typesAndInterfaces";
 
-export type PlanData = {
-  name: string;
-  connect: number;
-  duration: number;
-  features: string[];
-  amount: number;
-  avialbleConnect?: number;
-  _id: string;
-  Expiry?: Date;
-};
+
 const PlanPurchase = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [planData, setPlanData] = useState<PlanData[]>([
-    { _id: "", amount: 0, duration: 0, features: [""], connect: 0, name: "" },
+    { _id: "", amount: 0, duration: 0, features: [""], connect: 0, name: "" ,avialbleConnect:0,Expiry:new Date()},
   ]);
 
   ///////////fetching plan
   useEffect(() => {
     async function fetchPlanData() {
-      const response: typeof planData = await request({
+      const response:{plans:PlanData[]} = await request({
         url: "/user/fetchPlanData",
       });
 
-      setPlanData(response);
+      setPlanData(response.plans);
+      
     }
     fetchPlanData();
   }, []);
@@ -117,7 +110,7 @@ const PlanPurchase = () => {
         </div>
         <div className={`w-[100%]  px-4 overflow-x-auto no-scrollbar no-scrollbarh-[70%] flex ${planData.length>3?'sm:justify-start justify-center':'justify-center'}  items-center`}>
           <div className="flex   sm:flex-col md:flex-col lg:flex-row flex-col gap-5 h-full ">
-            {planData.map((el, index) => (
+            {planData.length&&planData?.map((el, index) => (
               <div
                 key={index}
                 className="sm:w-[300px] w-[250px]  h-[98%] ml-5 rounded-2xl bg-blue-950 "

@@ -14,6 +14,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { showToast } from "@/utils/alert/toast";
 import { compressImage } from "@/utils/imageCompressor";
+import { EmojiMartEmoji } from "@/types/typesAndInterfaces";
 
 const ChatInterface = () => {
   const onliners = useSelector((state: ReduxState) => state.onlinePersons);
@@ -43,20 +44,25 @@ const ChatInterface = () => {
   const location = useLocation();
   const ref = useRef(0);
 
-  const addEmoji = (emoji: any) => {
+  const addEmoji = (emoji: EmojiMartEmoji) => {
     setInput((prev) => prev + emoji.native);
   };
   useEffect(() => {
     const fetch = async () => {
       if (chatId) {
-        const messagesResponse: {
-          senderId: string;
-          text: string;
-          createdAt: string;
-          _id: string;
-          image: boolean;
-        }[] = await request({ url: `/user/getMessages/${chatId}` });
-        setMessages(messagesResponse);
+        try {
+          const messagesResponse: {
+            senderId: string;
+            text: string;
+            createdAt: string;
+            _id: string;
+            image: boolean;
+          }[] = await request({ url: `/user/getMessages/${chatId}` });
+          
+          setMessages(messagesResponse);
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     fetch();
@@ -117,9 +123,10 @@ const ChatInterface = () => {
         if (userData) {
           setRecieverData({ image: userData.photo, name: userData.name });
         }
+
+      
         const response: { chatRoomId: string } = await request({
-          url: `/user/getChats`,
-          data: { id: location.state.id },
+          url: `/user/getChats/` + location.state.id,
           method: "post",
         });
 
@@ -175,7 +182,7 @@ const ChatInterface = () => {
     setEmogi(false);
     let imgUrl = "";
     setLoading(true);
-    if (file) {
+    if (file&&input?.trim()==='') {
       const formData = new FormData();
 
       formData.append("file", file);
@@ -279,9 +286,11 @@ const ChatInterface = () => {
           },
           method: "post",
         });
+      
         if (response.messsage)
           throw new Error(response.messsage || "erro on Chat");
         if (response.newMessage._id) {
+       
           socket?.emit("sendMessage", {
             chatId: chatId,
             senderId: localStorage.getItem("userRefresh"),
@@ -299,8 +308,8 @@ const ChatInterface = () => {
           handleAlert("error", error.message);
         }
         handleAlert("error", "error on sending message");
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
 
       setInput("");
@@ -310,20 +319,27 @@ const ChatInterface = () => {
   };
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const handlePhoto =async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
 
     if (selectedFile) {
-      const maxSize=10*1024*1024
-      const lessSize=1*1024*1024
-     const file=(selectedFile.size>lessSize)?await compressImage (selectedFile):selectedFile
-      if(maxSize<file.size){
-                   alertWithOk('Photo size limit','please reduce size to below 10 mp','info')
-                   return
-                 }
+      const maxSize = 10 * 1024 * 1024;
+      const lessSize = 1 * 1024 * 1024;
+      const file =
+        selectedFile.size > lessSize
+          ? await compressImage(selectedFile)
+          : selectedFile;
+      if (maxSize < file.size) {
+        alertWithOk(
+          "Photo size limit",
+          "please reduce size to below 10 mp",
+          "info"
+        );
+        return;
+      }
+      setInput('')
       setFile(file);
-      setPreview(URL.createObjectURL(file))
-      ;
+      setPreview(URL.createObjectURL(file));
     }
   };
 

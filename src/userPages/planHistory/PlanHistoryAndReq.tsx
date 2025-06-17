@@ -1,6 +1,7 @@
 import { Footer } from "@/components/user/footer/Footer";
 import { NavbarForPlan } from "@/components/user/navbar/NavbarForPlan";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
+import { RequtestUser } from "@/types/typesAndInterfaces";
 import { showToast } from "@/utils/alert/toast";
 import { request } from "@/utils/AxiosUtils";
 import { dateToDateInputGenerator } from "@/utils/dateToDateInputGenerator";
@@ -13,19 +14,14 @@ import { useEffect, useState } from "react";
   const [toggle, setToggle] = useState<boolean>(false);
   const [currenPlan, setCurrentPlan] = useState<currentPlan>();
   const [previousePlan, setPreviousePlan] = useState<currentPlan[]>([]);
-  const [requestArray, setRequestArray] = useState<requtest[]>([]);
+  const [requestArray, setRequestArray] = useState<RequtestUser[]>([]);
 
-  type requtest = {
-    _id: string;
-    status: string;
-    typeOfRequest: string;
-    name: string;
-  };
+  
   useEffect(() => {
     const fetch = async () => {
       try {
         const response: {
-          request: requtest[];
+          request: RequtestUser[];
           plan: currentPlan;
           history: currentPlan[];
         } = await request({ url: "/user/planHistoryAndRequest" });
