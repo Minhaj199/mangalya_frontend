@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Navbar } from "../../components/user/navbar/Navbar";
 import { useState } from "react";
 import store from "@/redux/reduxGlobal";
-import { IReduxState } from "@/types/typesAndInterfaces";  
+import { IReduxState } from "@/types/typesAndInterfaces";
 import { showToast as toastAlert } from "@/utils/alert/toast";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
@@ -12,9 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter} from "@/components/ui/dialog";
-  
-  import {
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -43,8 +44,9 @@ import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { useSelector } from "react-redux";
 import { Footer } from "@/components/user/footer/Footer";
 import { MatchedProfileType } from "@/types/typesAndInterfaces";
+import CircularIndeterminate from "@/components/circularLoading/Circular";
 
- const Matched = () => {
+const Matched = () => {
   const onliners = useSelector((state: IReduxState) => state.onlinePersons);
 
   const [showToast, setShowToast] = useState(false);
@@ -54,6 +56,7 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
   const [fetchedProfiles, setFetchedProfiles] = useState<MatchedProfileType[]>(
     []
   );
+  const [loading, setLoading] = useState(false);
 
   /////////////pagination////////////
   const [temporary, setTemporay] = useState<MatchedProfileType[]>([]);
@@ -67,7 +70,6 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
   const [reportedId, setReportedId] = useState<string>("");
   const [onliner, setOnliner] = useState<string[]>([]);
   const navigate = useNavigate();
-  
 
   ////////////fetch data/////////
   interface Response {
@@ -87,6 +89,7 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
       if (ref.current === 0) {
         ref.current++;
         try {
+          setLoading(true);
           const response: Response = await request({
             url: "/user/matchedUsers",
           });
@@ -117,6 +120,8 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
             );
           }
           console.warn(error);
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -169,7 +174,7 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
     socket?.on("user_loggedOut", (data: { id: string }) => {
       store.dispatch({
         type: "SET_ONLINERS",
-        payload: onliners.filter((el:string) => el !== data.id),
+        payload: onliners.filter((el: string) => el !== data.id),
       });
     });
     socket?.on("errorFromSocket", (data) => {
@@ -207,10 +212,11 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
     setTimeout(() => setShowToast(false), 3000);
   };
 
-const handleDelete = async (userId: string) => {
+  const handleDelete = async (userId: string) => {
     try {
+      setLoading(true);
       const response: { status: boolean; message: string } = await request({
-        url: "/user/deleteMatched/"+userId ,
+        url: "/user/deleteMatched/" + userId,
         method: "delete",
       });
 
@@ -232,8 +238,10 @@ const handleDelete = async (userId: string) => {
         );
       }
       console.warn(error);
+    } finally {
+      setLoading(false);
     }
-};
+  };
 
   const handleReport = async (userId: string) => {
     if (reportData.reason === "") {
@@ -243,6 +251,7 @@ const handleDelete = async (userId: string) => {
     if (reportData.moreInfo.trim() === "")
       handleAlert("warning", "please fill more info");
     try {
+      setLoading(true);
       const response: { data: boolean | []; message: string } = await request({
         url: "/user/reportAbuse",
         method: "post",
@@ -264,6 +273,8 @@ const handleDelete = async (userId: string) => {
         handleAlert("error", error.message || "error on report abuse");
       }
       console.warn(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -276,75 +287,80 @@ const handleDelete = async (userId: string) => {
     setCurrentPage(1);
   };
 
-//////////////////handling reporting//////////////////
-return (
-    <div className="h-auto w-auto bg-slate-200 min-h-svh">
-      <div className="container mx-auto px-4 py-8 ">
-        <Navbar active="matched" />
-        <div className="w-auto h-auto mt-20">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-4">Profiles</h1>
+  //////////////////handling reporting//////////////////
+  return (
+    <>
+      {loading && (
+        <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
+          <CircularIndeterminate />
+        </div>
+      )}
+      <div className="h-auto w-auto bg-slate-200 min-h-svh">
+        <div className="container mx-auto px-4 py-8 ">
+          <Navbar active="matched" setLoading={setLoading} />
+          <div className="w-auto h-auto mt-20">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold mb-4">Profiles</h1>
 
-            {/* Search and Filter Bar */}
-            <div className="flex flex-wrap gap-4 mb-6">
-              <div className="flex-1 min-w-[200px] ">
-                <div className="relative">
-                  <div
-                    className="absolute flex justify-center items-center  right-0.5 rounded-full top-0 h-9 w-9 
+              {/* Search and Filter Bar */}
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex-1 min-w-[200px] ">
+                  <div className="relative">
+                    <div
+                      className="absolute flex justify-center items-center  right-0.5 rounded-full top-0 h-9 w-9 
                text-gray-500"
-                  >
-                    <Search className="w-[60%] text-amber-900 h-[40%] outline-none opacity-70" />
+                    >
+                      <Search className="w-[60%] text-amber-900 h-[40%] outline-none opacity-70" />
+                    </div>
+                    <Input
+                      onChange={handleSerch}
+                      placeholder="Search users..."
+                      className="pl-4 rounded-full bg-white placeholder:text-amber-900 placeholder:opacity-70 "
+                    />
                   </div>
-                  <Input
-                    onChange={handleSerch}
-                    placeholder="Search users..."
-                    className="pl-4 rounded-full bg-white placeholder:text-amber-900 placeholder:opacity-70 "
-                  />
                 </div>
+
+                <Select
+                  onValueChange={handleSorting}
+                  disabled={place?.length === 0}
+                >
+                  <SelectTrigger className="w-[180px] bg-white">
+                    <SelectValue placeholder="Filter by location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="reset">All</SelectItem>
+                    {place.map((el, index) => {
+                      return (
+                        <SelectItem key={index} value={el}>
+                          {el}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setViewMode(viewMode === "grid" ? "list" : "grid")
+                  }
+                >
+                  {viewMode === "grid" ? "List View" : "Grid View"}
+                </Button>
               </div>
-
-              <Select
-                onValueChange={handleSorting}
-                disabled={place?.length === 0}
-              >
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="Filter by location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="reset">All</SelectItem>
-                  {place.map((el, index) => {
-                    return (
-                      <SelectItem key={index} value={el}>
-                        {el}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-
-              <Button
-                variant="outline"
-                onClick={() =>
-                  setViewMode(viewMode === "grid" ? "list" : "grid")
-                }
-              >
-                {viewMode === "grid" ? "List View" : "Grid View"}
-              </Button>
             </div>
-          </div>
 
-          {/* Profiles Grid */}
-          <div
-            className={`grid gap-6 ${
-              viewMode === "grid"
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                : "grid-cols-1"
-            }`}
-          >
-            {currentItems ? <></> : <></>}
-            {currentItems?.length > 0 &&
-              currentItems?.map((user) => (
-                
+            {/* Profiles Grid */}
+            <div
+              className={`grid gap-6 ${
+                viewMode === "grid"
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  : "grid-cols-1"
+              }`}
+            >
+              {currentItems ? <></> : <></>}
+              {currentItems?.length > 0 &&
+                currentItems?.map((user) => (
                   <Card
                     key={user._id}
                     className="hover:shadow-2xl transition-shadow  relative shadow-blue-300"
@@ -488,55 +504,62 @@ return (
                       </Dialog>
                     </CardFooter>
                   </Card>
-                
-              ))}
-          </div>
-          {temporary?.length <= 0 && (
-            <div className="w-full flex justify-center items-center h-[300px] ">
-              <div className="sm:w-1/2 w-full h-full">
-                <img src="/NoDataFound.jpg" className="w-full h-full" alt="" />
+                ))}
+            </div>
+            {temporary?.length <= 0 && (
+              <div className="w-full flex justify-center items-center h-[300px] ">
+                <div className="sm:w-1/2 w-full h-full">
+                  <img
+                    src="/NoDataFound.jpg"
+                    className="w-full h-full"
+                    alt=""
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Toast Notification */}
-          {showToast && (
-            <div className="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-up">
-              {toastMessage}
-            </div>
-          )}
+            {/* Toast Notification */}
+            {showToast && (
+              <div className="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in-up">
+                {toastMessage}
+              </div>
+            )}
 
-          {/* Pagination */}
-          <div className="mt-8 flex justify-center gap-2">
-            <Button
-              variant="outline"
-              onClick={goBack}
-              disabled={currentPage <= 1}>
-              Previous
-            </Button>
-            {temporary?.length &&
-              pageNumber?.map((el) => (
-                <Button
-                  className={el === currentPage ? "bg-blue-300 text-white" : ""}
-                  key={el}
-                  onClick={() => setCurrentPage(el)}
-                  variant="outline"
-                >
-                  {el}
-                </Button>
-              ))}
-            <Button
-              onClick={goNext}
-              disabled={currentPage === totalPages}
-              variant="outline"
-            >
-              Next
-            </Button>
+            {/* Pagination */}
+            <div className="mt-8 flex justify-center gap-2">
+              <Button
+                variant="outline"
+                onClick={goBack}
+                disabled={currentPage <= 1}
+              >
+                Previous
+              </Button>
+              {temporary?.length &&
+                pageNumber?.map((el) => (
+                  <Button
+                    className={
+                      el === currentPage ? "bg-blue-300 text-white" : ""
+                    }
+                    key={el}
+                    onClick={() => setCurrentPage(el)}
+                    variant="outline"
+                  >
+                    {el}
+                  </Button>
+                ))}
+              <Button
+                onClick={goNext}
+                disabled={currentPage === totalPages}
+                variant="outline"
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 };
-export default Matched
+export default Matched;

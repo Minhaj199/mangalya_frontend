@@ -23,6 +23,7 @@ import { IReduxState } from "@/types/typesAndInterfaces";
 import { showToast } from "@/utils/alert/toast";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { Footer } from "@/components/user/footer/Footer";
+import CircularIndeterminate from "@/components/circularLoading/Circular";
 
 
 
@@ -32,6 +33,12 @@ import { Footer } from "@/components/user/footer/Footer";
   const [planData, setPlanData] = useState<PlanData | null>(null);
   const location = useLocation();
 
+    /////////////pagination
+  const [totalPage, setTotalPage] = useState(0);
+  const itemPerPage = 9;
+  const [currentPage, setCurrenPage] = useState(1);
+  const [currentData, setCurrentData] = useState<ProfileType[] | undefined>([]);
+  const [loading,setLoading]=useState(false)
   const [requestProfile, setRequest] = useState<ProfileType[]>([
     {
       _id: "",
@@ -258,8 +265,6 @@ import { Footer } from "@/components/user/footer/Footer";
       const searchData = location.state.data;
       searchData.minAge = minAge;
       searchData.maxAge = maxAge;
-
-      async function handleSearch() {
         if (searchData.maxAge < searchData.minAge) {
           alertWithOk(
             "Search Details",
@@ -268,7 +273,10 @@ import { Footer } from "@/components/user/footer/Footer";
           );
           return;
         }
-        const response: {
+      async function handleSearch() {
+        try {
+          setLoading(true)
+          const response: {
           datas: { profile: ProfileType[]; request: ProfileType[] }[];
           currntPlan: PlanData;
           interest: string[];
@@ -361,7 +369,6 @@ import { Footer } from "@/components/user/footer/Footer";
             );
             return;
           }
-          // showToast(`${profile?.length} profiles found`)
           alertWithOk(
             "search Data",
             `${profile?.length} profiles found`,
@@ -407,12 +414,25 @@ import { Footer } from "@/components/user/footer/Footer";
             setPlanData(response.currntPlan);
           }
         }
+        } catch (error) {
+          if(error instanceof Error){
+            alertWithOk('searching',error.message||'error on search ','error')
+          }
+        }finally{
+          
+        setLoading(false)
+        }
+      
+        
+      
       }
 
       handleSearch();
     } else if (location?.state?.from === "suggestion") {
       async function fetch() {
-        const response: {
+        try {
+          setLoading(true)
+          const response: {
           datas: { profile: ProfileType[]; request: ProfileType[] }[];
           currntPlan: PlanData;
           interest: string[];
@@ -437,18 +457,29 @@ import { Footer } from "@/components/user/footer/Footer";
         ) {
           setPlanData(response.currntPlan);
         }
+        } catch (error) {
+          if(error instanceof Error){
+            alertWithOk('searching',error.message||'error on search ','error')
+          }
+        }finally{
+          setLoading(false)
+        }
+        
       }
       fetch();
     } else {
       async function fetch() {
-        const response: {
+
+        try {
+          setLoading(true)
+           const response: {
           datas: { profile: ProfileType[]; request: ProfileType[] }[];
           currntPlan: PlanData;
           interest: string[];
         } = await request({
           url: `/user/fetchProfile`,
         });
-        // setInterest(response.interest);
+       
 
         const res: { profile: ProfileType[]; request: ProfileType[] }[] =
           response.datas ?? { profile: [], request: [] };
@@ -462,16 +493,20 @@ import { Footer } from "@/components/user/footer/Footer";
         ) {
           setPlanData(response.currntPlan);
         }
+        } catch (error) {
+          if(error instanceof Error){
+            alertWithOk('searching',error.message||'error on search ','error')
+          }
+        }finally{
+          setLoading(false)
+        }
+       
       }
       fetch();
     }
   }, [location]);
 
-  /////////////pagination
-  const [totalPage, setTotalPage] = useState(0);
-  const itemPerPage = 9;
-  const [currentPage, setCurrenPage] = useState(1);
-  const [currentData, setCurrentData] = useState<ProfileType[] | undefined>([]);
+
 
   //////////scroll pagination
   const handlePreviouse = () => {
@@ -541,6 +576,12 @@ import { Footer } from "@/components/user/footer/Footer";
   }
 
   return (
+    <>
+      {loading && (
+                    <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
+                      <CircularIndeterminate />
+                    </div>
+                  )}
     <div className="min-h-[700px]   w-[100%] bg-slate-200 ">
       {/* planModal */}
       {showRequest && (
@@ -813,6 +854,7 @@ import { Footer } from "@/components/user/footer/Footer";
             : "profile"
         }
         setShowRequest={setShowRequest}
+        setLoading={setLoading}
       />
 
       <div className="w-[100%] h-full  flex">
@@ -1043,6 +1085,7 @@ import { Footer } from "@/components/user/footer/Footer";
       <Footer />
       {/* <Footer/> */}
     </div>
+    </>
   );
 };
 export default LoginLanding

@@ -12,12 +12,13 @@ import { PlanMgtWarningType, PlanType } from "@/types/typesAndInterfaces";
 import { editedDataValidateion } from "../../../validators/planValidator";
 import { capitaliser } from "../../../utils/firstLetterCapitaliser";
 import { ReponseMessage } from "@/constrains/messages";
+import CircularIndeterminate from "@/components/circularLoading/Circular";
 
 
 
  const PlanDetails = () => {
   const [featureData, setFeatureData] = useState<string[]>([""]);
-
+  const [loading,setLoading]=useState(false)
   useEffect(() => {
     async function fetchFeature() {
       const response: { features: string[] } = await request({
@@ -76,9 +77,12 @@ import { ReponseMessage } from "@/constrains/messages";
   });
 
   let dataDB: { message: string; plans: PlanType[] };
+
+
   useEffect(() => {
     async function fetchPlanData() {
       try {
+        setLoading(true)
         dataDB = await request({ url: "/admin/fetchPlanData" });
         if (dataDB.message && typeof dataDB.message === "string") {
           alertWithOk(
@@ -104,6 +108,8 @@ import { ReponseMessage } from "@/constrains/messages";
                 }else{
                   alertWithOk('plan service',ReponseMessage.UNEXPTECTED_ERROR,'error')
                 }
+      }finally{
+        setLoading(false)
       }
     }
     fetchPlanData();
@@ -221,16 +227,16 @@ import { ReponseMessage } from "@/constrains/messages";
  
     if (processedData.validation) {
       try {
-        const response: { response: true; message: string } = await request({
+        const response: { response: PlanType[]; message: string } = await request({
           url: "/admin/editPlan/"+originalData._id,
           method: "put",
           data: processedData.finalData,
         });
-       
+      console.log(response)
         if (response.response) {
           setData((el) =>
             el.map((element) =>
-              element._id === editData._id ? editData : element
+              element._id === editData._id ? response.response[0] : element
             )
           );
           setCurrentData(editData);
@@ -246,7 +252,7 @@ import { ReponseMessage } from "@/constrains/messages";
           setToggle(true);
           alertWithOk("Plan Edit", "Plan edited successfully", "success");
         } else {
-          throw new Error(response.message);
+          throw new Error(response.message||'error on updation');
         }
       } catch (error) {
         if(error instanceof Error){
@@ -265,6 +271,12 @@ import { ReponseMessage } from "@/constrains/messages";
     }
   }
   return (
+    <>
+     {loading && (
+                <div className="w-full flex items-center justify-center  h-full  fixed bg-[rgb(255,255,255)] z-50">
+                  <CircularIndeterminate />
+                </div>
+              )}
     <div className="md:w-[80%] overflow-hidden  h-svh">
       <div className="w-full h-full lg:mt-0 mt-10  overflow-hidden ">
         <div className="w-full h-[25%]  flex justify-center items-center">
@@ -490,6 +502,7 @@ import { ReponseMessage } from "@/constrains/messages";
         </div>
       </div>
     </div>
+    </>
   );
 };
 export default PlanDetails

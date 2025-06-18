@@ -91,11 +91,12 @@ const PlanPurchase = () => {
 
   return (
     <>
-      {loading && (
-        <div className="w-full flex items-center justify-center  h-full  fixed bg-[rgba(0,0,0,.8)] z-10">
-          <CircularIndeterminate />
-        </div>
-      )}
+    
+     {loading && (
+                        <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
+                          <CircularIndeterminate />
+                        </div>
+                      )}
       <div className="h-svh w-screen flex items-center flex-col bg-blue-400 ">
         <h1 className="text-white text-xl sm:text-5xl mt-10 font-italian">
           PLEASE JOIN OUR FAMILY

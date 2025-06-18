@@ -40,10 +40,9 @@ export const ReportModal = ({
       setLoading(true)
       setTimeout(()=>{
         setLoading(false)
-      },5000)
+      },10000)
       const response:{data:IAbuserReport,message:string}=await request({url:'/admin/sendWarningMail/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
       if(response.message){
-        setLoading(false)
         if(response.message==='validation Faild'){
           navigate('/')
         }
@@ -52,17 +51,19 @@ export const ReportModal = ({
       if(response.data){
         setReport(el=>el.map(elem=>({...elem,read:(elem._id===reportData._id)?true:false,warningMail:(elem._id===reportData._id)?true:false})))
         setOpen(false)
-        setLoading(false)
+      
         handleAlert("success",'warning mail send')
       }
     } catch (error:unknown) {
-      setLoading(false)
+    
       if(error instanceof Error){
 
         handleAlert('error',error.message||'error on setWarning')
       }
+    }finally{
+      setLoading(false)
+        setOpen(false)
     }
-    console.log("Sending warning mail...");
   };
 
    const handleBlock =async () => {
@@ -72,7 +73,6 @@ export const ReportModal = ({
       setLoading(true)
       const response:{data:IAbuserReport,message:string}=await request({url:'/admin/blockAbuser/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
       if(response.message){
-        setLoading(false)
         if(response.message==='validation Faild'){
           navigate('/')
         }
@@ -80,12 +80,13 @@ export const ReportModal = ({
       }
       if(response.data){
         setReport(el=>el.map(elem=>({...elem,read:(elem._id===reportData._id)?true:false,block:(elem._id===reportData._id)?true:false})))
-        setOpen(false)
-        setLoading(false)
+        
+      
         handleAlert("success",' User Blocked')
       }
     } catch (error:unknown) {
       setLoading(false)
+      setOpen(false)
       if(error instanceof Error){
         handleAlert('error',error.message||'error on setWarning')
       }
@@ -99,24 +100,27 @@ export const ReportModal = ({
       setLoading(true)
       const response:{data:IAbuserReport,message:string}=await request({url:'/admin/rejecReport/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id}})
       if(response.message){
-        setLoading(false)
+      
         if(response.message==='validation Faild'){
           navigate('/')
         }
         throw new Error(response.message)
       }
       if(response.data){
-        setLoading(false)
+      
         setReport(el=>el.map(elem=>({...elem,read:(elem._id===reportData._id)?true:false,rejected:(elem._id===reportData._id)?true:false,block:(elem._id===reportData._id)?true:false,warningMail:(elem._id===reportData._id)?true:false})))
-        setOpen(false)
+
         handleAlert("success",'Request Rejected')
       }
     } catch (error:unknown) {
-      setLoading(false)
       if(error instanceof Error){
 
         handleAlert('error',error.message||'error on setWarning')
       }
+    }finally{
+      console.log(reportData)
+      setLoading(false)
+        setOpen(false)
     }
   };
 

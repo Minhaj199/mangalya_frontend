@@ -17,6 +17,7 @@ import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { Footer } from "@/components/user/footer/Footer";
+import CircularIndeterminate from "@/components/circularLoading/Circular";
 
 
 
@@ -26,7 +27,7 @@ import { Footer } from "@/components/user/footer/Footer";
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interest, setInterest] = useState<string[] | null>(null);
-
+  const [loading,setLoading]
   const navigate = useNavigate();
   const socket = useSocket();
   ////////////////fetch intererst///////////////
@@ -133,7 +134,12 @@ import { Footer } from "@/components/user/footer/Footer";
 
   return (
     <>
-      <Navbar active="search" />
+     {loading && (
+                        <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
+                          <CircularIndeterminate />
+                        </div>
+                      )}
+      <Navbar active="search" setLoading={setLoading} />
       <div className="mt-24 h-auto w-auto pb-40  ">
         <div className=" max-w-2xl mx-auto p-6 border  bg-white shadow-2xl shadow-orange-300 rounded-lg">
           <h1 className="text-2xl font-bold mb-6 text-center">User Search</h1>

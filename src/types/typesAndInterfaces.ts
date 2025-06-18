@@ -209,6 +209,10 @@ export interface UserForm {
     password: string
 }
 
+export interface UserListInterface {
+  triggerPagination: () => void;
+}
+
 export type MatchedProfileType = {
     firstName: string;
     secondName: string;
@@ -365,4 +369,10 @@ export interface JWTPayload {
   role?: string;
   id?: string;
   exp?: number;
+}
+
+/////////////// line chart prob///////
+
+export interface IDashChildProb{
+  setLoading:Dispatch<SetStateAction<boolean>>
 }

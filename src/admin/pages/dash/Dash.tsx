@@ -6,6 +6,7 @@ import BarChart from "./graphs/BarGraph";
 import { alertWithOk } from "../../../utils/alert/SweeAlert";
 import { request } from "../../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
+import CircularIndeterminate from "@/components/circularLoading/Circular";
 
 const Dash = () => {
   const [dashCount, setDashCount] = useState<{
@@ -13,10 +14,12 @@ const Dash = () => {
     suscriber: number;
     user: number;
   }>();
+    const [loading,setLoading]=useState<boolean>(false)
   const navigate = useNavigate();
   useEffect(() => {
     async function FetchData() {
       try {
+        setLoading(true)
         const response: {
           MonthlyRevenue: number;
           SubscriberCount: number;
@@ -40,11 +43,20 @@ const Dash = () => {
           }
           alertWithOk("Dash error", error.message || "error on dash", "error");
         }
+      }finally{
+        setLoading(false)
       }
     }
     FetchData();
   }, []);
   return (
+    <>
+     {loading && (
+            <div className="w-full flex items-center justify-center  h-full  fixed bg-[rgba(255,255,255,0)] z-50">
+              <CircularIndeterminate />
+            </div>
+          )}
+
     <div className=" w-[100%] lg:w-[80%] flex flex-col  pl-5">
       <div className="w-[100%]   sm:mt-10 mt-20 grid h-auto lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-y-4  pr-1">
         <DashCard
@@ -65,14 +77,15 @@ const Dash = () => {
       </div>
 
       <div className="lg:w-[70%] w-[90%] lg:h-[400px] h-[300px] rounded-md bg-white transform transition-transform duration-300 ease-in-out hover:scale-105    mt-10">
-        <BarChart />
+        <BarChart setLoading={setLoading}/>
       </div>
       <div className="lg:w-[100%] flex lg:justify-end   pr-2  w-[100%]   h-[400px] pb-10  transform transition-transform duration-300 ease-in-out hover:scale-105    mt-16">
         <div className="sm:w-[50%]  w-[100%] lg:ml-0 ml-10 h-full rounded-2xl bg-white overflow-hidden ">
-          <PieChart />
+          <PieChart setLoading={setLoading} />
         </div>
       </div>
     </div>
+    </>
   );
 };
 export default Dash;

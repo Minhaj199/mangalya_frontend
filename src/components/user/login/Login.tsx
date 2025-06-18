@@ -46,7 +46,7 @@ export const Login:React.FC<UserLoginProp> = ({changeToggle,loginTogle,setLoadin
     const response:LoginReponse=await request({url:'/user/login',method:'post',data:userData})
     if(response.message&&response.message==='password not matched'){
       handleAlert("error",response.message  )
-      setLoading(false)
+      
       return
     }
     setWarnning(prev=>({...prev,password:null,email:null}))
@@ -55,11 +55,11 @@ export const Login:React.FC<UserLoginProp> = ({changeToggle,loginTogle,setLoadin
       if(response.message==='user not found'){
        
        setWarnning(prev=>({...prev,email:response.message,password:null}))
-       setLoading(true)
+      
       }
       else if(response.message==='password not matched'){
        setWarnning(prev=>({...prev,password:response.message,email:null}))
-       setLoading(true)
+      
       }
       else if(response.message==='password matched'){
         localStorage.setItem('userToken',response.token)
@@ -91,14 +91,14 @@ export const Login:React.FC<UserLoginProp> = ({changeToggle,loginTogle,setLoadin
     }
     if(response.message){
       handleAlert("error",response.message  )
-      setLoading(false)
+      
       return
     }
     }
   
   } catch (error:unknown) {
     if(error instanceof Error){
-      setLoading(false)
+     
       handleAlert('error',error.message||'error on login')
     }
    }

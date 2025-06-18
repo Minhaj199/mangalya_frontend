@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import  React, { SetStateAction, useEffect, useState,Dispatch } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +11,8 @@ import {
   Legend,
 } from "chart.js";
 import { request } from "../../../../utils/axiosUtils";
+import { IDashChildProb } from "@/types/typesAndInterfaces";
+
 
 ChartJS.register(
   CategoryScale,
@@ -22,18 +24,23 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = () => {
+
+const LineChart:React.FC<IDashChildProb> = ({setLoading}) => {
   const [datas, setData] = useState<{ month: number[]; revenue: number[] }>();
 
   useEffect(() => {
     async function FetchData() {
       try {
+        setLoading(true)
         const response: { month: number[]; revenue: number[] } = await request({
           url: "/admin/getDataToDash?from=Revenue",
         });
         setData({ month: response.month, revenue: response.revenue });
       } catch (error) {
         console.error("Error fetching data:", error);
+      }
+      finally{
+        setLoading(false)
       }
     }
     FetchData();

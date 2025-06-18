@@ -4,16 +4,18 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { request } from "../../../../utils/axiosUtils";
 import { alertWithOk } from "../../../../utils/alert/SweeAlert";
 import { ReponseMessage } from "@/constrains/messages";
+import { IDashChildProb } from "@/types/typesAndInterfaces";
 
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart: React.FC = () => {
+const PieChart: React.FC<IDashChildProb> = ({setLoading}) => {
   const [dashCount, setDashCount] = useState<number[]>([0, 0]);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        setLoading(true)
         const response: number[] = await request({
           url: "/admin/getDataToDash?from=SubscriberCount",
         });
@@ -25,6 +27,8 @@ const PieChart: React.FC = () => {
         } else {
           alertWithOk("Dash Error", ReponseMessage.UNEXPTECTED_ERROR, "error");
         }
+      }finally{
+        setLoading(false)
       }
     }
     fetchData();

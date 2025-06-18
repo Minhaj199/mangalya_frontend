@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { districtsOfKerala } from "@/components/user/signupInputs/inputFields.ts";
-import "./userProfile.css";
 import { CountdownProfile } from "@/components/user/timer/CountdownProfile";
 import { Send, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,9 +12,7 @@ import { validateEditedData } from "../../validators/editValidator.ts";
 import { capitaliser } from "../../utils/firstLetterCapitaliser.ts";
 import { Navbar } from "../../components/user/navbar/Navbar.tsx";
 import { showToast } from "@/utils/alert/toast.tsx";
-import {
-  editedDataFinder,
-} from "../../utils/editedDataFinder.ts";
+import { editedDataFinder } from "../../utils/editedDataFinder.ts";
 import { dateToDateInputGenerator } from "../../utils/dateToDateInputGenerator.ts";
 import { useSocket } from "@/shared/hoc/GlobalSocket.tsx";
 import CircularIndeterminate from "@/components/circularLoading/Circular.tsx";
@@ -24,7 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { FetchBlankData, IReduxState } from "@/types/typesAndInterfaces.ts";
 import { compressImage } from "@/utils/imageCompressor.ts";
 import { UserData } from "@/types/typesAndInterfaces.ts";
-
 
 const blanUserData = {
   PersonalInfo: {
@@ -44,7 +40,7 @@ const blanUserData = {
 
   subscriber: "",
 };
- const UserProfile = () => {
+const UserProfile = () => {
   const socket = useSocket();
   const [editUser, setEditUser] = useState<boolean>(false);
   const [editedData, setEditedData] = useState<UserData>(blanUserData);
@@ -87,6 +83,7 @@ const blanUserData = {
   useEffect(() => {
     async function fetchUserData() {
       try {
+        setLoading(true);
         const userData: fetchUserData = await request({
           url: "/user/getUserProfile",
         });
@@ -139,6 +136,8 @@ const blanUserData = {
         } else {
           console.error(error);
         }
+      } finally {
+        setLoading(false);
       }
     }
     fetchUserData();
@@ -208,16 +207,20 @@ const blanUserData = {
 
   ///////////////handling photo////////////////
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
-  
     const draft = e.target.files;
     if (draft?.length) {
-      const maxSize=10*1024*1024
-    const lessSize=1*1024*1024
-      const file=(draft[0].size>lessSize)?await compressImage (draft[0]):draft[0]
-       if(maxSize<file.size){
-              alertWithOk('Photo size limit','please reduce size to below 10 mp','info')
-              return
-            }
+      const maxSize = 10 * 1024 * 1024;
+      const lessSize = 1 * 1024 * 1024;
+      const file =
+        draft[0].size > lessSize ? await compressImage(draft[0]) : draft[0];
+      if (maxSize < file.size) {
+        alertWithOk(
+          "Photo size limit",
+          "please reduce size to below 10 mp",
+          "info"
+        );
+        return;
+      }
       setEditedData((el) => ({
         ...el,
         PersonalInfo: { ...el.PersonalInfo, image: file },
@@ -301,6 +304,7 @@ const blanUserData = {
     }
 
     try {
+      setLoading(true);
       const response: { status: boolean; message: string } = await request({
         url: "/user/resetPassword",
         data: passwords,
@@ -326,8 +330,8 @@ const blanUserData = {
         );
         console.error(error);
       }
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   }
   async function handleOTPSent() {
@@ -363,8 +367,8 @@ const blanUserData = {
         );
         console.error(error);
       }
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -453,6 +457,7 @@ const blanUserData = {
       formData.append("file", editedData.PersonalInfo.image || "");
       formData.append("data", JSON.stringify(dataToFind));
       try {
+        setLoading(true);
         const response: {
           newData: { data: FetchBlankData; token: string | boolean };
           message: string;
@@ -532,8 +537,7 @@ const blanUserData = {
         } else {
           console.warn(error);
         }
-      }finally{
-
+      } finally {
         setLoading(false);
       }
     }
@@ -627,12 +631,12 @@ const blanUserData = {
   return (
     <>
       {loading && (
-        <div className="w-full flex items-center justify-center  h-full  fixed bg-[rgba(0,0,0,.8)] z-10">
+        <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
           <CircularIndeterminate />
         </div>
       )}
       <div className="w-full flex   items-center justify-evenly  pb-12  md:min-h-[1100px]   bg-blue-100 ">
-        <Navbar active="profile setting" />
+        <Navbar active="profile setting" setLoading={setLoading} />
         <div className="w-[90%] min-h-svh flex md:flex-row items-center flex-col md:items-start pt-36 gap-5   ">
           {openPopUp && (
             <div className="w-full h-screen  z-[1] fixed -top-0 flex justify-center items-center">
@@ -1538,4 +1542,4 @@ const blanUserData = {
     </>
   );
 };
-export default UserProfile
+export default UserProfile;

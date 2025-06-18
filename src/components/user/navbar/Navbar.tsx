@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { IReduxState } from "@/types/typesAndInterfaces"; 
+import { IReduxState } from "@/types/typesAndInterfaces";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { request } from "@/utils/axiosUtils";
 import { showToast } from "@/utils/alert/toast";
@@ -10,9 +10,11 @@ import { showToast } from "@/utils/alert/toast";
 export const Navbar = ({
   active,
   setShowRequest,
+  setLoading
 }: {
   active: string;
   setShowRequest?: Dispatch<SetStateAction<boolean>>;
+  setLoading?:Dispatch<SetStateAction<boolean>>
 }) => {
   const socket = useSocket();
   const [messageTab, setMessageTab] = useState(false);
@@ -106,22 +108,30 @@ export const Navbar = ({
 
   function handleLogout() {
     try {
-      setImage("");
-      dispatch({ type: "CLEAR_DATA" });
-      if (socket) {
-        socket.emit("userLoggedOut", {
-          token: localStorage.getItem("userRefresh"),
-        });
+      if(setLoading){
+        alert('here')
+        setLoading(true)
       }
-      localStorage.removeItem("userToken");
-      localStorage.removeItem("userRefresh");
+      setTimeout(() => {
+        setImage("");
+        dispatch({ type: "CLEAR_DATA" });
+        if (socket) {
+          socket.emit("userLoggedOut", {
+            token: localStorage.getItem("userRefresh"),
+          });
+        }
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("userRefresh");
 
-      handleAlert("warning", "User logged out");
-      navigate("/");
+        handleAlert("warning", "User logged out");
+         if (setLoading) setLoading(false)
+        navigate("/");
+      },2000);
     } catch (error) {
       if (error instanceof Error) {
         handleAlert("error", error.message || "internal server error");
       }
+     if (setLoading) setLoading(false)
     }
   }
 

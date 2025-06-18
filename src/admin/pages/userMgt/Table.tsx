@@ -17,18 +17,17 @@ import {
 
 import { Columns } from "./UserHeadSchema";
 import { TableUserDataType } from "@/types/typesAndInterfaces"; 
-
 import { request } from "../../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, promptSweet } from "../../../utils/alert/SweeAlert";
+import CircularIndeterminate from "@/components/circularLoading/Circular";
 
-export interface UserListInterface {
-  triggerPagination: () => void;
-}
+
+
 
 export const UserTable: React.FC = () => {
   const navigate = useNavigate();
-
+ 
   const [MockData, setMockData] = useState<TableUserDataType[]>([]);
   function blockUser(id: string, name: string, status: string) {
     async function Handler() {
@@ -67,10 +66,13 @@ export const UserTable: React.FC = () => {
     const completed = `Your ${status}ing is completed`;
     promptSweet(() => Handler(), text, completed);
   }
+  const [loading,setLoading]=useState<boolean>(false)
   const [searchWord, setSearchWord] = useState<string>("");
   useEffect(() => {
     async function fetchData() {
+      
       try {
+        setLoading(true)
         const MockDataFromDb: TableUserDataType[] = await request({
           url: `/admin/fetchUserData?from=user`,
         });
@@ -95,6 +97,8 @@ export const UserTable: React.FC = () => {
             "error"
           );
         }
+      }finally{
+           setLoading(false)
       }
     }
     fetchData();
@@ -134,6 +138,11 @@ export const UserTable: React.FC = () => {
   const { pageIndex } = state as UsePaginationState<TableUserDataType>;
   return (
     <>
+     {loading && (
+                <div className="w-full flex items-center justify-center  h-full  fixed bg-[rgba(255,255,255,0)] z-50">
+                  <CircularIndeterminate />
+                </div>
+              )}
       <div className="w-[80%] h-svh">
         <div className="h-full w-full  flex flex-col items-center">
           <div className="w-full h-[150px] lg:mt-0 mt-10 transform transition-transform duration-300 ease-in-out hover:scale-10   flex justify-center items-center">
