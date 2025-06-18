@@ -1,6 +1,5 @@
 
-import { Forgot_Props } from "../forgotPassword/Forgot_first"
-import {  Dispatch, SetStateAction,useState } from "react"
+import {  useState } from "react"
 import { LoginValidator } from "../../../validators/loginValidator"
 import { useDispatch } from 'react-redux';
 
@@ -9,23 +8,16 @@ import { useDispatch } from 'react-redux';
 
 import React from "react"
 import { useNavigate } from "react-router-dom"
-import { request } from "../../../utils/AxiosUtils"
+import { request } from "../../../utils/axiosUtils"
 import { handleAlert } from "../../../utils/alert/SweeAlert"
-import {  StateProb } from "../../../redux/reduxGlobal";
-
-interface userLoginProp extends Forgot_Props{
-    loginTogle:string
-    setLoading:Dispatch<SetStateAction<boolean>>
-}
-type LoginReponse={message:string,token:string,refresh:string,name:string,photo:string,partner:string,gender:string,subscriptionStatus:string}
-
-
-export interface userForm {
-    email: string
-    password: string
-}
  
-export const Login:React.FC<userLoginProp> = ({changeToggle,loginTogle,setLoading}) => {
+import { LoginReponse, StateProb, UserForm, UserLoginProp } from "@/types/typesAndInterfaces";
+
+
+
+
+ 
+export const Login:React.FC<UserLoginProp> = ({changeToggle,loginTogle,setLoading}) => {
   const dispatch=useDispatch()
  
   const data:StateProb={ 
@@ -40,7 +32,7 @@ export const Login:React.FC<userLoginProp> = ({changeToggle,loginTogle,setLoadin
   }
 
   const [warning, setWarnning] = useState<probs>({email:null,password:null});
-  const [userData, setUserData] = useState<userForm>({
+  const [userData, setUserData] = useState<UserForm>({
       email: "",
       password: "",
     });

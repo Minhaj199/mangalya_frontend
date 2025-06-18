@@ -3,17 +3,17 @@ import { NavbarForPlan } from "@/components/user/navbar/NavbarForPlan";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { RequtestUser } from "@/types/typesAndInterfaces";
 import { showToast } from "@/utils/alert/toast";
-import { request } from "@/utils/AxiosUtils";
+import { request } from "@/utils/axiosUtils";
 import { dateToDateInputGenerator } from "@/utils/dateToDateInputGenerator";
-import { currentPlan } from "@/utils/editedDataFinder";
+import { CurrentPlan } from "@/types/typesAndInterfaces"; 
 
 import { useEffect, useState } from "react";
 
  const PlanHistoryAndReq = () => {
   const socket = useSocket();
   const [toggle, setToggle] = useState<boolean>(false);
-  const [currenPlan, setCurrentPlan] = useState<currentPlan>();
-  const [previousePlan, setPreviousePlan] = useState<currentPlan[]>([]);
+  const [currenPlan, setCurrentPlan] = useState<CurrentPlan>();
+  const [previousePlan, setPreviousePlan] = useState<CurrentPlan[]>([]);
   const [requestArray, setRequestArray] = useState<RequtestUser[]>([]);
 
   
@@ -22,8 +22,8 @@ import { useEffect, useState } from "react";
       try {
         const response: {
           request: RequtestUser[];
-          plan: currentPlan;
-          history: currentPlan[];
+          plan: CurrentPlan;
+          history: CurrentPlan[];
         } = await request({ url: "/user/planHistoryAndRequest" });
         setCurrentPlan(response.plan);
         setPreviousePlan(response.history);

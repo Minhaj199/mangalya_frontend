@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { ReduxState } from "../../redux/reduxGlobal";
+import { IReduxState } from "@/types/typesAndInterfaces"; 
 import store from "../../redux/reduxGlobal";
 import { useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ const SocketContext = createContext<Socket | null>(null);
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  const onliners = useSelector((state: ReduxState) => state.onlinePersons);
+  const onliners = useSelector((state: IReduxState) => state.onlinePersons);
 
   useEffect(() => {
     const newSocket: Socket = io(import.meta.env.VITE_BACKENT_URL);
@@ -63,3 +63,5 @@ export const useSocket = () => {
   }
   return socket;
 };
+
+

@@ -1,7 +1,7 @@
-import React from 'react'
-import { Toggle } from '../homeCards/HomeCards'
 
-export const Info = ({setToggle}:Toggle) => {
+import { IToggle } from "@/types/typesAndInterfaces" 
+
+export const Info = ({setToggle}:IToggle) => {
     function handleScroll(){
         window.scrollTo({ top: 0, behavior: "smooth" })
         setToggle('2')

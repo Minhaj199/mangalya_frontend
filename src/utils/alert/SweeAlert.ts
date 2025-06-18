@@ -76,7 +76,7 @@ export function simplePropt(actionFunction: () => void, titile: string) {
     confirmButtonText: "Yes",
     cancelButtonText: "Cancel",
     icon: "question",
-    // reverseButtons: true,
+
   }).then((result) => {
     if (result.isConfirmed) {
       actionFunction();

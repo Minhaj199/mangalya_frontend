@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 
-import { request } from "../../utils/AxiosUtils";
+import { request } from "../../utils/axiosUtils";
 
 import { LoginValidatorAdmin } from "../../validators/loginValidatorForAdmin";
 import { useNavigate } from "react-router-dom";

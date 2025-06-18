@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { request } from "../../../../utils/AxiosUtils";
+import { request } from "../../../../utils/axiosUtils";
 
 ChartJS.register(
   CategoryScale,

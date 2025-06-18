@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { request } from "../../utils/AxiosUtils";
+import { request } from "../../utils/axiosUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
@@ -15,10 +15,10 @@ import {
   handleAlert,
   simplePropt,
 } from "../../utils/alert/SweeAlert";
-import { PlanData, profileType } from "@/types/typesAndInterfaces"; 
+import { PlanData, ProfileType } from "@/types/typesAndInterfaces"; 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "../../redux/reduxGlobal";
+import { IReduxState } from "@/types/typesAndInterfaces";
 
 import { showToast } from "@/utils/alert/toast";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
@@ -32,7 +32,7 @@ import { Footer } from "@/components/user/footer/Footer";
   const [planData, setPlanData] = useState<PlanData | null>(null);
   const location = useLocation();
 
-  const [requestProfile, setRequest] = useState<profileType[]>([
+  const [requestProfile, setRequest] = useState<ProfileType[]>([
     {
       _id: "",
       age: 0,
@@ -146,7 +146,7 @@ import { Footer } from "@/components/user/footer/Footer";
     socket?.emit("register_user", {
       userId: localStorage.getItem("userToken"),
     });
-    socket?.on("new_connect", (data: { data: profileType; note: string }) => {
+    socket?.on("new_connect", (data: { data: ProfileType; note: string }) => {
       if (data.data) {
         showToast("new request arraived", "info");
         setProfiles((prev) => prev.filter((el) => el._id !== data.data._id));
@@ -228,8 +228,8 @@ import { Footer } from "@/components/user/footer/Footer";
     }
   };
 
-  const [profils, setProfiles] = useState<profileType[]>([]);
-  const useData = useSelector((state: ReduxState) => state.userData);
+  const [profils, setProfiles] = useState<ProfileType[]>([]);
+  const useData = useSelector((state: IReduxState) => state.userData);
   ////////pagination
 
   
@@ -269,13 +269,13 @@ import { Footer } from "@/components/user/footer/Footer";
           return;
         }
         const response: {
-          datas: { profile: profileType[]; request: profileType[] }[];
+          datas: { profile: ProfileType[]; request: ProfileType[] }[];
           currntPlan: PlanData;
           interest: string[];
         } = await request({
           url: `/user/fetchProfile`,
         });
-        const res: { profile: profileType[]; request: profileType[] }[] =
+        const res: { profile: ProfileType[]; request: ProfileType[] }[] =
           response.datas ?? { profile: [], request: [] };
 
         if (!res[0]?.profile) {
@@ -291,7 +291,7 @@ import { Footer } from "@/components/user/footer/Footer";
           setPlanData(response.currntPlan);
         }
         if (searchData.district && searchData.interests.length !== 0) {
-          const profile = res[0]?.profile.filter((el: profileType) => {
+          const profile = res[0]?.profile.filter((el: ProfileType) => {
             return (
               searchData.minAge <= el.age &&
               searchData.maxAge >= el.age &&
@@ -321,7 +321,7 @@ import { Footer } from "@/components/user/footer/Footer";
             setPlanData(response.currntPlan);
           }
         } else if (!searchData.district && searchData.interests.length === 0) {
-          const profile = res[0]?.profile.filter((el: profileType) => {
+          const profile = res[0]?.profile.filter((el: ProfileType) => {
             return searchData.minAge <= el.age && searchData.maxAge >= el.age;
           });
           if (!profile.length) {
@@ -346,7 +346,7 @@ import { Footer } from "@/components/user/footer/Footer";
             setPlanData(response.currntPlan);
           }
         } else if (searchData.district) {
-          const profile = res[0]?.profile.filter((el: profileType) => {
+          const profile = res[0]?.profile.filter((el: ProfileType) => {
             return (
               searchData.minAge <= el.age &&
               searchData.maxAge >= el.age &&
@@ -376,7 +376,7 @@ import { Footer } from "@/components/user/footer/Footer";
             setPlanData(response.currntPlan);
           }
         } else if (searchData.interests?.length !== 0) {
-          const profile = res[0]?.profile.filter((el: profileType) => {
+          const profile = res[0]?.profile.filter((el: ProfileType) => {
             return (
               searchData.minAge <= el.age &&
               searchData.maxAge >= el.age &&
@@ -413,7 +413,7 @@ import { Footer } from "@/components/user/footer/Footer";
     } else if (location?.state?.from === "suggestion") {
       async function fetch() {
         const response: {
-          datas: { profile: profileType[]; request: profileType[] }[];
+          datas: { profile: ProfileType[]; request: ProfileType[] }[];
           currntPlan: PlanData;
           interest: string[];
         } = await request({
@@ -425,7 +425,7 @@ import { Footer } from "@/components/user/footer/Footer";
           navigate("/loginLanding");
         }
 
-        const res: { profile: profileType[]; request: profileType[] }[] =
+        const res: { profile: ProfileType[]; request: ProfileType[] }[] =
           response.datas ?? { profile: [], request: [] };
 
         if (res[0]?.profile) setProfiles(res[0].profile);
@@ -442,7 +442,7 @@ import { Footer } from "@/components/user/footer/Footer";
     } else {
       async function fetch() {
         const response: {
-          datas: { profile: profileType[]; request: profileType[] }[];
+          datas: { profile: ProfileType[]; request: ProfileType[] }[];
           currntPlan: PlanData;
           interest: string[];
         } = await request({
@@ -450,7 +450,7 @@ import { Footer } from "@/components/user/footer/Footer";
         });
         // setInterest(response.interest);
 
-        const res: { profile: profileType[]; request: profileType[] }[] =
+        const res: { profile: ProfileType[]; request: ProfileType[] }[] =
           response.datas ?? { profile: [], request: [] };
 
         if (res[0]?.profile) setProfiles(res[0].profile);
@@ -471,7 +471,7 @@ import { Footer } from "@/components/user/footer/Footer";
   const [totalPage, setTotalPage] = useState(0);
   const itemPerPage = 9;
   const [currentPage, setCurrenPage] = useState(1);
-  const [currentData, setCurrentData] = useState<profileType[] | undefined>([]);
+  const [currentData, setCurrentData] = useState<ProfileType[] | undefined>([]);
 
   //////////scroll pagination
   const handlePreviouse = () => {
@@ -516,7 +516,7 @@ import { Footer } from "@/components/user/footer/Footer";
   const [showProfile, setShowProfile] = useState<boolean>(false);
   const [showRequest, setShowRequest] = useState(false);
 
-  const [partnerProfile, setParternProfile] = useState<profileType>({
+  const [partnerProfile, setParternProfile] = useState<ProfileType>({
     _id: "",
     age: 0,
     gender: "",
@@ -531,7 +531,7 @@ import { Footer } from "@/components/user/footer/Footer";
   });
   function handleShowProfile(
     e: React.MouseEvent<HTMLButtonElement>,
-    profile: profileType
+    profile: ProfileType
   ) {
     e.stopPropagation();
     setParternProfile(profile);

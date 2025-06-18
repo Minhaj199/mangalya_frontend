@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import { CredentialInterface } from "@/types/typesAndInterfaces";
+import { ICredentialInterface } from "@/types/typesAndInterfaces";
 
 export function Validator_(
-  setWarning: Dispatch<SetStateAction<CredentialInterface>>,
+  setWarning: Dispatch<SetStateAction<ICredentialInterface>>,
   key: string,
   value: string,
   password?: string

@@ -3,15 +3,15 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { interestType, PhotAndIntInterface } from "@/types/typesAndInterfaces"; 
-import { request } from "../../../utils/AxiosUtils";
+import { InterestType, IPhotAndIntInterface } from "@/types/typesAndInterfaces"; 
+import { request } from "../../../utils/axiosUtils";
 
 import { alertWithOk } from "@/utils/alert/SweeAlert";
 import { compressImage } from "@/utils/imageCompressor";
 
 
 
-export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
+export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const interestCount = useRef(0);
   const [image, setImage] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
     useState<boolean>(false);
   const [handleChange, setHandleChang] = useState<string[]>([""]);
 
-  const [interest, setInterest] = useState<interestType>({
+  const [interest, setInterest] = useState<InterestType>({
     sports: [""],
     music: [""],
     food: [""],
@@ -32,7 +32,7 @@ export const PhotAndInt: React.FC<PhotAndIntInterface> = ({ probSetter }) => {
   useEffect(() => {
     async function fetectInterst() {
       try {
-        const response: { Data: interestType; message: string } = await request(
+        const response: { Data: InterestType; message: string } = await request(
           { url: "/user/getInterest" }
         );
 

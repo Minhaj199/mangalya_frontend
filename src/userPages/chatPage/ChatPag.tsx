@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, ArrowLeft, Image } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { request } from "@/utils/AxiosUtils";
+import { request } from "@/utils/axiosUtils";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,15 +9,15 @@ import { faFaceSmile, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import { useSocket } from "@/shared/hoc/GlobalSocket";
 import { useSelector } from "react-redux";
-import store, { ReduxState } from "@/redux/reduxGlobal";
+import store from "@/redux/reduxGlobal";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { showToast } from "@/utils/alert/toast";
 import { compressImage } from "@/utils/imageCompressor";
-import { EmojiMartEmoji } from "@/types/typesAndInterfaces";
+import { EmojiMartEmoji, IReduxState } from "@/types/typesAndInterfaces";
 
 const ChatInterface = () => {
-  const onliners = useSelector((state: ReduxState) => state.onlinePersons);
+  const onliners = useSelector((state: IReduxState) => state.onlinePersons);
 
   const socket = useSocket();
   const [Loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ const ChatInterface = () => {
       });
     });
     function getOnliners(data: { id: string }) {
-      store.dispatch((distpatch, getState: () => ReduxState) => {
+      store.dispatch((distpatch, getState: () => IReduxState) => {
         const updateOnliners = getState().onlinePersons;
         if (data.id && !updateOnliners.includes(data.id)) {
           distpatch({ type: "ADD_NEW_ONLINER", payload: data.id });

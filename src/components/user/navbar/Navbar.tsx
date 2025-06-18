@@ -2,9 +2,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "../../../redux/reduxGlobal";
+import { IReduxState } from "@/types/typesAndInterfaces"; 
 import { useSocket } from "@/shared/hoc/GlobalSocket";
-import { request } from "@/utils/AxiosUtils";
+import { request } from "@/utils/axiosUtils";
 import { showToast } from "@/utils/alert/toast";
 
 export const Navbar = ({
@@ -26,7 +26,7 @@ export const Navbar = ({
   const [newMessage, setNewMessage] = useState<
     { userId: string; name: string; count: number }[]
   >([]);
-  const userphoto = useSelector((state: ReduxState) => state.userData.photo);
+  const userphoto = useSelector((state: IReduxState) => state.userData.photo);
   useEffect(() => {
     if (userphoto) {
       setImage(userphoto || "");
@@ -102,7 +102,7 @@ export const Navbar = ({
   }, [newMessage, socket]);
 
   const dispatch = useDispatch();
-  const userData = useSelector((state: ReduxState) => state.userData);
+  const userData = useSelector((state: IReduxState) => state.userData);
 
   function handleLogout() {
     try {

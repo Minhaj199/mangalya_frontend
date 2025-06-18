@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Navbar } from "../../components/user/navbar/Navbar";
 import { useState } from "react";
-import store, { ReduxState } from "../../redux/reduxGlobal";
+import store from "@/redux/reduxGlobal";
+import { IReduxState } from "@/types/typesAndInterfaces";  
 import { showToast as toastAlert } from "@/utils/alert/toast";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
@@ -35,7 +36,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, Trash2, Flag, Search } from "lucide-react";
-import { request } from "@/utils/AxiosUtils";
+import { request } from "@/utils/axiosUtils";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
@@ -44,7 +45,7 @@ import { Footer } from "@/components/user/footer/Footer";
 import { MatchedProfileType } from "@/types/typesAndInterfaces";
 
  const Matched = () => {
-  const onliners = useSelector((state: ReduxState) => state.onlinePersons);
+  const onliners = useSelector((state: IReduxState) => state.onlinePersons);
 
   const [showToast, setShowToast] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
@@ -168,7 +169,7 @@ import { MatchedProfileType } from "@/types/typesAndInterfaces";
     socket?.on("user_loggedOut", (data: { id: string }) => {
       store.dispatch({
         type: "SET_ONLINERS",
-        payload: onliners.filter((el) => el !== data.id),
+        payload: onliners.filter((el:string) => el !== data.id),
       });
     });
     socket?.on("errorFromSocket", (data) => {

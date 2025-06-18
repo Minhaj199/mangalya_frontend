@@ -1,7 +1,7 @@
-import { DashCardProps } from "@/types/typesAndInterfaces"; 
+import { IDashCardProps } from "@/types/typesAndInterfaces"; 
 import "./dash.css";
 
-export function DashCard({ Title, Data, img }: DashCardProps) {
+export function DashCard({ Title, Data, img }: IDashCardProps) {
   return (
     <div className="sm:w-[70%] shadow-xl  h-[175px] transform transition-transform duration-300 ease-in-out hover:scale-105 rounded-2xl pt-4 pr-2 bg-white flex justify-between   ">
       <div className="flex flex-col w-[70%]  h-full pt-3 pl-5   left-48">

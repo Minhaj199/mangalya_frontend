@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 
 import { Columns } from "./UserHeadSchema";
-import { TableUserDataType } from "./UserTable";
+import { TableUserDataType } from "@/types/typesAndInterfaces"; 
 
-import { request } from "../../../utils/AxiosUtils";
+import { request } from "../../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, promptSweet } from "../../../utils/alert/SweeAlert";
 

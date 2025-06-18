@@ -4,7 +4,7 @@ import { DashCard } from "./DashCard";
 import PieChart from "./graphs/PieChart";
 import BarChart from "./graphs/BarGraph";
 import { alertWithOk } from "../../../utils/alert/SweeAlert";
-import { request } from "../../../utils/AxiosUtils";
+import { request } from "../../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
 
 const Dash = () => {

@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 
 import { Columns } from "./UserHeadSchema";
-import { SubscriberTableDataType } from "./SubscriberTableDataType"; 
+import { ISubscriberTableDataType } from "@/types/typesAndInterfaces"; 
 
-import { request } from "../../../utils/AxiosUtils";
+import { request } from "../../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, } from "../../../utils/alert/SweeAlert";
-import { PlanDataType } from "./SubscriberTableDataType";
+import { PlanDataType } from "@/types/typesAndInterfaces"; 
 
 export interface UserListInterface {
   triggerPagination: () => void;
@@ -25,7 +25,7 @@ export interface UserListInterface {
   const navigate = useNavigate();
   
   
-  const [MockData, setMockData] = useState<SubscriberTableDataType[]>([]);
+  const [MockData, setMockData] = useState<ISubscriberTableDataType[]>([]);
   const [planData, setPlanData] = useState<PlanDataType[]>([{ name: "" }]);
   const [searchWord, setSearchWord] = useState<string>("");
 
@@ -93,8 +93,8 @@ export interface UserListInterface {
     canPreviousPage,
     pageOptions,
     state,
-  } = useTable<SubscriberTableDataType>({ columns, data,  initialState: { pageIndex: 0, pageSize: 5 }, }, usePagination)  as TableInstance<SubscriberTableDataType> & UsePaginationInstanceProps<SubscriberTableDataType>;
-  const { pageIndex } = state as UsePaginationState<SubscriberTableDataType>;
+  } = useTable<ISubscriberTableDataType>({ columns, data,  initialState: { pageIndex: 0, pageSize: 5 }, }, usePagination)  as TableInstance<ISubscriberTableDataType> & UsePaginationInstanceProps<ISubscriberTableDataType>;
+  const { pageIndex } = state as UsePaginationState<ISubscriberTableDataType>;
   
   return (
     <>
@@ -145,7 +145,7 @@ export interface UserListInterface {
                   ))}
                 </TableHead>
                 <TableBody {...getTableBodyProps()} className="bg-gray-200 ">
-                  {page.map((row:Row<SubscriberTableDataType>, rowIndex:number) => {
+                  {page.map((row:Row<ISubscriberTableDataType>, rowIndex:number) => {
                     prepareRow(row);
                     return (
                       <TableRow
@@ -153,7 +153,7 @@ export interface UserListInterface {
                         key={rowIndex}
                         className="text-start hover:bg-slate-400 "
                       >
-                        {row.cells.map((cell: Cell<SubscriberTableDataType>) => (
+                        {row.cells.map((cell: Cell<ISubscriberTableDataType>) => (
                           <TableCell
                             className="text-lg"
                             {...cell.getCellProps()}

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./Credential.css";
 import { Inputs } from "../../components/user/signupInputs/Inputs";
 import { SignupContext } from "../../shared/globalCondext/signupData";
-import { request } from "../../utils/AxiosUtils";
+import { request } from "../../utils/axiosUtils";
 
 import { PhotAndInt } from "./photoAndInterest.tsx/PhotAndInt";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
@@ -13,7 +13,7 @@ import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import { useDispatch } from "react-redux";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { Footer } from "@/components/user/footer/Footer";
-import { CredentialInterface, InputArrayProbs, PhotoAndInterest } from "@/types/typesAndInterfaces";
+import { ICredentialInterface, InputArrayProbs, PhotoAndInterest } from "@/types/typesAndInterfaces";
 
 
  const Credentials: React.FC<InputArrayProbs> = ({
@@ -59,8 +59,8 @@ import { CredentialInterface, InputArrayProbs, PhotoAndInterest } from "@/types/
   const photo =
     "flex justify-center items-center w-full md:h-lvh sm:h-lvh  h-lvh sm:pt-0 pt-12  bg-cover bg-center";
 
-  const [credentialData, setCredentialData] = useState<CredentialInterface>({});
-  const [warnning, setWarnning] = useState<CredentialInterface>({});
+  const [credentialData, setCredentialData] = useState<ICredentialInterface>({});
+  const [warnning, setWarnning] = useState<ICredentialInterface>({});
   const [loading, setLoding] = useState<boolean>(false);
   const navigate = useNavigate();
   async function submintCredential() {

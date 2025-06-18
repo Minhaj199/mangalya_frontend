@@ -1,6 +1,6 @@
 import { Column } from "react-table";
-import { SubscriberTableDataType } from "./SubscriberTableDataType";
-export const Columns: Column<SubscriberTableDataType>[] = [
+import { ISubscriberTableDataType } from "@/types/typesAndInterfaces";
+export const Columns: Column<ISubscriberTableDataType>[] = [
   {
     Header: "no",
     accessor: "no",

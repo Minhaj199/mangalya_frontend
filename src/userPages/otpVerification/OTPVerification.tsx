@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import { SignupContext } from "../../shared/globalCondext/signupData";
 import { Countdown } from "@/components/user/timer/Countdown";
-import { request } from "../../utils/AxiosUtils";
+import { request } from "../../utils/axiosUtils";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import { promptSweet } from "../../utils/alert/SweeAlert";
 import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "../../redux/reduxGlobal";
+import { IReduxState } from "@/types/typesAndInterfaces"; 
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { Footer } from "@/components/user/footer/Footer";
 
@@ -17,7 +17,7 @@ export interface CredentialInterface {
 
  const OTPVerification: React.FC = () => {
   const dispatch = useDispatch();
-  const userData = useSelector((state: ReduxState) => state.userData);
+  const userData = useSelector((state: IReduxState) => state.userData);
   const navigate = useNavigate();
   const context = useContext(SignupContext);
   if (!context) {

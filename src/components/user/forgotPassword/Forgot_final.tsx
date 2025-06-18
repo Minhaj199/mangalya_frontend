@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react"
-import { Forgot_Props } from "./Forgot_first" 
+import { IForgot_Props } from "@/types/typesAndInterfaces" 
 import { EmailForFogot } from "../../../shared/globalCondext/signupData"
 import { useNavigate } from "react-router-dom"
-import { request } from "../../../utils/AxiosUtils"
+import { request } from "../../../utils/axiosUtils"
 import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert"
 import CircularIndeterminate from "@/components/circularLoading/Circular"
 
-export const Forgot_Final:React.FC<Forgot_Props> = ({changeToggle}) => {
+export const Forgot_Final:React.FC<IForgot_Props> = ({changeToggle}) => {
   const navigate=useNavigate()
   const contest=useContext(EmailForFogot)
     if(!contest){

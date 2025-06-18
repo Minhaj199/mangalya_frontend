@@ -6,46 +6,26 @@ import "./userProfile.css";
 import { CountdownProfile } from "@/components/user/timer/CountdownProfile";
 import { Send, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { request } from "../../utils/AxiosUtils.ts";
+import { request } from "../../utils/axiosUtils.ts";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert.ts";
-
 import { validateEditedData } from "../../validators/editValidator.ts";
 import { capitaliser } from "../../utils/firstLetterCapitaliser.ts";
 import { Navbar } from "../../components/user/navbar/Navbar.tsx";
-
 import { showToast } from "@/utils/alert/toast.tsx";
-
 import {
   editedDataFinder,
-  fetchBlankData,
 } from "../../utils/editedDataFinder.ts";
 import { dateToDateInputGenerator } from "../../utils/dateToDateInputGenerator.ts";
 import { useSocket } from "@/shared/hoc/GlobalSocket.tsx";
 import CircularIndeterminate from "@/components/circularLoading/Circular.tsx";
 import { Footer } from "@/components/user/footer/Footer.tsx";
 import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "@/redux/reduxGlobal.ts";
+import { FetchBlankData, IReduxState } from "@/types/typesAndInterfaces.ts";
 import { compressImage } from "@/utils/imageCompressor.ts";
+import { UserData } from "@/types/typesAndInterfaces.ts";
 
-export type userData = {
-  PersonalInfo: {
-    firstName: string;
-    secondName: string;
-    state: string;
-    gender: string;
-    dateOfBirth: string | Date;
-    image?: File | string;
-    interest?: string[] | null;
-    photo: FormData | null;
-  };
-  partnerData: {
-    gender: string;
-  };
-  email: string;
 
-  subscriber: string;
-};
 const blanUserData = {
   PersonalInfo: {
     firstName: "",
@@ -67,12 +47,12 @@ const blanUserData = {
  const UserProfile = () => {
   const socket = useSocket();
   const [editUser, setEditUser] = useState<boolean>(false);
-  const [editedData, setEditedData] = useState<userData>(blanUserData);
-  const userData = useSelector((state: ReduxState) => state.userData);
+  const [editedData, setEditedData] = useState<UserData>(blanUserData);
+  const userData = useSelector((state: IReduxState) => state.userData);
   const dispatch = useDispatch();
   //////////////////fetching data////////////
 
-  const [orginalData, setOrginalData] = useState<fetchBlankData>({
+  const [orginalData, setOrginalData] = useState<FetchBlankData>({
     PersonalInfo: {
       firstName: "",
       secondName: "",
@@ -98,7 +78,7 @@ const blanUserData = {
   });
   interface fetchUserData {
     message: string;
-    user: fetchBlankData;
+    user: FetchBlankData;
   }
 
   //////////////set interest////////
@@ -474,7 +454,7 @@ const blanUserData = {
       formData.append("data", JSON.stringify(dataToFind));
       try {
         const response: {
-          newData: { data: fetchBlankData; token: string | boolean };
+          newData: { data: FetchBlankData; token: string | boolean };
           message: string;
         } = await request({
           url: "/user/editProfile",

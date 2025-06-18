@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AbuserReport } from "../../../admin/pages/abuse/Abuse";
-import { request } from "@/utils/AxiosUtils";
+import { IAbuserReport } from "@/types/typesAndInterfaces"; 
+import { request } from "@/utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
 import { handleAlert } from "@/utils/alert/SweeAlert";
 
@@ -23,9 +23,9 @@ export const ReportModal = ({
   setLoading
 }: {
   isOpen: boolean;
-  reportData: AbuserReport;
+  reportData: IAbuserReport;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setReport:Dispatch<SetStateAction<AbuserReport[]>>
+  setReport:Dispatch<SetStateAction<IAbuserReport[]>>
   setLoading:Dispatch<SetStateAction<boolean>>
 }) => {
   const navigate=useNavigate()
@@ -41,7 +41,7 @@ export const ReportModal = ({
       setTimeout(()=>{
         setLoading(false)
       },5000)
-      const response:{data:AbuserReport,message:string}=await request({url:'/admin/sendWarningMail/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
+      const response:{data:IAbuserReport,message:string}=await request({url:'/admin/sendWarningMail/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
       if(response.message){
         setLoading(false)
         if(response.message==='validation Faild'){
@@ -70,7 +70,7 @@ export const ReportModal = ({
 
     try {
       setLoading(true)
-      const response:{data:AbuserReport,message:string}=await request({url:'/admin/blockAbuser/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
+      const response:{data:IAbuserReport,message:string}=await request({url:'/admin/blockAbuser/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id,reported:reportData.reported._id}})
       if(response.message){
         setLoading(false)
         if(response.message==='validation Faild'){
@@ -97,7 +97,7 @@ export const ReportModal = ({
     // Implement reject logic
     try {
       setLoading(true)
-      const response:{data:AbuserReport,message:string}=await request({url:'/admin/rejecReport/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id}})
+      const response:{data:IAbuserReport,message:string}=await request({url:'/admin/rejecReport/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id}})
       if(response.message){
         setLoading(false)
         if(response.message==='validation Faild'){

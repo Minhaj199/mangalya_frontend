@@ -1,10 +1,10 @@
-import { CredentialInterface } from "@/types/typesAndInterfaces"; 
+import { ICredentialInterface } from "@/types/typesAndInterfaces"; 
 import { Dispatch, SetStateAction } from "react";
-import { request } from "../utils/AxiosUtils";
+import { request } from "../utils/axiosUtils";
 
 export const credential_validation = async (
-  formData: CredentialInterface,
-  setWarnning: Dispatch<SetStateAction<CredentialInterface>>
+  formData: ICredentialInterface,
+  setWarnning: Dispatch<SetStateAction<ICredentialInterface>>
 ): Promise<boolean> => {
   if (
     formData["FIRST NAME"]?.trim() === "" ||

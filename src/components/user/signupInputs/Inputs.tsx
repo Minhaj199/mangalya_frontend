@@ -1,27 +1,12 @@
 
 
-import React, { Dispatch,SetStateAction } from 'react'
-import { CredentialInterface } from '@/types/typesAndInterfaces' 
+import {  IInputsProbs } from '@/types/typesAndInterfaces' 
 import { Validator_ } from '../../../validators/liveValidator' 
 import { capitaliser } from '../../../utils/firstLetterCapitaliser'
 
 
-interface InputsProbs{
-  inputFields:{
-    linkingName:string,
-    inputType:string,
-    inputName:string,
-    option?:string[]
-    
 
-  }[],
-  setCredentialData:Dispatch<SetStateAction<CredentialInterface>>
-  setWarnning:Dispatch<SetStateAction<CredentialInterface>>,
-  CredentailData:{[key:string]:string},
-  Warning:{[key:string]:string}
-}
-
-export const Inputs:React.FC<InputsProbs> = ({inputFields,setCredentialData,setWarnning,CredentailData,Warning}) => {
+export const Inputs:React.FC<IInputsProbs> = ({inputFields,setCredentialData,setWarnning,CredentailData,Warning}) => {
   function handleChange(e:React.ChangeEvent<HTMLInputElement|HTMLSelectElement>,field:string){
     if(field==='CONFIRM PASSWORD'){
       const value=e.target.value

@@ -1,31 +1,13 @@
+import { IEmailForGotContextType, ISignupContextType, SignupFirst } from "@/types/typesAndInterfaces";
 import React, { createContext, useState, ReactNode } from "react";
 
-export type signupFirst = {
-  "SECOND NAME": string;
-  "DATE OF BIRTH": string;
-  "DISTRICT THAT YOU LIVE": string;
-  "YOUR GENDER": string;
-  "GENDER OF PARTNER": string;
-  EMAIL: string;
-  PASSWORD: string;
-  "FIRST NAME": string;
-};
-
-interface SignupContextType {
-  signupFirstData: signupFirst;
-  setSignupFirst: React.Dispatch<React.SetStateAction<signupFirst>>;
-}
-interface EmailForGotContextType {
-  forgotEmail: string;
-  setforgotEmail: React.Dispatch<React.SetStateAction<string>>;
-}
-export const SignupContext = createContext<SignupContextType | null>(null);
-export const EmailForFogot = createContext<EmailForGotContextType | null>(null);
+export const SignupContext = createContext<ISignupContextType | null>(null);
+export const EmailForFogot = createContext<IEmailForGotContextType | null>(null);
 interface SignupProvider {
   children: ReactNode;
 }
 export const SignupProvider = ({ children }: SignupProvider) => {
-  const [signupFirstData, setSignupFirst] = useState<signupFirst>({
+  const [signupFirstData, setSignupFirst] = useState<SignupFirst>({
     "FIRST NAME": "",
     "SECOND NAME": "",
     "DATE OF BIRTH": "",

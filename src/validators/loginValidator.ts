@@ -1,4 +1,4 @@
-import { userForm } from "../components/user/login/Login";
+import { UserForm } from "@/types/typesAndInterfaces";
 import { Dispatch, SetStateAction } from "react";
 
 type probs = {
@@ -6,7 +6,7 @@ type probs = {
   password: string | null;
 };
 export const LoginValidator = (
-  { email, password }: userForm,
+  { email, password }: UserForm,
   setWarnning: Dispatch<SetStateAction<probs>>
 ): boolean => {
   if (email.trim() === "") {

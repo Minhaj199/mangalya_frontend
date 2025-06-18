@@ -1,24 +1,17 @@
 import { useEffect, useState } from "react";
-import { request } from "../../../utils/AxiosUtils";
-import { Dispatch, SetStateAction } from "react";
+import { request } from "../../../utils/axiosUtils";
 
-export interface Toggle {
-  setToggle: Dispatch<SetStateAction<string>>;
-}
+import { IToggle, NewAddedData } from "@/types/typesAndInterfaces";
 
-export const HomeCards = ({ setToggle }: Toggle) => {
-  type newAddedData = {
-    name: string;
-    age: number;
-    image: string;
-    place: string;
-  };
-  const [fetchedData, setFetechedData] = useState<newAddedData[]>([
+
+export const HomeCards = ({ setToggle }: IToggle) => {
+ 
+  const [fetchedData, setFetechedData] = useState<NewAddedData[]>([
     { name: "", age: 0, image: "", place: "" },
   ]);
   useEffect(() => {
     const fetchNewAdded = async () => {
-      const data: newAddedData[] = await request({
+      const data: NewAddedData[] = await request({
         url: "/user/fetchforLanding",
       });
       setFetechedData(data);

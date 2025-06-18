@@ -49,7 +49,7 @@ export type PlanDatas = {
   connect: number;
   duration: number;
 };
-export type PlanType = {
+export type PlanType  = {
   _id: string;
   name: string;
   delete: boolean;
@@ -57,7 +57,7 @@ export type PlanType = {
   features: string[];
   amount: number;
   connect: number;
-};
+}
 
 export type PlanDataForValidation = {
   name: string;
@@ -81,22 +81,32 @@ export type PlanValidation = {
 };
 
 ////////////dash ralated
-export interface DashCardProps {
+export interface IDashCardProps {
   Title: string;
   Data: number;
   img: string;
 }
 
 ////////////subscriber list related////////////
+export type  ISubscriberTableDataType = {
+    no: number;
+    username: string;
+    planName: string;
+    expiry: string;
+    MatchCountRemaining:number
+    planAmount:number
+}
+export type PlanDataType = {
+    name: string;
+  };
+export interface IDataForPlan {
+    planData: PlanDataType[];
+    userData: ISubscriberTableDataType[];
+    message: string;
+  }
 
-export type SubscriberTableDataType = {
-  no: number;
-  username: string;
-  planName: string;
-  expiry: string;
-  MatchCountRemaining: number;
-  planAmount: number;
-};
+
+
 
 export type EmojiMartEmoji = {
   native: string;
@@ -117,7 +127,7 @@ export type PlanData = {
 
 /////////////edit validator//////
 
-export type editValidatorwarning = {
+export type EditValidatorwarning = {
   firstName: string;
   secondName: string;
   state: string;
@@ -128,7 +138,7 @@ export type editValidatorwarning = {
 ////////////////user profile type //////////
 
 
-export type profileType = {
+export type ProfileType = {
   _id: string;
   interest: string[];
   photo: string;
@@ -142,6 +152,62 @@ export type profileType = {
   dateOfBirth: Date | string;
   matchStatics?: string;
 };
+
+    export type  TableUserDataType = {
+        _id:string,
+        no: number;
+        username: string;
+        email: string;
+        match: number;
+        subscriber: boolean;
+        expiry: string;
+        block:boolean
+    }
+    export type NewAddedData = {
+        name: string;
+        age: number;
+        image: string;
+        place: string;
+      };
+export interface IToggle {
+  setToggle: Dispatch<SetStateAction<string>>;
+}
+
+export interface IInputsProbs{
+  inputFields:{
+    linkingName:string,
+    inputType:string,
+    inputName:string,
+    option?:string[]
+    
+
+  }[],
+  setCredentialData:Dispatch<SetStateAction<ICredentialInterface>>
+  setWarnning:Dispatch<SetStateAction<ICredentialInterface>>,
+  CredentailData:{[key:string]:string},
+  Warning:{[key:string]:string}
+}
+ export interface ITimerProbs{
+    expiryTimeStamp:Date,
+    from:string
+    email?:string
+    status?:boolean
+}
+export interface IForgot_Props{
+  changeToggle:Dispatch<SetStateAction<string>>
+}
+
+export interface UserLoginProp extends IForgot_Props{
+    loginTogle:string
+    setLoading:Dispatch<SetStateAction<boolean>>
+}
+
+ export type LoginReponse={message:string,token:string,refresh:string,name:string,photo:string,partner:string,gender:string,subscriptionStatus:string}
+
+export interface UserForm {
+    email: string
+    password: string
+}
 
 export type MatchedProfileType = {
     firstName: string;
@@ -159,7 +225,7 @@ export type MatchedProfileType = {
       name: string;
     };
 
-    export interface CredentialInterface {
+    export interface ICredentialInterface {
       [key: string]: string;
     }
      export interface InputArrayProbs {
@@ -176,10 +242,127 @@ export type MatchedProfileType = {
       interest?: string[];
     };
 
-    export interface PhotAndIntInterface {
+    export interface IPhotAndIntInterface {
       probState: PhotoAndInterest;
       probSetter: Dispatch<SetStateAction<PhotoAndInterest>>;
     }
+
+    export type UserData = {
+  PersonalInfo: {
+    firstName: string;
+    secondName: string;
+    state: string;
+    gender: string;
+    dateOfBirth: string | Date;
+    image?: File | string;
+    interest?: string[] | null;
+    photo: FormData | null;
+  };
+  partnerData: {
+    gender: string;
+  };
+  email: string;
+
+  subscriber: string;
+};
 ////////////interst related/////
 
-export  type interestType = { sports: string[]; music: string[]; food: string[] };
+export  type InterestType = { sports: string[]; music: string[]; food: string[] };
+
+
+/////////////redux/////////
+
+export type StateProb = {
+  photo: string;
+  subscriptionStatus: string;
+};
+
+export interface IReduxState {
+  userData: StateProb;
+  onlinePersons: string[];
+}
+
+export type ReduxUserDataDispatchType =
+  | { type: "SET_DATA"; payload: StateProb }
+  | { type: "CLEAR_ONLINER"; payload: string[] }
+  | { type: "CLEAR_DATA" }
+  | { type: "SET_ONLINERS"; payload: string[] }
+  | { type: "ADD_NEW_ONLINER"; payload: string };
+
+///////////// edit validator//////////
+
+export type EditWarning = {
+  firstName: string;
+  secondName: string;
+  state: string;
+  dob: string;
+  email: string;
+};
+
+///////////edited data finder ////////
+
+
+export type CurrentPlan={
+    amount: number;
+    connect: number;
+    avialbleConnect: number;
+    duration: number;
+    features: string[];
+    name: string;
+    Expiry: Date
+}
+export type FetchBlankData = {
+    PersonalInfo: {
+      firstName: string;
+      secondName: string;
+      state: string;
+      gender: string;
+      dateOfBirth: Date;
+      interest: string[];
+      age: number;
+      image: string;
+    };
+    PartnerData: { gender: string };
+    Email: string;
+    subscriptionStatus: string;
+    currentPlan: CurrentPlan;
+  };
+ export interface IFindChange{
+    dataToFind:UserData
+    orginalData:FetchBlankData
+    
+  }
+
+/////////////////signp///////////
+
+
+
+export type SignupFirst = {
+  "SECOND NAME": string;
+  "DATE OF BIRTH": string;
+  "DISTRICT THAT YOU LIVE": string;
+  "YOUR GENDER": string;
+  "GENDER OF PARTNER": string;
+  EMAIL: string;
+  PASSWORD: string;
+  "FIRST NAME": string;
+};
+
+export interface ISignupContextType {
+  signupFirstData: SignupFirst;
+  setSignupFirst: React.Dispatch<React.SetStateAction<SignupFirst>>;
+}
+export interface IEmailForGotContextType {
+  forgotEmail: string;
+  setforgotEmail: React.Dispatch<React.SetStateAction<string>>;
+}
+
+
+  ///////////////jwt//////
+export interface JWTPayload {
+  auth: boolean;
+  message: string;
+  role?: string;
+  id?: string;
+  exp?: number;
+}

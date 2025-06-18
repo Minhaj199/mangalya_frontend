@@ -1,37 +1,8 @@
-import { userData } from "@/userPages/userProfile/UserProfile"; 
-import { dateToDateInputGenerator } from "./dateToDateInputGenerator"; 
-export type currentPlan={
-    amount: number;
-    connect: number;
-    avialbleConnect: number;
-    duration: number;
-    features: string[];
-    name: string;
-    Expiry: Date
-}
-export type fetchBlankData = {
-    PersonalInfo: {
-      firstName: string;
-      secondName: string;
-      state: string;
-      gender: string;
-      dateOfBirth: Date;
-      interest: string[];
-      age: number;
-      image: string;
-    };
-    PartnerData: { gender: string };
-    Email: string;
-    subscriptionStatus: string;
-    currentPlan: currentPlan;
-  };
-  interface FindChange{
-    dataToFind:userData
-    orginalData:fetchBlankData
-    
-  }
 
-export function editedDataFinder({dataToFind,orginalData}:FindChange){ 
+import { IFindChange } from "@/types/typesAndInterfaces";
+import { dateToDateInputGenerator } from "./dateToDateInputGenerator"; 
+
+export function editedDataFinder({dataToFind,orginalData}:IFindChange){ 
        if(dataToFind.PersonalInfo.firstName===orginalData.PersonalInfo.firstName){
            dataToFind.PersonalInfo.firstName=''
     }

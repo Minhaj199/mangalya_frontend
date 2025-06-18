@@ -1,18 +1,11 @@
+import { IReduxState, ReduxUserDataDispatchType } from "@/types/typesAndInterfaces";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-export type StateProb = {
-  photo: string;
-  subscriptionStatus: string;
-};
 
-export interface ReduxState {
-  userData: StateProb;
-  onlinePersons: string[];
-}
 
-const initialState: ReduxState = {
+const initialState: IReduxState = {
   userData: {
     photo: "",
     subscriptionStatus: "",
@@ -20,17 +13,12 @@ const initialState: ReduxState = {
   onlinePersons: [],
 };
 
-export type ReduxUserDataDispatchType =
-  | { type: "SET_DATA"; payload: StateProb }
-  | { type: "CLEAR_ONLINER"; payload: string[] }
-  | { type: "CLEAR_DATA" }
-  | { type: "SET_ONLINERS"; payload: string[] }
-  | { type: "ADD_NEW_ONLINER"; payload: string };
+
 
 const appReducer = (
-  state: ReduxState = initialState,
+  state: IReduxState = initialState,
   action: ReduxUserDataDispatchType
-): ReduxState => {
+): IReduxState => {
   switch (action.type) {
     case "SET_DATA":
       return { ...state, userData: { ...action.payload } };

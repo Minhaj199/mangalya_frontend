@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction } from "react";
-import { userData } from "@/userPages/userProfile/UserProfile";
+import { UserData } from "@/types/typesAndInterfaces";
 import { showToast } from "../utils/alert/toast";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
-import { request } from '../utils/AxiosUtils'
-import { editValidatorwarning } from "@/types/typesAndInterfaces";
+import { request } from '../utils/axiosUtils'
+import { EditWarning } from "@/types/typesAndInterfaces";
 
 
 export async function validateEditedData(
-  editedData: userData,
-  setFormWaring: Dispatch<SetStateAction<editValidatorwarning>>
+  editedData: UserData,
+  setFormWaring: Dispatch<SetStateAction<EditWarning>>
 ) {
   let count = 0;
   setFormWaring({
@@ -106,7 +106,7 @@ export async function validateEditedData(
   return count === 0 && !isEmpty;
 }
 
-function checkEmpty(editedData: userData) {
+function checkEmpty(editedData: UserData) {
    
   if (editedData.PersonalInfo.firstName?.trim() !== "") {
     return false; ///

@@ -1,10 +1,11 @@
 
-import React,{Dispatch,SetStateAction, useContext, useState} from "react"
-import { request } from "../../../utils/AxiosUtils"
+import React,{ useContext, useState} from "react"
+import { request } from "@/utils/axiosUtils"  
 
 import { EmailForFogot } from "../../../shared/globalCondext/signupData"
 import CircularIndeterminate from "@/components/circularLoading/Circular"
 import { handleAlert } from "@/utils/alert/SweeAlert"
+import { IForgot_Props } from "@/types/typesAndInterfaces"
 
 function validateEmail(email:string){
   const emailRegex=/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -14,11 +15,9 @@ function validateEmail(email:string){
   }
  return false
 }
-export interface Forgot_Props{
-  changeToggle:Dispatch<SetStateAction<string>>
-}
 
-export const Forgot_first:React.FC<Forgot_Props> = ({changeToggle}) => {
+
+export const Forgot_first:React.FC<IForgot_Props> = ({changeToggle}) => {
   const [email,setEmail]=useState<string>('')
   const [warnning,setWarning]=useState<string>('')
   const [isLoading,setLoading]=useState(false)

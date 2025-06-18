@@ -1,5 +1,5 @@
 import { Column } from "react-table";
-import { TableUserDataType } from "./UserTable";
+import { TableUserDataType } from "@/types/typesAndInterfaces";
 
 export const  Columns: Column<TableUserDataType>[] = [
     {

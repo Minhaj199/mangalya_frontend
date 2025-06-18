@@ -1,12 +1,12 @@
 import  { useEffect, useState } from "react";
 import "./Plan.css";
-import { request } from "../../utils/AxiosUtils";
+import { request } from "../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import StripeCheckout, { Token } from "react-stripe-checkout";
 
 import { useDispatch, useSelector } from "react-redux";
-import { ReduxState } from "../../redux/reduxGlobal";
+import { IReduxState } from "@/types/typesAndInterfaces"; 
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { Footer } from "@/components/user/footer/Footer";
 import { PlanData } from "@/types/typesAndInterfaces";
@@ -31,7 +31,7 @@ const PlanPurchase = () => {
     }
     fetchPlanData();
   }, []);
-  const userData = useSelector((state: ReduxState) => state.userData);
+  const userData = useSelector((state: IReduxState) => state.userData);
 
   ////handing skiping
 

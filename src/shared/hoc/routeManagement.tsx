@@ -2,15 +2,9 @@ import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
-import { ReduxState } from "../../redux/reduxGlobal";
+import { IReduxState, JWTPayload } from "@/types/typesAndInterfaces"; 
 
-interface JWTPayload {
-  auth: boolean;
-  message: string;
-  role?: string;
-  id?: string;
-  exp?: number;
-}
+
 
 export const ProtectRouteAdmin: React.FC = () => {
   let setIsAuthorised = false;
@@ -72,7 +66,7 @@ export const UnProtectRouteUser: React.FC = () => {
   return setIsAuthorised ? <Navigate to="/loginLanding" /> : <Outlet />;
 };
 export const PlanRouteUser: React.FC = () => {
-  const userData = useSelector((state: ReduxState) => state.userData);
+  const userData = useSelector((state: IReduxState) => state.userData);
 
   let setIsAuthorised = false;
 
