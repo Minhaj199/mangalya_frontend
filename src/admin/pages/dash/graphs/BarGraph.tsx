@@ -35,7 +35,7 @@ const LineChart:React.FC<IDashChildProb> = ({setLoading}) => {
         const response: { month: number[]; revenue: number[] } = await request({
           url: "/admin/getDataToDash?from=Revenue",
         });
-        setData({ month: response.month, revenue: response.revenue });
+        setData({ month: [...response.month].reverse(), revenue: [...response.revenue].reverse() });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
