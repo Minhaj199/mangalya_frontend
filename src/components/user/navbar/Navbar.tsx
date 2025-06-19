@@ -109,7 +109,6 @@ export const Navbar = ({
   function handleLogout() {
     try {
       if(setLoading){
-        alert('here')
         setLoading(true)
       }
       setTimeout(() => {
