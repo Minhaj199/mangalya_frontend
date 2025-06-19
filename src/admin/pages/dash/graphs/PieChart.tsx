@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { request } from "@/utils/axiosUtils"; 
+import { request } from "@/utils/axiosUtilsTemp"; 
 import { alertWithOk } from "../../../../utils/alert/SweeAlert";
 import { ReponseMessage } from "@/constrains/messages";
 import { IDashChildProb } from "@/types/typesAndInterfaces";

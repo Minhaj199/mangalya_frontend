@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, Trash2, Flag, Search } from "lucide-react";
-import { request } from "@/utils/axiosUtils";
+import { request } from "@/utils/axiosUtilsTemp";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "@/shared/hoc/GlobalSocket";

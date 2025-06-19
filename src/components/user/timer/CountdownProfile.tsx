@@ -1,6 +1,6 @@
 import { useTimer } from "react-timer-hook";
 
-import { request } from "@/utils/axiosUtils"; 
+import { request } from "@/utils/axiosUtilsTemp"; 
 import { ITimerProbs } from "@/types/typesAndInterfaces";
 export const CountdownProfile: React.FC<ITimerProbs> = ({
   expiryTimeStamp,

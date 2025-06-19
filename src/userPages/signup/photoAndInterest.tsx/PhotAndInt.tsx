@@ -4,7 +4,7 @@ import React, {
   useEffect,
 } from "react";
 import { InterestType, IPhotAndIntInterface } from "@/types/typesAndInterfaces"; 
-import { request } from "@/utils/axiosUtils"; 
+import { request } from "@/utils/axiosUtilsTemp"; 
 
 import { alertWithOk } from "@/utils/alert/SweeAlert";
 import { compressImage } from "@/utils/imageCompressor";

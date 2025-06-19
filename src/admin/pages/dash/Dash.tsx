@@ -4,7 +4,7 @@ import { DashCard } from "./DashCard";
 import PieChart from "./graphs/PieChart";
 import BarChart from "./graphs/BarGraph";
 import { alertWithOk } from "../../../utils/alert/SweeAlert";
-import { request } from "@/utils/axiosUtils"; 
+import { request } from "@/utils/axiosUtilsTemp"; 
 import { useNavigate } from "react-router-dom";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 

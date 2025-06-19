@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 
-import { request } from '../../utils/axiosUtils' 
+import { request } from '../../utils/axiosUtilsTemp' 
 
 import { LoginValidatorAdmin } from "../../validators/loginValidatorForAdmin";
 import { useNavigate } from "react-router-dom";
@@ -135,3 +135,4 @@ const Login: React.FC = () => {
   );
 };
 export default Login;
+

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, ArrowLeft, Image } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { request } from "@/utils/axiosUtils";
+import { request } from "@/utils/axiosUtilsTemp";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

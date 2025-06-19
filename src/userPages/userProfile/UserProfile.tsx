@@ -5,7 +5,7 @@ import { districtsOfKerala } from "@/components/user/signupInputs/inputFields.ts
 import { CountdownProfile } from "@/components/user/timer/CountdownProfile";
 import { Send, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { request } from "@/utils/axiosUtils"; 
+import { request } from "@/utils/axiosUtilsTemp.ts"; 
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert.ts";
 import { validateEditedData } from "../../validators/editValidator.ts";
