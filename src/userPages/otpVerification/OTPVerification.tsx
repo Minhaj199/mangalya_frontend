@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { SignupContext } from "../../shared/globalCondext/signupData";
 import { Countdown } from "@/components/user/timer/Countdown";
-import { request } from "@/utils/axiosUtils"; 
+import { request } from '../../../index' 
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import { promptSweet } from "../../utils/alert/SweeAlert";
 import { useDispatch, useSelector } from "react-redux";
