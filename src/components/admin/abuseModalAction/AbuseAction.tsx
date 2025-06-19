@@ -85,6 +85,7 @@ export const ReportModal = ({
         handleAlert("success",' User Blocked')
       }
     } catch (error:unknown) {
+  
       setLoading(false)
       setOpen(false)
       if(error instanceof Error){
@@ -92,15 +93,19 @@ export const ReportModal = ({
       }
     }finally{
       setLoading(false)
+        setOpen(false)
+        handleAlert("success",' User Blocked')
     }
    
   };
 
   const handleReject = async() => {
     // Implement reject logic
+    setOpen(false)
     try {
       setLoading(true)
       const response:{data:IAbuserReport,message:string}=await request({url:'/admin/rejecReport/'+reportData._id,method:'patch',data:{reporter:reportData.reporter._id}})
+   
       if(response.message){
       
         if(response.message==='validation Faild'){
@@ -109,20 +114,23 @@ export const ReportModal = ({
         throw new Error(response.message)
       }
       if(response.data){
+    
       
         setReport(el=>el.map(elem=>({...elem,read:(elem._id===reportData._id)?true:false,rejected:(elem._id===reportData._id)?true:false,block:(elem._id===reportData._id)?true:false,warningMail:(elem._id===reportData._id)?true:false})))
 
         handleAlert("success",'Request Rejected')
       }
     } catch (error:unknown) {
+  
+      setOpen(false)
+      setLoading(false)
       if(error instanceof Error){
 
         handleAlert('error',error.message||'error on setWarning')
       }
     }finally{
-
+      setOpen(false)
       setLoading(false)
-        setOpen(false)
     }
   };
 
