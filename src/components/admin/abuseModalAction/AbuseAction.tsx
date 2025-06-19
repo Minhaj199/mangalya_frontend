@@ -90,6 +90,8 @@ export const ReportModal = ({
       if(error instanceof Error){
         handleAlert('error',error.message||'error on setWarning')
       }
+    }finally{
+      setLoading(false)
     }
    
   };
@@ -118,7 +120,7 @@ export const ReportModal = ({
         handleAlert('error',error.message||'error on setWarning')
       }
     }finally{
-      console.log(reportData)
+
       setLoading(false)
         setOpen(false)
     }
