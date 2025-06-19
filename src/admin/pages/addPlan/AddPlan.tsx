@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./planMgt.css";
 import { PlanValidator } from "../../../validators/planValidator";
 import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert";
-import { request } from "../../../utils/axiosUtils";
+import { request } from "@/utils/axiosUtils"; 
 import { useNavigate } from "react-router-dom";
 import { capitaliser } from "../../../utils/firstLetterCapitaliser";
 import { PlanDatas, PlanMgtWarningType } from '../../../types/typesAndInterfaces'

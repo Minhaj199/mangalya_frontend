@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Plan.css";
-import { request } from "../../utils/axiosUtils";
+import { request } from "@/utils/axiosUtils"; 
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import StripeCheckout, { Token } from "react-stripe-checkout";

@@ -1,6 +1,6 @@
 import { ICredentialInterface } from "@/types/typesAndInterfaces"; 
 import { Dispatch, SetStateAction } from "react";
-import { request } from "../utils/axiosUtils";
+import { request } from "@/utils/axiosUtils"; 
 
 export const credential_validation = async (
   formData: ICredentialInterface,
