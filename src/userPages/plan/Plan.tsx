@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Plan.css";
 import { request } from "../../utils/axiosUtils";
 import { useNavigate } from "react-router-dom";
@@ -6,28 +6,35 @@ import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";
 import StripeCheckout, { Token } from "react-stripe-checkout";
 
 import { useDispatch, useSelector } from "react-redux";
-import { IReduxState } from "@/types/typesAndInterfaces"; 
+import { IReduxState } from "@/types/typesAndInterfaces";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { Footer } from "@/components/user/footer/Footer";
 import { PlanData } from "@/types/typesAndInterfaces";
-
 
 const PlanPurchase = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [planData, setPlanData] = useState<PlanData[]>([
-    { _id: "", amount: 0, duration: 0, features: [""], connect: 0, name: "" ,avialbleConnect:0,Expiry:new Date()},
+    {
+      _id: "",
+      amount: 0,
+      duration: 0,
+      features: [""],
+      connect: 0,
+      name: "",
+      avialbleConnect: 0,
+      Expiry: new Date(),
+    },
   ]);
 
   ///////////fetching plan
   useEffect(() => {
     async function fetchPlanData() {
-      const response:{plans:PlanData[]} = await request({
+      const response: { plans: PlanData[] } = await request({
         url: "/user/fetchPlanData",
       });
 
       setPlanData(response.plans);
-      
     }
     fetchPlanData();
   }, []);
@@ -78,8 +85,8 @@ const PlanPurchase = () => {
             );
           }
           console.error(error);
-        }finally{
-          setLoading(false)
+        } finally {
+          setLoading(false);
         }
       }
       Purchase();
@@ -91,12 +98,11 @@ const PlanPurchase = () => {
 
   return (
     <>
-    
-     {loading && (
-                        <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
-                          <CircularIndeterminate />
-                        </div>
-                      )}
+      {loading && (
+        <div className="w-full flex items-center justify-center  h-full  fixed bg-[#00000032] z-50">
+          <CircularIndeterminate />
+        </div>
+      )}
       <div className="h-svh w-screen flex items-center flex-col bg-blue-400 ">
         <h1 className="text-white text-xl sm:text-5xl mt-10 font-italian">
           PLEASE JOIN OUR FAMILY
@@ -109,57 +115,68 @@ const PlanPurchase = () => {
             {"DO IT LATER>"}
           </p>
         </div>
-        <div className={`w-[100%]  px-4 overflow-x-auto no-scrollbar no-scrollbarh-[70%] flex ${planData.length>3?'sm:justify-start justify-center':'justify-center'}  items-center`}>
+        <div
+          className={`w-[100%]  px-4 overflow-x-auto no-scrollbar no-scrollbarh-[70%] flex ${
+            planData.length > 3
+              ? "sm:justify-start justify-center"
+              : "justify-center"
+          }  items-center`}
+        >
           <div className="flex   sm:flex-col md:flex-col lg:flex-row flex-col gap-5 h-full ">
-            {planData.length&&planData?.map((el, index) => (
-              <div
-                key={index}
-                className="sm:w-[300px] w-[250px]  h-[98%] ml-5 rounded-2xl bg-blue-950 "
-              >
-                <div className="w-full h-[13%] flex justify-center items-center">
-                  <p className="text-white font-bold font-inter">
-                    {`${el.name} : ${el.duration} month`}{" "}
-                  </p>
-                </div>
-                <div className="w-full h-[18%] flex justify-center items-center flex-col">
-                  <p className="text-white text-2xl font-bold">{`₹ ${el.amount}`}</p>
-                  <p className="text-white">{`${(
-                    el.amount / el.duration
-                  ).toFixed(0)}/month`}</p>
-                </div>
-                <div className="w-[80%] h-[50%] ml-10 flex py-10 flex-col">
-                  <p className="inline-flex mb-2 text-white items-center">
-                    <img src="./check-mark.png" className="w-8 h-8" alt="" />
-                    UP TO {el.connect} connects
-                  </p>
-                  {el.features.map((elem, idx) => (
-                    <p
-                      key={idx}
-                      className="inline-flex mb-2 text-white items-center"
-                    >
-                      <img src="./check-mark.png" className="w-8 h-8" alt="" />
-                      {elem}
+            {planData.length &&
+              planData?.map((el, index) => (
+                <div
+                  key={index}
+                  className="sm:w-[300px] w-[250px]  h-[98%] ml-5 rounded-2xl bg-blue-950 "
+                >
+                  <div className="w-full h-[13%] flex justify-center items-center">
+                    <p className="text-white font-bold font-inter">
+                      {`${el.name} : ${el.duration} month`}{" "}
                     </p>
-                  ))}
-                </div>
-                <div className="w-full h-20 flex justify-center items-center">
-                  <StripeCheckout
-                    stripeKey={import.meta.env.VITE_STRIPE_SECRET_KEY}
-                    token={(token) => handlePurchase(token, el)}
-                    currency="INR"
-                    name={el.name}
-                    amount={el.amount * 100}
-                  >
-                    <button
-                      id="pay"
-                      className="border px-10 py-1 rounded-xl text-white bg-dark-blue"
+                  </div>
+                  <div className="w-full h-[18%] flex justify-center items-center flex-col">
+                    <p className="text-white text-2xl font-bold">{`₹ ${el.amount}`}</p>
+                    <p className="text-white">{`${(
+                      el.amount / el.duration
+                    ).toFixed(0)}/month`}</p>
+                  </div>
+                  <div className="w-[80%] h-[50%] ml-10 flex py-10 flex-col">
+                    <p className="inline-flex mb-2 text-white items-center">
+                      <img src="./check-mark.png" className="w-8 h-8" alt="" />
+                      UP TO {el.connect} connects
+                    </p>
+                    {el.features.map((elem, idx) => (
+                      <p
+                        key={idx}
+                        className="inline-flex mb-2 text-white items-center"
+                      >
+                        <img
+                          src="./check-mark.png"
+                          className="w-8 h-8"
+                          alt=""
+                        />
+                        {elem}
+                      </p>
+                    ))}
+                  </div>
+                  <div className="w-full h-20 flex justify-center items-center">
+                    <StripeCheckout
+                      stripeKey={import.meta.env.VITE_STRIPE_SECRET_KEY}
+                      token={(token) => handlePurchase(token, el)}
+                      currency="INR"
+                      name={el.name}
+                      amount={el.amount * 100}
                     >
-                      BUY
-                    </button>
-                  </StripeCheckout>
+                      <button
+                        id="pay"
+                        className="border px-10 py-1 rounded-xl text-white bg-dark-blue"
+                      >
+                        BUY
+                      </button>
+                    </StripeCheckout>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>

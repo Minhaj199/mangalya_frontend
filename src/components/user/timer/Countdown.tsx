@@ -54,6 +54,7 @@ export const Countdown: React.FC<ITimerProbs> = ({
           }
         }
       } else {
+        handleAlert("error", "internal server error");
       }
     }
   }

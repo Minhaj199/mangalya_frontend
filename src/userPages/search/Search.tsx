@@ -27,7 +27,7 @@ import CircularIndeterminate from "@/components/circularLoading/Circular";
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [interest, setInterest] = useState<string[] | null>(null);
-  const [loading,setLoading]
+  const [loading,setLoading]= useState(false)
   const navigate = useNavigate();
   const socket = useSocket();
   ////////////////fetch intererst///////////////
