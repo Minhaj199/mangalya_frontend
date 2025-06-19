@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil";  
 
 import { IToggle, NewAddedData } from "@/types/typesAndInterfaces";
 

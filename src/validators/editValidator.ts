@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { UserData } from "@/types/typesAndInterfaces";
 import { showToast } from "../utils/alert/toast";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil";  
 import { EditWarning } from "@/types/typesAndInterfaces";
 
 

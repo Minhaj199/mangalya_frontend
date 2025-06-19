@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 
 import React from "react"
 import { useNavigate } from "react-router-dom"
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil";  
 import { handleAlert } from "../../../utils/alert/SweeAlert"
  
 import { LoginReponse, StateProb, UserForm, UserLoginProp } from "@/types/typesAndInterfaces";

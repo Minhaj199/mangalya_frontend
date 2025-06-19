@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useTimer } from "react-timer-hook";
 import { SignupContext } from "../../../shared/globalCondext/signupData";
 import { useNavigate } from "react-router-dom";
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil";  
 import { handleAlert } from "@/utils/alert/SweeAlert";
 import { ITimerProbs } from "@/types/typesAndInterfaces";
 

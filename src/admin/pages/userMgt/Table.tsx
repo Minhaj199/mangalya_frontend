@@ -17,7 +17,7 @@ import {
 
 import { Columns } from "./UserHeadSchema";
 import { TableUserDataType } from "@/types/typesAndInterfaces"; 
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil"  
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, promptSweet } from "../../../utils/alert/SweeAlert";
 import CircularIndeterminate from "@/components/circularLoading/Circular";

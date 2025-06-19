@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./Credential.css";
 import { Inputs } from "../../components/user/signupInputs/Inputs";
 import { SignupContext } from "../../shared/globalCondext/signupData";
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil";  
 
 import { PhotAndInt } from "./photoAndInterest.tsx/PhotAndInt";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert";

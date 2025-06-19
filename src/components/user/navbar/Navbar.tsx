@@ -4,7 +4,7 @@ import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert";
 import { useDispatch, useSelector } from "react-redux";
 import { IReduxState } from "@/types/typesAndInterfaces";
 import { useSocket } from "@/shared/hoc/GlobalSocket";
-import { request } from "@/utils/axiosUtilsTemp";
+import { request } from "@/utils/axiosUtil"; 
 import { showToast } from "@/utils/alert/toast";
 
 export const Navbar = ({

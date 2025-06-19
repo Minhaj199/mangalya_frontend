@@ -1,6 +1,6 @@
 
 import React,{ useContext, useState} from "react"
-import { request } from "@/utils/axiosUtilsTemp"  
+import { request } from "@/utils/axiosUtil"  
 
 import { EmailForFogot } from "../../../shared/globalCondext/signupData"
 import CircularIndeterminate from "@/components/circularLoading/Circular"

@@ -2,7 +2,7 @@ import { ReportModal } from "@/components/admin/abuseModalAction/AbuseAction";
 import CircularIndeterminate from "@/components/circularLoading/Circular";
 import { IAbuserReport } from "@/types/typesAndInterfaces";
 import { alertWithOk, handleAlert, promptSweet } from "@/utils/alert/SweeAlert";
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil"; 
 
 import { Trash2, Mail, MailOpen } from "lucide-react";
 import React, { useEffect, useState } from "react";

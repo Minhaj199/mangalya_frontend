@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { IAbuserReport } from "@/types/typesAndInterfaces"; 
-import { request } from "@/utils/axiosUtilsTemp";
+import { request } from "@/utils/axiosUtil"; 
 import { useNavigate } from "react-router-dom";
 import { handleAlert } from "@/utils/alert/SweeAlert";
 

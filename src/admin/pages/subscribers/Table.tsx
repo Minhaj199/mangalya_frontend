@@ -12,7 +12,7 @@ import {
 import { Columns } from "./UserHeadSchema";
 import { ISubscriberTableDataType } from "@/types/typesAndInterfaces"; 
 
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil"; 
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, } from "../../../utils/alert/SweeAlert";
 import { PlanDataType } from "@/types/typesAndInterfaces"; 

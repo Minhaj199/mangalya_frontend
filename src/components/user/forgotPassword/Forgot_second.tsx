@@ -3,7 +3,7 @@ import { IForgot_Props } from "@/types/typesAndInterfaces"
 import { Countdown } from "../timer/Countdown" 
 import { EmailForFogot } from "../../../shared/globalCondext/signupData"
 import { useNavigate } from "react-router-dom"
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil"; 
 import { alertWithOk, handleAlert } from "../../../utils/alert/SweeAlert"
 import CircularIndeterminate from "@/components/circularLoading/Circular"
 

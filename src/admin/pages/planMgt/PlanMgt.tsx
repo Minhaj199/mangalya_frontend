@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./plan.css";
-import { request } from "@/utils/axiosUtilsTemp"; 
+import { request } from "@/utils/axiosUtil"; 
 import { useNavigate } from "react-router-dom";
 import {
   alertWithOk,

@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 import { districtsOfKerala } from "@/components/user/signupInputs/inputFields"; 
-import { request } from "@/utils/axiosUtilsTemp";
+import { request } from "@/utils/axiosUtil"; 
 import { showToast } from "@/utils/alert/toast";
 import { alertWithOk, handleAlert } from "@/utils/alert/SweeAlert";
 import { useNavigate } from "react-router-dom";
