@@ -5,7 +5,7 @@ import { districtsOfKerala } from "@/components/user/signupInputs/inputFields.ts
 import { CountdownProfile } from "@/components/user/timer/CountdownProfile";
 import { Send, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { request } from "@/utils/axiosUtil"; 
+import { request } from "@/utils/axiosUtil";
 import { useNavigate } from "react-router-dom";
 import { alertWithOk, handleAlert } from "../../utils/alert/SweeAlert.ts";
 import { validateEditedData } from "../../validators/editValidator.ts";
@@ -21,6 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { FetchBlankData, IReduxState } from "@/types/typesAndInterfaces.ts";
 import { compressImage } from "@/utils/imageCompressor.ts";
 import { UserData } from "@/types/typesAndInterfaces.ts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 
 const blanUserData = {
   PersonalInfo: {
@@ -142,6 +149,7 @@ const UserProfile = () => {
     }
     fetchUserData();
   }, []);
+
   //////////////////handle change in input data/////////////////
   const handleInputData = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -205,6 +213,21 @@ const UserProfile = () => {
     }
   };
 
+  //////////////////handle input select change
+  function selectInputChange(field: string, value: string) {
+    if (field === "partnerGender") {
+      setEditedData((el) => ({
+        ...el,
+        partnerData: { ...el.partnerData, gender: value },
+      }));
+    } else if (field === "district") {
+      if (value !== "")
+        setEditedData((el) => ({
+          ...el,
+          PersonalInfo: { ...el.PersonalInfo, state: value },
+        }));
+    }
+  }
   ///////////////handling photo////////////////
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     const draft = e.target.files;
@@ -989,25 +1012,30 @@ const UserProfile = () => {
                   </div>
                   <div className="w-full h-[120px]  relative">
                     <div>
-                      <div className="border h-10 px-2 rounded-md mt-7 w-[100%] font-semibold">
+                      <div className=" h-10 rounded-md mt-7 w-[100%] font-semibold">
                         {editUser ? (
-                          <select
-                            className="w-full h-full  outline-none"
-                            name="gender"
-                            onChange={handleInputData}
-                            disabled={!editUser}
+                           <Select
+                            onValueChange={(v) =>
+                              selectInputChange("gender", v)
+                            }
                             value={editedData.PersonalInfo.gender}
-                            id="gender"
+                            disabled={!editUser}
+                          
                           >
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                          </select>
+                            <SelectTrigger id="gender" className="w-full h-full  ">
+                              <SelectValue placeholder="gender" />
+                            </SelectTrigger> 
+                            <SelectContent >
+                             <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                            </SelectContent>
+                          </Select>
                         ) : (
                           <input
                             type="text"
                             name="firstName"
                             value={orginalData.PersonalInfo.gender}
-                            className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                            className="profileInputs px-4  border outline-none font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
                           />
                         )}
                         {editUser && (
@@ -1039,26 +1067,27 @@ const UserProfile = () => {
                   </div>
                   <div className="w-full h-[120px]  relative">
                     <div>
-                      <div className="border h-10 px-2 rounded-md mt-7 font-semibold w-[100%]">
+                      <div className=" h-10   rounded-md mt-7 font-semibold w-[100%] overflow-hidden">
                         {editUser ? (
-                          <select
-                            className="w-full h-full outline-none"
-                            name="district"
-                            id="district"
-                            onChange={handleInputData}
+                          <Select
+                            onValueChange={(v) =>
+                              selectInputChange("district", v)
+                            }
                             value={editedData.PersonalInfo.state}
+                            disabled={!editUser}
+                          
                           >
-                            <option value="">select state</option>
-                            {districtsOfKerala?.map((el, index) => (
-                              <option
-                                className="text-sm "
-                                key={index}
-                                value={el}
-                              >
-                                {el}
-                              </option>
-                            ))}
-                          </select>
+                            <SelectTrigger id="district" className="w-full h-full  ">
+                              <SelectValue placeholder="gender" />
+                            </SelectTrigger>
+                            <SelectContent >
+                              {districtsOfKerala?.map((el, index) => (
+                                <SelectItem key={index} value={el}>
+                                  {el}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         ) : (
                           <input
                             type="text"
@@ -1066,7 +1095,7 @@ const UserProfile = () => {
                             name=""
                             disabled={!editUser}
                             value={orginalData.PersonalInfo.state}
-                            className="profileInputs px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
+                            className="profileInputs border px-4  font-popin text-sm  rounded-md w-[100%] active:border-2 h-full "
                           />
                         )}
                       </div>
@@ -1231,22 +1260,30 @@ const UserProfile = () => {
                       </label>
 
                       {editUser ? (
-                        <div className="border h-10 rounded-md mt-5 w-[100%] relative">
-                          <select
-                            className="w-full h-full  outline-none"
-                            name="partnerGender"
-                            onChange={handleInputData}
-                            disabled={!editUser}
+                        <div className=" h-10 rounded-md mt-5 w-[100%] relative">
+                          <Select
+                            onValueChange={(v) =>
+                              selectInputChange("partnerGender", v)
+                            }
                             value={editedData.partnerData.gender}
-                            id="partnerGender"
+                            disabled={!editUser}
                           >
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                          </select>
+                            <SelectTrigger
+                              id="partnerGender"
+                              className="w-full"
+                            >
+                              <SelectValue placeholder="gender" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                            </SelectContent>
+                          </Select>
+
                           {editUser && (
                             <img
                               src="/undo.png"
-                              className="w-4 h-4 cursor-pointer top-3 right-6 absolute "
+                              className="w-4 h-4 cursor-pointer top-2 right-8 absolute "
                               onClick={() =>
                                 setEditedData((el) => ({
                                   ...el,
