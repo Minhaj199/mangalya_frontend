@@ -171,12 +171,6 @@ const UserProfile = () => {
           ...el,
           PersonalInfo: { ...el.PersonalInfo, state: e.target.value },
         }));
-    } else if (e.target.name === "gender") {
-      if (e.target.value !== "")
-        setEditedData((el) => ({
-          ...el,
-          PersonalInfo: { ...el.PersonalInfo, gender: e.target.value },
-        }));
     } else if (e.target.name === "dateOfBirth") {
       const inputDate = new Date(e.target.value);
       const formattedDate = inputDate.toISOString().split("T")[0];
@@ -227,6 +221,13 @@ const UserProfile = () => {
           PersonalInfo: { ...el.PersonalInfo, state: value },
         }));
     }
+    else if (field === "gender") {
+      if (value !== "")
+        setEditedData((el) => ({
+          ...el,
+          PersonalInfo: { ...el.PersonalInfo, gender: value },
+        }));
+    } 
   }
   ///////////////handling photo////////////////
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
