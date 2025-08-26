@@ -1,5 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useTable, usePagination,Row, Cell, TableInstance, UsePaginationInstanceProps, UsePaginationState } from "react-table";
+import {
+  useTable,
+  usePagination,
+  Row,
+  Cell,
+  TableInstance,
+  UsePaginationInstanceProps,
+  UsePaginationState,
+} from "react-table";
 import {
   Table,
   TableBody,
@@ -10,21 +18,21 @@ import {
 } from "@mui/material";
 
 import { Columns } from "./UserHeadSchema";
-import { ISubscriberTableDataType } from "@/types/typesAndInterfaces"; 
+import { ISubscriberTableDataType } from "@/types/typesAndInterfaces";
 
-import { request } from "@/utils/axiosUtil"; 
+import { request } from "@/utils/axiosUtil";
 import { useNavigate } from "react-router-dom";
-import { alertWithOk, } from "../../../utils/alert/SweeAlert";
-import { PlanDataType } from "@/types/typesAndInterfaces"; 
+import { alertWithOk } from "../../../utils/alert/SweeAlert";
+import { PlanDataType } from "@/types/typesAndInterfaces";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export interface UserListInterface {
   triggerPagination: () => void;
 }
 
- const SubscriberTable: React.FC = () => {
+const SubscriberTable: React.FC = () => {
   const navigate = useNavigate();
-  
-  
+
   const [MockData, setMockData] = useState<ISubscriberTableDataType[]>([]);
   const [planData, setPlanData] = useState<PlanDataType[]>([{ name: "" }]);
   const [searchWord, setSearchWord] = useState<string>("");
@@ -47,13 +55,21 @@ export interface UserListInterface {
         }
         setMockData(data.userData);
       } catch (error) {
-        if(error instanceof Error){
+        if (error instanceof Error) {
           if (error.message === "405") {
-            alertWithOk("subscriber", error.message || "error on dash", "error");
+            alertWithOk(
+              "subscriber",
+              error.message || "error on dash",
+              "error"
+            );
             navigate("/login");
             return;
-          }else{
-            alertWithOk("subscriber", error.message || "error on dash", "error");
+          } else {
+            alertWithOk(
+              "subscriber",
+              error.message || "error on dash",
+              "error"
+            );
           }
         }
       }
@@ -72,8 +88,8 @@ export interface UserListInterface {
   const data = useMemo(() => filterData ?? [], [filterData]);
 
   ///// sorting///////
-  function handleFilter(t: React.ChangeEvent<HTMLSelectElement>) {
-    const value = t.target.value;
+  function handleFilter(value:string) {
+    
     if (value === "All") {
       setSearchWord("");
     } else {
@@ -93,9 +109,13 @@ export interface UserListInterface {
     canPreviousPage,
     pageOptions,
     state,
-  } = useTable<ISubscriberTableDataType>({ columns, data,  initialState: { pageIndex: 0, pageSize: 5 }, }, usePagination)  as TableInstance<ISubscriberTableDataType> & UsePaginationInstanceProps<ISubscriberTableDataType>;
+  } = useTable<ISubscriberTableDataType>(
+    { columns, data, initialState: { pageIndex: 0, pageSize: 5 } },
+    usePagination
+  ) as TableInstance<ISubscriberTableDataType> &
+    UsePaginationInstanceProps<ISubscriberTableDataType>;
   const { pageIndex } = state as UsePaginationState<ISubscriberTableDataType>;
-  
+
   return (
     <>
       <div className="w-[100%] h-svh">
@@ -105,19 +125,21 @@ export interface UserListInterface {
               <p className=" ml-5 font-extrabold sm:text-base text-xs  font-inter text-dark-blue">
                 SUBSCRIBER DATA
               </p>
-              <select
-                onChange={handleFilter}
-                className="cursor-pointer bg-white mr-3 h-8 w-20 sm:w-48 pl-2  text-dark-blue border border-dark-blue  sm:placeholder:text-sm  outline-none"
-                id=""
-              >
-                <option value="All">All</option>
-                {planData[0].name !== "" &&
+
+              <Select onValueChange={handleFilter}
+                              >
+                <SelectTrigger id="gender" className="border border-blue-900 mr-3 h-8 w-20 sm:w-48   ">
+                  <SelectValue placeholder="Plans" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='All' >All</SelectItem>
+                  {planData[0].name !== "" &&
                   planData.map((el, index) => (
-                    <option key={index} value={el.name}>
-                      {el.name}
-                    </option>
+                      <SelectItem key={index} value={el.name}>{el.name}</SelectItem>
                   ))}
-              </select>
+                  
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="w-[95%] h-3/5 mt-10 overflow-auto no-scrollbar ">
@@ -145,31 +167,34 @@ export interface UserListInterface {
                   ))}
                 </TableHead>
                 <TableBody {...getTableBodyProps()} className="bg-gray-200 ">
-                  {page.map((row:Row<ISubscriberTableDataType>, rowIndex:number) => {
-                    prepareRow(row);
-                    return (
-                      <TableRow
-                        {...row.getRowProps()}
-                        key={rowIndex}
-                        className="text-start hover:bg-slate-400 "
-                      >
-                        {row.cells.map((cell: Cell<ISubscriberTableDataType>) => (
-                          <TableCell
-                            className="text-lg"
-                            {...cell.getCellProps()}
-                          >
-                            {cell.render("Cell")}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    );
-                  })}
+                  {page.map(
+                    (row: Row<ISubscriberTableDataType>, rowIndex: number) => {
+                      prepareRow(row);
+                      return (
+                        <TableRow
+                          {...row.getRowProps()}
+                          key={rowIndex}
+                          className="text-start hover:bg-slate-400 "
+                        >
+                          {row.cells.map(
+                            (cell: Cell<ISubscriberTableDataType>) => (
+                              <TableCell
+                                className="text-lg"
+                                {...cell.getCellProps()}
+                              >
+                                {cell.render("Cell")}
+                              </TableCell>
+                            )
+                          )}
+                        </TableRow>
+                      );
+                    }
+                  )}
                 </TableBody>
               </Table>
             </Paper>
           </div>
           <div className="w-full h-1/5 flex justify-center items-center">
-            
             <button
               onClick={() => previousPage()}
               disabled={!canPreviousPage}
@@ -178,7 +203,6 @@ export interface UserListInterface {
               {"<<"}
             </button>
             <span className="mx-2 sm:mb-0 mb-3">
-              
               <strong>
                 {pageIndex + 1} of {pageOptions.length}
               </strong>{" "}
@@ -196,4 +220,4 @@ export interface UserListInterface {
     </>
   );
 };
-export default SubscriberTable
+export default SubscriberTable;
