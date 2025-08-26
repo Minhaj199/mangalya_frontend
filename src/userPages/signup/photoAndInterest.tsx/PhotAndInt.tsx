@@ -1,15 +1,16 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-} from "react";
-import { InterestType, IPhotAndIntInterface } from "@/types/typesAndInterfaces"; 
-import { request } from "@/utils/axiosUtil"; 
+import React, { useRef, useState, useEffect } from "react";
+import { InterestType, IPhotAndIntInterface } from "@/types/typesAndInterfaces";
+import { request } from "@/utils/axiosUtil";
 
 import { alertWithOk } from "@/utils/alert/SweeAlert";
 import { compressImage } from "@/utils/imageCompressor";
-
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -19,11 +20,9 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
     probSetter((el) => ({ ...el, interest: selected }));
   }, [selected, image]);
 
-
   const [enablingTypesOfInterest, setEnablingTypesOfInterest] =
     useState<boolean>(false);
   const [handleChange, setHandleChang] = useState<string[]>([""]);
-
   const [interest, setInterest] = useState<InterestType>({
     sports: [""],
     music: [""],
@@ -61,36 +60,46 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
     }
   }
   async function handleFile(t: React.ChangeEvent<HTMLInputElement>) {
-   try {
-    const maxSize=10*1024*1024
-    const lessSize=1*1024*1024
-    if (t.target.files?.length && t.target.files?.length > 0) {
-      
-      const fileDraft=t.target.files[0]
-      const file =(fileDraft.size>lessSize)?await compressImage (t.target.files[0]):fileDraft
-      if(maxSize<file.size){
-        alertWithOk('Photo size limit','please reduce size to below 10 mp','info')
-        return
+    try {
+      const maxSize = 10 * 1024 * 1024;
+      const lessSize = 1 * 1024 * 1024;
+      if (t.target.files?.length && t.target.files?.length > 0) {
+        const fileDraft = t.target.files[0];
+        const file =
+          fileDraft.size > lessSize
+            ? await compressImage(t.target.files[0])
+            : fileDraft;
+        if (maxSize < file.size) {
+          alertWithOk(
+            "Photo size limit",
+            "please reduce size to below 10 mp",
+            "info"
+          );
+          return;
+        }
+        probSetter((el) => ({ ...el, photo: file }));
+        const imageUrl = URL.createObjectURL(t.target.files?.[0]);
+        setImage(imageUrl);
       }
-      probSetter((el) => ({ ...el, photo: file }));
-      const imageUrl = URL.createObjectURL(t.target.files?.[0]);
-      setImage(imageUrl);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alertWithOk(
+          "Error",
+          error.message || "some error occured on photo management",
+          "error"
+        );
+      } else {
+        console.error(error);
+      }
     }
-   } catch (error:unknown) {
-    if(error instanceof Error){
-      alertWithOk('Error',error.message||'some error occured on photo management','error')
-    }else{
-      console.error(error)
-    }
-   }
   }
-  function handleCategoryInterest(t: React.ChangeEvent<HTMLSelectElement>) {
-    if (t.target.value) {
+  function handleCategoryInterest(value: string) {
+    if (value) {
       if (!enablingTypesOfInterest) {
         setEnablingTypesOfInterest(true);
       }
-      if (t.target) {
-        const key = t.target.value;
+      if (value) {
+        const key = value;
 
         if (key === "sports" || key === "music" || key === "food") {
           setHandleChang(interest[key]);
@@ -100,9 +109,9 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
       setEnablingTypesOfInterest(false);
     }
   }
-  function handleAddInterest(t: React.ChangeEvent<HTMLSelectElement>) {
-    if (t.target.value && !selected.includes(t.target.value)) {
-      setSelected((el) => [...el, t.target.value]);
+  function handleAddInterest(value:string) {
+    if (value && !selected.includes(value)) {
+      setSelected((el) => [...el, value]);
       interestCount.current++;
     }
     if (interestCount.current === 5) {
@@ -161,38 +170,67 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
       <div className="w-2/3 h-full  flex flex-col">
         <div className="w-full h-[40%] items-center  flex sm:justify-normal  justify-between ">
           {interestCount.current !== 5 && (
-            <select
-              name=""
-              id=""
-              onChange={(t) => handleCategoryInterest(t)}
-              className="sm:w-[30%] w-[50%]   h-9 outline-none border border-theme-blue"
-            >
-              <option value="">Interst Category</option>
-              {Object.keys(interest).map((key, index) => {
-                return (
-                  <option key={index} value={key}>
-                    {key}
-                  </option>
-                );
-              })}
-            </select>
+            // <select
+            //   name=""
+            //   id=""
+            //   onChange={(t) => handleCategoryInterest(t)}
+            //   className="sm:w-[30%] w-[50%]   h-9 outline-none border border-theme-blue"
+            // >
+            //   <option value="">Interst Category</option>
+            //   {Object.keys(interest).map((key, index) => {
+            //     return (
+            //       <option key={index} value={key}>
+            //         {key}
+            //       </option>
+            //     );
+            //   })}
+            // </select>
+            <Select onValueChange={handleCategoryInterest}>
+              <SelectTrigger id="gender" className="sm:w-[30%] w-[50%]   h-9 ">
+                <SelectValue placeholder="Interst Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(interest).map((key, index) => {
+                  return (
+                    <SelectItem key={index} value={key}>
+                      {key}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
           )}
           {enablingTypesOfInterest && (
-            <select
-              name=""
-              id=""
-              className="sm:w-[30%] w-[50%]    ml-10 h-9 outline-none border border-theme-blue"
-              onChange={handleAddInterest}
-            >
-              <option value="">Interst</option>
-              {handleChange.map((el, index) => {
-                return (
-                  <option key={index} value={el}>
-                    {el}
-                  </option>
-                );
-              })}
-            </select>
+            // <select
+            //   name=""
+            //   id=""
+            //   className="sm:w-[30%] w-[50%]    ml-10 h-9 outline-none border border-theme-blue"
+            //   onChange={handleAddInterest}
+            // >
+            //   <option value="">Interst</option>
+            //   {handleChange.map((el, index) => {
+            //     return (
+            //       <option key={index} value={el}>
+            //         {el}
+            //       </option>
+            //     );
+            //   })}
+            // </select>
+            <Select onValueChange={handleAddInterest}>
+              <SelectTrigger id="gender" className="sm:w-[30%] w-[50%] ml-10 h-9 bg-white">
+                <SelectValue placeholder="Interst" />
+              </SelectTrigger>
+              <SelectContent>
+          
+            {handleChange.map((el, index) => {
+                 return (
+                    <SelectItem key={index} value={el}>
+                      {el}
+                    </SelectItem>
+                 );
+               })}
+              </SelectContent>
+            </Select>
           )}
         </div>
         <div className="w-full sm:h-[60%] h-72 sm:mt-0 mt-14 mb-10 bg-white border border-theme-blue">
