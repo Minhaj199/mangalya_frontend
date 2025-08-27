@@ -11,10 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { showToast } from "@/utils/alert/toast";
 
 export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const interestCount = useRef(0);
+  
   const [image, setImage] = useState<string | null>(null);
   useEffect(() => {
     probSetter((el) => ({ ...el, interest: selected }));
@@ -53,6 +55,11 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
     }
     fetectInterst();
   }, []);
+  useEffect(()=>{
+    if(interestCount.current===5){
+     showToast('max limit reached','info')
+    }
+  },[interestCount.current])
   const fileInputRef = useRef<HTMLInputElement>(null);
   function handleClick() {
     if (fileInputRef.current) {
@@ -100,7 +107,6 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
       }
       if (value) {
         const key = value;
-
         if (key === "sports" || key === "music" || key === "food") {
           setHandleChang(interest[key]);
         }
@@ -113,6 +119,7 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
     if (value && !selected.includes(value)) {
       setSelected((el) => [...el, value]);
       interestCount.current++;
+      
     }
     if (interestCount.current === 5) {
       setHandleChang([]);
@@ -170,23 +177,9 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
       <div className="w-2/3 h-full  flex flex-col">
         <div className="w-full h-[40%] items-center  flex sm:justify-normal  justify-between ">
           {interestCount.current !== 5 && (
-            // <select
-            //   name=""
-            //   id=""
-            //   onChange={(t) => handleCategoryInterest(t)}
-            //   className="sm:w-[30%] w-[50%]   h-9 outline-none border border-theme-blue"
-            // >
-            //   <option value="">Interst Category</option>
-            //   {Object.keys(interest).map((key, index) => {
-            //     return (
-            //       <option key={index} value={key}>
-            //         {key}
-            //       </option>
-            //     );
-            //   })}
-            // </select>
-            <Select onValueChange={handleCategoryInterest}>
-              <SelectTrigger id="gender" className="sm:w-[30%] w-[50%]   h-9 ">
+           
+            <Select   onValueChange={handleCategoryInterest}>
+              <SelectTrigger id="gender" className="sm:w-[30%] w-[50%] bg-white   h-9 ">
                 <SelectValue placeholder="Interst Category" />
               </SelectTrigger>
               <SelectContent>
@@ -200,23 +193,9 @@ export const PhotAndInt: React.FC<IPhotAndIntInterface> = ({ probSetter }) => {
               </SelectContent>
             </Select>
           )}
-          {enablingTypesOfInterest && (
-            // <select
-            //   name=""
-            //   id=""
-            //   className="sm:w-[30%] w-[50%]    ml-10 h-9 outline-none border border-theme-blue"
-            //   onChange={handleAddInterest}
-            // >
-            //   <option value="">Interst</option>
-            //   {handleChange.map((el, index) => {
-            //     return (
-            //       <option key={index} value={el}>
-            //         {el}
-            //       </option>
-            //     );
-            //   })}
-            // </select>
-            <Select onValueChange={handleAddInterest}>
+          {enablingTypesOfInterest&&interestCount.current !== 5 && (
+            
+            <Select  onValueChange={handleAddInterest}>
               <SelectTrigger id="gender" className="sm:w-[30%] w-[50%] ml-10 h-9 bg-white">
                 <SelectValue placeholder="Interst" />
               </SelectTrigger>
